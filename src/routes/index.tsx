@@ -48,7 +48,7 @@ export const Route = createFileRoute("/")({
           "@context": "https://schema.org",
           "@type": "ProfessionalService",
           name: "ProHealth Digital LLC",
-          image: "https://www.prohealthdigital.com/prohealth-logo.png",
+          image: "https://prohealthdigitalllc.com/prohealth-logo.png",
           description:
             "Digital transformation and growth partner for clinics, medical professionals, and health-tech companies.",
           address: {
@@ -60,7 +60,7 @@ export const Route = createFileRoute("/")({
             addressCountry: "US",
           },
           telephone: "+1-307-210-6740",
-          url: "https://www.prohealthdigital.com",
+          url: "https://prohealthdigitalllc.com",
           priceRange: "$$",
           openingHoursSpecification: [
             {

@@ -88,9 +88,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "ProHealth Digital LLC" },
       { property: "og:site_name", content: "ProHealth Digital" },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://www.prohealthdigital.com/prohealth-logo.png" },
+      { property: "og:image", content: "https://prohealthdigitalllc.com/prohealth-logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://www.prohealthdigital.com/prohealth-logo.png" },
+      { name: "twitter:image", content: "https://prohealthdigitalllc.com/prohealth-logo.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

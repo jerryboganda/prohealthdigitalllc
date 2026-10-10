@@ -1,0 +1,31 @@
+services:
+  web:
+    image: node:22-bookworm-slim
+    container_name: prohealth-web
+    restart: unless-stopped
+    user: node
+    working_dir: /app
+    command: ["node", ".output/server/index.mjs"]
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 3000
+    volumes:
+      - ./current/.output:/app/.output:ro
+    read_only: true
+    tmpfs:
+      - /tmp
+    mem_limit: 256m
+    pids_limit: 128
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+    networks:
+      - proxy
+networks:
+  proxy:
+    external: true
+    name: nginx-proxy-manager_default
