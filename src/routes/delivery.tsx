@@ -82,7 +82,7 @@ export const Route = createFileRoute("/delivery")({
         <li>
           <strong>Production Deployment:</strong> Once a milestone phase or complete codebase is
           signed off, we handle the production deployment to your designated cloud provider (such as
-          Vercel, Netlify, or Cloudflare Workers) as detailed in your scope of work.
+          Netlify or Cloudflare Workers) as detailed in your scope of work.
         </li>
       </ul>
 

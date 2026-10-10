@@ -31,4 +31,12 @@ To compile the application for production deployment:
 npm run build
 ```
 
-This creates a production build in `.vercel/output` configured for Vercel deployments.
+This creates a production Node.js server build in `.output`.
+
+To start the production server:
+
+```sh
+npm start
+```
+
+Set `PORT` and `HOST` in the hosting environment to configure the listening address.
