@@ -1,55 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
-
-interface SitemapEntry {
-  path: string;
-  changefreq?: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
-  priority?: string;
-}
-
+import { ORIGIN, publicPaths, localPath } from "@/lib/content";
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
-      GET: async ({ request }) => {
-        const requestUrl = new URL(request.url);
-        const BASE_URL = `${requestUrl.protocol}//${requestUrl.host}`;
-        const entries: SitemapEntry[] = [
-          { path: "/", changefreq: "weekly", priority: "1.0" },
-          { path: "/about", changefreq: "monthly", priority: "0.8" },
-          { path: "/services", changefreq: "monthly", priority: "0.9" },
-          { path: "/packages", changefreq: "monthly", priority: "0.9" },
-          { path: "/digital-products", changefreq: "monthly", priority: "0.8" },
-          { path: "/faq", changefreq: "monthly", priority: "0.6" },
-          { path: "/contact", changefreq: "yearly", priority: "0.7" },
-          { path: "/privacy", changefreq: "yearly", priority: "0.3" },
-          { path: "/terms", changefreq: "yearly", priority: "0.3" },
-          { path: "/cookies", changefreq: "yearly", priority: "0.3" },
-        ];
-
-        const urls = entries.map((e) =>
-          [
-            `  <url>`,
-            `    <loc>${BASE_URL}${e.path}</loc>`,
-            e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
-            e.priority ? `    <priority>${e.priority}</priority>` : null,
-            `  </url>`,
-          ]
-            .filter(Boolean)
-            .join("\n"),
+      GET: () => {
+        const entries = publicPaths.flatMap((path) =>
+          (["en", "ar"] as const).map(
+            (locale) =>
+              `<url><loc>${ORIGIN}${localPath(path, locale)}</loc><xhtml:link rel="alternate" hreflang="en" href="${ORIGIN}${path}"/><xhtml:link rel="alternate" hreflang="ar" href="${ORIGIN}${localPath(path, "ar")}"/><xhtml:link rel="alternate" hreflang="x-default" href="${ORIGIN}${path}"/></url>`,
+          ),
         );
-
-        const xml = [
-          `<?xml version="1.0" encoding="UTF-8"?>`,
-          `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`,
-          ...urls,
-          `</urlset>`,
-        ].join("\n");
-
-        return new Response(xml, {
-          headers: {
-            "Content-Type": "application/xml",
-            "Cache-Control": "public, max-age=3600",
+        return new Response(
+          `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${entries.join("")}</urlset>`,
+          {
+            headers: { "Content-Type": "application/xml", "Cache-Control": "public, max-age=3600" },
           },
-        });
+        );
       },
     },
   },

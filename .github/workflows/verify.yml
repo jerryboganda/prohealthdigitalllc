@@ -1,0 +1,29 @@
+name: Verify website
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - run: npx tsc --noEmit
+      - name: Verify production routes
+        run: |
+          PORT=3100 HOST=127.0.0.1 node .output/server/index.mjs &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          for i in $(seq 1 20); do
+            if curl --fail --silent http://127.0.0.1:3100/api/health > /dev/null; then break; fi
+            sleep 1
+          done
+          npm run check:routes

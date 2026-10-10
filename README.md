@@ -40,3 +40,11 @@ npm start
 ```
 
 Set `PORT` and `HOST` in the hosting environment to configure the listening address.
+
+## Bilingual services and inquiries
+
+The website presents four scoped healthcare technology engagements in English and Arabic. Shared copy is in `src/lib/content.ts`; Arabic routes use `/ar`. Old service/package/product URLs permanently redirect to the current sections.
+
+Project inquiries use `/api/inquiries`, bounded Zod validation, authenticated SMTP, honeypot and proxy-authenticated rate limiting. Success requires mail-server acceptance. Credentials belong only in the private VPS environment; use `deploy/configure-mail.ps1` for the Hostinger sales mailbox.
+
+Run `npm test`, `npm run lint`, `npm run build`, then `npx tsc --noEmit`. With the production server running, `npm run check:routes` verifies all public pages and redirects. See [deployment and acceptance notes](deploy/OVERHAUL.md) for configuration, staging, rollback and remaining human review gates.

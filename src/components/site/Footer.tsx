@@ -60,10 +60,10 @@ export function Footer() {
               <li className="flex items-start gap-2.5">
                 <Mail className="h-4 w-4 mt-0.5 text-teal shrink-0" />
                 <a
-                  href="mailto:prohealthdigitalllc@outlook.com"
+                  href="mailto:sales@prohealthdigitalllc.com"
                   className="hover:text-white break-all"
                 >
-                  prohealthdigitalllc@outlook.com
+                  sales@prohealthdigitalllc.com
                 </a>
               </li>
               <li className="flex items-start gap-2.5">
@@ -94,21 +94,21 @@ export function Footer() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2">
             <div>© {new Date().getFullYear()} ProHealth Digital LLC. All rights reserved.</div>
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-              <Link to="/privacy" className="hover:text-white">
+              <a href="/privacy" className="hover:text-white">
                 Privacy
-              </Link>
-              <Link to="/terms" className="hover:text-white">
+              </a>
+              <a href="/terms" className="hover:text-white">
                 Terms
-              </Link>
-              <Link to="/refunds" className="hover:text-white">
+              </a>
+              <a href="/refunds" className="hover:text-white">
                 Refunds
-              </Link>
-              <Link to="/cookies" className="hover:text-white">
+              </a>
+              <a href="/cookies" className="hover:text-white">
                 Cookies
-              </Link>
-              <Link to="/delivery" className="hover:text-white">
+              </a>
+              <a href="/delivery" className="hover:text-white">
                 Delivery
-              </Link>
+              </a>
             </div>
           </div>
         </div>
@@ -124,9 +124,9 @@ function FooterCol({ title, links }: { title: string; links: { to: string; label
       <ul className="mt-5 space-y-2.5 text-[13.5px]">
         {links.map((l) => (
           <li key={l.to}>
-            <Link to={l.to} className="hover:text-white transition-colors">
+            <a href={l.to} className="hover:text-white transition-colors">
               {l.label}
-            </Link>
+            </a>
           </li>
         ))}
       </ul>

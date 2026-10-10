@@ -36,12 +36,12 @@ export function CookieConsent() {
             <h4 className="font-display font-semibold text-[14.5px]">Cookie Preferences</h4>
             <p className="text-[13px] text-muted-foreground leading-relaxed">
               We use cookies to optimize site navigation and analyze website traffic. Read our{" "}
-              <Link
-                to="/cookies"
+              <a
+                href="/cookies"
                 className="underline underline-offset-2 hover:text-royal transition-colors"
               >
                 Cookie Policy
-              </Link>{" "}
+              </a>{" "}
               to learn more.
             </p>
           </div>

@@ -9,79 +9,31 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AboutRouteImport } from './routes/about'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as CookiesRouteImport } from './routes/cookies'
-import { Route as DeliveryRouteImport } from './routes/delivery'
-import { Route as DigitalProductsRouteImport } from './routes/digital-products'
-import { Route as FaqRouteImport } from './routes/faq'
-import { Route as PackagesRouteImport } from './routes/packages'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as RefundsRouteImport } from './routes/refunds'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
-import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as TermsRouteImport } from './routes/terms'
+import { Route as ApiHealthRouteImport } from './routes/api.health'
+import { Route as ApiInquiriesRouteImport } from './routes/api.inquiries'
+import { Route as Char123LocaleChar125IndexRouteImport } from './routes/{-$locale}.index'
+import { Route as Char123LocaleChar125AboutRouteImport } from './routes/{-$locale}.about'
+import { Route as Char123LocaleChar125ContactRouteImport } from './routes/{-$locale}.contact'
+import { Route as Char123LocaleChar125CookiesRouteImport } from './routes/{-$locale}.cookies'
+import { Route as Char123LocaleChar125DeliveryRouteImport } from './routes/{-$locale}.delivery'
+import { Route as Char123LocaleChar125DigitalProductsRouteImport } from './routes/{-$locale}.digital-products'
+import { Route as Char123LocaleChar125FaqRouteImport } from './routes/{-$locale}.faq'
+import { Route as Char123LocaleChar125PackagesRouteImport } from './routes/{-$locale}.packages'
+import { Route as Char123LocaleChar125PrivacyRouteImport } from './routes/{-$locale}.privacy'
+import { Route as Char123LocaleChar125RefundsRouteImport } from './routes/{-$locale}.refunds'
+import { Route as Char123LocaleChar125ServicesRouteImport } from './routes/{-$locale}.services'
+import { Route as Char123LocaleChar125TermsRouteImport } from './routes/{-$locale}.terms'
+import { Route as Char123LocaleChar125HowWeWorkIndexRouteImport } from './routes/{-$locale}.how-we-work.index'
+import { Route as Char123LocaleChar125SolutionsIndexRouteImport } from './routes/{-$locale}.solutions.index'
+import { Route as Char123LocaleChar125SolutionsSlugRouteImport } from './routes/{-$locale}.solutions.$slug'
+import { Route as Char123LocaleChar125WorkIndexRouteImport } from './routes/{-$locale}.work.index'
+import { Route as Char123LocaleChar125WorkSlugRouteImport } from './routes/{-$locale}.work.$slug'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CookiesRoute = CookiesRouteImport.update({
-  id: '/cookies',
-  path: '/cookies',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DeliveryRoute = DeliveryRouteImport.update({
-  id: '/delivery',
-  path: '/delivery',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DigitalProductsRoute = DigitalProductsRouteImport.update({
-  id: '/digital-products',
-  path: '/digital-products',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FaqRoute = FaqRouteImport.update({
-  id: '/faq',
-  path: '/faq',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PackagesRoute = PackagesRouteImport.update({
-  id: '/packages',
-  path: '/packages',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RefundsRoute = RefundsRouteImport.update({
-  id: '/refunds',
-  path: '/refunds',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   id: '/robots.txt',
   path: '/robots.txt',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ServicesRoute = ServicesRouteImport.update({
-  id: '/services',
-  path: '/services',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -89,213 +41,291 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TermsRoute = TermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
+const ApiHealthRoute = ApiHealthRouteImport.update({
+  id: '/api/health',
+  path: '/api/health',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiInquiriesRoute = ApiInquiriesRouteImport.update({
+  id: '/api/inquiries',
+  path: '/api/inquiries',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Char123LocaleChar125IndexRoute =
+  Char123LocaleChar125IndexRouteImport.update({
+    id: '/{-$locale}/',
+    path: '/{-$locale}/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char123LocaleChar125AboutRoute =
+  Char123LocaleChar125AboutRouteImport.update({
+    id: '/{-$locale}/about',
+    path: '/{-$locale}/about',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char123LocaleChar125ContactRoute =
+  Char123LocaleChar125ContactRouteImport.update({
+    id: '/{-$locale}/contact',
+    path: '/{-$locale}/contact',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char123LocaleChar125CookiesRoute =
+  Char123LocaleChar125CookiesRouteImport.update({
+    id: '/{-$locale}/cookies',
+    path: '/{-$locale}/cookies',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char123LocaleChar125DeliveryRoute =
+  Char123LocaleChar125DeliveryRouteImport.update({
+    id: '/{-$locale}/delivery',
+    path: '/{-$locale}/delivery',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char123LocaleChar125DigitalProductsRoute =
+  Char123LocaleChar125DigitalProductsRouteImport.update({
+    id: '/{-$locale}/digital-products',
+    path: '/{-$locale}/digital-products',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char123LocaleChar125FaqRoute = Char123LocaleChar125FaqRouteImport.update({
+  id: '/{-$locale}/faq',
+  path: '/{-$locale}/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Char123LocaleChar125PackagesRoute =
+  Char123LocaleChar125PackagesRouteImport.update({
+    id: '/{-$locale}/packages',
+    path: '/{-$locale}/packages',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char123LocaleChar125PrivacyRoute =
+  Char123LocaleChar125PrivacyRouteImport.update({
+    id: '/{-$locale}/privacy',
+    path: '/{-$locale}/privacy',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char123LocaleChar125RefundsRoute =
+  Char123LocaleChar125RefundsRouteImport.update({
+    id: '/{-$locale}/refunds',
+    path: '/{-$locale}/refunds',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char123LocaleChar125ServicesRoute =
+  Char123LocaleChar125ServicesRouteImport.update({
+    id: '/{-$locale}/services',
+    path: '/{-$locale}/services',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char123LocaleChar125TermsRoute =
+  Char123LocaleChar125TermsRouteImport.update({
+    id: '/{-$locale}/terms',
+    path: '/{-$locale}/terms',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char123LocaleChar125HowWeWorkIndexRoute =
+  Char123LocaleChar125HowWeWorkIndexRouteImport.update({
+    id: '/{-$locale}/how-we-work/',
+    path: '/{-$locale}/how-we-work/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char123LocaleChar125SolutionsIndexRoute =
+  Char123LocaleChar125SolutionsIndexRouteImport.update({
+    id: '/{-$locale}/solutions/',
+    path: '/{-$locale}/solutions/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char123LocaleChar125SolutionsSlugRoute =
+  Char123LocaleChar125SolutionsSlugRouteImport.update({
+    id: '/{-$locale}/solutions/$slug',
+    path: '/{-$locale}/solutions/$slug',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char123LocaleChar125WorkIndexRoute =
+  Char123LocaleChar125WorkIndexRouteImport.update({
+    id: '/{-$locale}/work/',
+    path: '/{-$locale}/work/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char123LocaleChar125WorkSlugRoute =
+  Char123LocaleChar125WorkSlugRouteImport.update({
+    id: '/{-$locale}/work/$slug',
+    path: '/{-$locale}/work/$slug',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/contact': typeof ContactRoute
-  '/cookies': typeof CookiesRoute
-  '/delivery': typeof DeliveryRoute
-  '/digital-products': typeof DigitalProductsRoute
-  '/faq': typeof FaqRoute
-  '/packages': typeof PackagesRoute
-  '/privacy': typeof PrivacyRoute
-  '/refunds': typeof RefundsRoute
   '/robots.txt': typeof RobotsDottxtRoute
-  '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/terms': typeof TermsRoute
+  '/api/health': typeof ApiHealthRoute
+  '/api/inquiries': typeof ApiInquiriesRoute
+  '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
+  '/{-$locale}/contact': typeof Char123LocaleChar125ContactRoute
+  '/{-$locale}/cookies': typeof Char123LocaleChar125CookiesRoute
+  '/{-$locale}/delivery': typeof Char123LocaleChar125DeliveryRoute
+  '/{-$locale}/digital-products': typeof Char123LocaleChar125DigitalProductsRoute
+  '/{-$locale}/faq': typeof Char123LocaleChar125FaqRoute
+  '/{-$locale}/packages': typeof Char123LocaleChar125PackagesRoute
+  '/{-$locale}/privacy': typeof Char123LocaleChar125PrivacyRoute
+  '/{-$locale}/refunds': typeof Char123LocaleChar125RefundsRoute
+  '/{-$locale}/services': typeof Char123LocaleChar125ServicesRoute
+  '/{-$locale}/terms': typeof Char123LocaleChar125TermsRoute
+  '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
+  '/{-$locale}/solutions/$slug': typeof Char123LocaleChar125SolutionsSlugRoute
+  '/{-$locale}/work/$slug': typeof Char123LocaleChar125WorkSlugRoute
+  '/{-$locale}/how-we-work/': typeof Char123LocaleChar125HowWeWorkIndexRoute
+  '/{-$locale}/solutions/': typeof Char123LocaleChar125SolutionsIndexRoute
+  '/{-$locale}/work/': typeof Char123LocaleChar125WorkIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/contact': typeof ContactRoute
-  '/cookies': typeof CookiesRoute
-  '/delivery': typeof DeliveryRoute
-  '/digital-products': typeof DigitalProductsRoute
-  '/faq': typeof FaqRoute
-  '/packages': typeof PackagesRoute
-  '/privacy': typeof PrivacyRoute
-  '/refunds': typeof RefundsRoute
   '/robots.txt': typeof RobotsDottxtRoute
-  '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/terms': typeof TermsRoute
+  '/api/health': typeof ApiHealthRoute
+  '/api/inquiries': typeof ApiInquiriesRoute
+  '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
+  '/{-$locale}/contact': typeof Char123LocaleChar125ContactRoute
+  '/{-$locale}/cookies': typeof Char123LocaleChar125CookiesRoute
+  '/{-$locale}/delivery': typeof Char123LocaleChar125DeliveryRoute
+  '/{-$locale}/digital-products': typeof Char123LocaleChar125DigitalProductsRoute
+  '/{-$locale}/faq': typeof Char123LocaleChar125FaqRoute
+  '/{-$locale}/packages': typeof Char123LocaleChar125PackagesRoute
+  '/{-$locale}/privacy': typeof Char123LocaleChar125PrivacyRoute
+  '/{-$locale}/refunds': typeof Char123LocaleChar125RefundsRoute
+  '/{-$locale}/services': typeof Char123LocaleChar125ServicesRoute
+  '/{-$locale}/terms': typeof Char123LocaleChar125TermsRoute
+  '/{-$locale}': typeof Char123LocaleChar125IndexRoute
+  '/{-$locale}/solutions/$slug': typeof Char123LocaleChar125SolutionsSlugRoute
+  '/{-$locale}/work/$slug': typeof Char123LocaleChar125WorkSlugRoute
+  '/{-$locale}/how-we-work': typeof Char123LocaleChar125HowWeWorkIndexRoute
+  '/{-$locale}/solutions': typeof Char123LocaleChar125SolutionsIndexRoute
+  '/{-$locale}/work': typeof Char123LocaleChar125WorkIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/contact': typeof ContactRoute
-  '/cookies': typeof CookiesRoute
-  '/delivery': typeof DeliveryRoute
-  '/digital-products': typeof DigitalProductsRoute
-  '/faq': typeof FaqRoute
-  '/packages': typeof PackagesRoute
-  '/privacy': typeof PrivacyRoute
-  '/refunds': typeof RefundsRoute
   '/robots.txt': typeof RobotsDottxtRoute
-  '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/terms': typeof TermsRoute
+  '/api/health': typeof ApiHealthRoute
+  '/api/inquiries': typeof ApiInquiriesRoute
+  '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
+  '/{-$locale}/contact': typeof Char123LocaleChar125ContactRoute
+  '/{-$locale}/cookies': typeof Char123LocaleChar125CookiesRoute
+  '/{-$locale}/delivery': typeof Char123LocaleChar125DeliveryRoute
+  '/{-$locale}/digital-products': typeof Char123LocaleChar125DigitalProductsRoute
+  '/{-$locale}/faq': typeof Char123LocaleChar125FaqRoute
+  '/{-$locale}/packages': typeof Char123LocaleChar125PackagesRoute
+  '/{-$locale}/privacy': typeof Char123LocaleChar125PrivacyRoute
+  '/{-$locale}/refunds': typeof Char123LocaleChar125RefundsRoute
+  '/{-$locale}/services': typeof Char123LocaleChar125ServicesRoute
+  '/{-$locale}/terms': typeof Char123LocaleChar125TermsRoute
+  '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
+  '/{-$locale}/solutions/$slug': typeof Char123LocaleChar125SolutionsSlugRoute
+  '/{-$locale}/work/$slug': typeof Char123LocaleChar125WorkSlugRoute
+  '/{-$locale}/how-we-work/': typeof Char123LocaleChar125HowWeWorkIndexRoute
+  '/{-$locale}/solutions/': typeof Char123LocaleChar125SolutionsIndexRoute
+  '/{-$locale}/work/': typeof Char123LocaleChar125WorkIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/about'
-    | '/contact'
-    | '/cookies'
-    | '/delivery'
-    | '/digital-products'
-    | '/faq'
-    | '/packages'
-    | '/privacy'
-    | '/refunds'
     | '/robots.txt'
-    | '/services'
     | '/sitemap.xml'
-    | '/terms'
+    | '/api/health'
+    | '/api/inquiries'
+    | '/{-$locale}/about'
+    | '/{-$locale}/contact'
+    | '/{-$locale}/cookies'
+    | '/{-$locale}/delivery'
+    | '/{-$locale}/digital-products'
+    | '/{-$locale}/faq'
+    | '/{-$locale}/packages'
+    | '/{-$locale}/privacy'
+    | '/{-$locale}/refunds'
+    | '/{-$locale}/services'
+    | '/{-$locale}/terms'
+    | '/{-$locale}/'
+    | '/{-$locale}/solutions/$slug'
+    | '/{-$locale}/work/$slug'
+    | '/{-$locale}/how-we-work/'
+    | '/{-$locale}/solutions/'
+    | '/{-$locale}/work/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
-    | '/about'
-    | '/contact'
-    | '/cookies'
-    | '/delivery'
-    | '/digital-products'
-    | '/faq'
-    | '/packages'
-    | '/privacy'
-    | '/refunds'
     | '/robots.txt'
-    | '/services'
     | '/sitemap.xml'
-    | '/terms'
+    | '/api/health'
+    | '/api/inquiries'
+    | '/{-$locale}/about'
+    | '/{-$locale}/contact'
+    | '/{-$locale}/cookies'
+    | '/{-$locale}/delivery'
+    | '/{-$locale}/digital-products'
+    | '/{-$locale}/faq'
+    | '/{-$locale}/packages'
+    | '/{-$locale}/privacy'
+    | '/{-$locale}/refunds'
+    | '/{-$locale}/services'
+    | '/{-$locale}/terms'
+    | '/{-$locale}'
+    | '/{-$locale}/solutions/$slug'
+    | '/{-$locale}/work/$slug'
+    | '/{-$locale}/how-we-work'
+    | '/{-$locale}/solutions'
+    | '/{-$locale}/work'
   id:
     | '__root__'
-    | '/'
-    | '/about'
-    | '/contact'
-    | '/cookies'
-    | '/delivery'
-    | '/digital-products'
-    | '/faq'
-    | '/packages'
-    | '/privacy'
-    | '/refunds'
     | '/robots.txt'
-    | '/services'
     | '/sitemap.xml'
-    | '/terms'
+    | '/api/health'
+    | '/api/inquiries'
+    | '/{-$locale}/about'
+    | '/{-$locale}/contact'
+    | '/{-$locale}/cookies'
+    | '/{-$locale}/delivery'
+    | '/{-$locale}/digital-products'
+    | '/{-$locale}/faq'
+    | '/{-$locale}/packages'
+    | '/{-$locale}/privacy'
+    | '/{-$locale}/refunds'
+    | '/{-$locale}/services'
+    | '/{-$locale}/terms'
+    | '/{-$locale}/'
+    | '/{-$locale}/solutions/$slug'
+    | '/{-$locale}/work/$slug'
+    | '/{-$locale}/how-we-work/'
+    | '/{-$locale}/solutions/'
+    | '/{-$locale}/work/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
-  ContactRoute: typeof ContactRoute
-  CookiesRoute: typeof CookiesRoute
-  DeliveryRoute: typeof DeliveryRoute
-  DigitalProductsRoute: typeof DigitalProductsRoute
-  FaqRoute: typeof FaqRoute
-  PackagesRoute: typeof PackagesRoute
-  PrivacyRoute: typeof PrivacyRoute
-  RefundsRoute: typeof RefundsRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
-  ServicesRoute: typeof ServicesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  TermsRoute: typeof TermsRoute
+  ApiHealthRoute: typeof ApiHealthRoute
+  ApiInquiriesRoute: typeof ApiInquiriesRoute
+  Char123LocaleChar125AboutRoute: typeof Char123LocaleChar125AboutRoute
+  Char123LocaleChar125ContactRoute: typeof Char123LocaleChar125ContactRoute
+  Char123LocaleChar125CookiesRoute: typeof Char123LocaleChar125CookiesRoute
+  Char123LocaleChar125DeliveryRoute: typeof Char123LocaleChar125DeliveryRoute
+  Char123LocaleChar125DigitalProductsRoute: typeof Char123LocaleChar125DigitalProductsRoute
+  Char123LocaleChar125FaqRoute: typeof Char123LocaleChar125FaqRoute
+  Char123LocaleChar125PackagesRoute: typeof Char123LocaleChar125PackagesRoute
+  Char123LocaleChar125PrivacyRoute: typeof Char123LocaleChar125PrivacyRoute
+  Char123LocaleChar125RefundsRoute: typeof Char123LocaleChar125RefundsRoute
+  Char123LocaleChar125ServicesRoute: typeof Char123LocaleChar125ServicesRoute
+  Char123LocaleChar125TermsRoute: typeof Char123LocaleChar125TermsRoute
+  Char123LocaleChar125IndexRoute: typeof Char123LocaleChar125IndexRoute
+  Char123LocaleChar125SolutionsSlugRoute: typeof Char123LocaleChar125SolutionsSlugRoute
+  Char123LocaleChar125WorkSlugRoute: typeof Char123LocaleChar125WorkSlugRoute
+  Char123LocaleChar125HowWeWorkIndexRoute: typeof Char123LocaleChar125HowWeWorkIndexRoute
+  Char123LocaleChar125SolutionsIndexRoute: typeof Char123LocaleChar125SolutionsIndexRoute
+  Char123LocaleChar125WorkIndexRoute: typeof Char123LocaleChar125WorkIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cookies': {
-      id: '/cookies'
-      path: '/cookies'
-      fullPath: '/cookies'
-      preLoaderRoute: typeof CookiesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/delivery': {
-      id: '/delivery'
-      path: '/delivery'
-      fullPath: '/delivery'
-      preLoaderRoute: typeof DeliveryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/digital-products': {
-      id: '/digital-products'
-      path: '/digital-products'
-      fullPath: '/digital-products'
-      preLoaderRoute: typeof DigitalProductsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/faq': {
-      id: '/faq'
-      path: '/faq'
-      fullPath: '/faq'
-      preLoaderRoute: typeof FaqRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/packages': {
-      id: '/packages'
-      path: '/packages'
-      fullPath: '/packages'
-      preLoaderRoute: typeof PackagesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/refunds': {
-      id: '/refunds'
-      path: '/refunds'
-      fullPath: '/refunds'
-      preLoaderRoute: typeof RefundsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/robots.txt': {
       id: '/robots.txt'
       path: '/robots.txt'
       fullPath: '/robots.txt'
       preLoaderRoute: typeof RobotsDottxtRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/services': {
-      id: '/services'
-      path: '/services'
-      fullPath: '/services'
-      preLoaderRoute: typeof ServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -305,31 +335,168 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/terms': {
-      id: '/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof TermsRouteImport
+    '/api/health': {
+      id: '/api/health'
+      path: '/api/health'
+      fullPath: '/api/health'
+      preLoaderRoute: typeof ApiHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/inquiries': {
+      id: '/api/inquiries'
+      path: '/api/inquiries'
+      fullPath: '/api/inquiries'
+      preLoaderRoute: typeof ApiInquiriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/{-$locale}/': {
+      id: '/{-$locale}/'
+      path: '/{-$locale}'
+      fullPath: '/{-$locale}/'
+      preLoaderRoute: typeof Char123LocaleChar125IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/{-$locale}/about': {
+      id: '/{-$locale}/about'
+      path: '/{-$locale}/about'
+      fullPath: '/{-$locale}/about'
+      preLoaderRoute: typeof Char123LocaleChar125AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/{-$locale}/contact': {
+      id: '/{-$locale}/contact'
+      path: '/{-$locale}/contact'
+      fullPath: '/{-$locale}/contact'
+      preLoaderRoute: typeof Char123LocaleChar125ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/{-$locale}/cookies': {
+      id: '/{-$locale}/cookies'
+      path: '/{-$locale}/cookies'
+      fullPath: '/{-$locale}/cookies'
+      preLoaderRoute: typeof Char123LocaleChar125CookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/{-$locale}/delivery': {
+      id: '/{-$locale}/delivery'
+      path: '/{-$locale}/delivery'
+      fullPath: '/{-$locale}/delivery'
+      preLoaderRoute: typeof Char123LocaleChar125DeliveryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/{-$locale}/digital-products': {
+      id: '/{-$locale}/digital-products'
+      path: '/{-$locale}/digital-products'
+      fullPath: '/{-$locale}/digital-products'
+      preLoaderRoute: typeof Char123LocaleChar125DigitalProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/{-$locale}/faq': {
+      id: '/{-$locale}/faq'
+      path: '/{-$locale}/faq'
+      fullPath: '/{-$locale}/faq'
+      preLoaderRoute: typeof Char123LocaleChar125FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/{-$locale}/packages': {
+      id: '/{-$locale}/packages'
+      path: '/{-$locale}/packages'
+      fullPath: '/{-$locale}/packages'
+      preLoaderRoute: typeof Char123LocaleChar125PackagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/{-$locale}/privacy': {
+      id: '/{-$locale}/privacy'
+      path: '/{-$locale}/privacy'
+      fullPath: '/{-$locale}/privacy'
+      preLoaderRoute: typeof Char123LocaleChar125PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/{-$locale}/refunds': {
+      id: '/{-$locale}/refunds'
+      path: '/{-$locale}/refunds'
+      fullPath: '/{-$locale}/refunds'
+      preLoaderRoute: typeof Char123LocaleChar125RefundsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/{-$locale}/services': {
+      id: '/{-$locale}/services'
+      path: '/{-$locale}/services'
+      fullPath: '/{-$locale}/services'
+      preLoaderRoute: typeof Char123LocaleChar125ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/{-$locale}/terms': {
+      id: '/{-$locale}/terms'
+      path: '/{-$locale}/terms'
+      fullPath: '/{-$locale}/terms'
+      preLoaderRoute: typeof Char123LocaleChar125TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/{-$locale}/how-we-work/': {
+      id: '/{-$locale}/how-we-work/'
+      path: '/{-$locale}/how-we-work'
+      fullPath: '/{-$locale}/how-we-work/'
+      preLoaderRoute: typeof Char123LocaleChar125HowWeWorkIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/{-$locale}/solutions/': {
+      id: '/{-$locale}/solutions/'
+      path: '/{-$locale}/solutions'
+      fullPath: '/{-$locale}/solutions/'
+      preLoaderRoute: typeof Char123LocaleChar125SolutionsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/{-$locale}/solutions/$slug': {
+      id: '/{-$locale}/solutions/$slug'
+      path: '/{-$locale}/solutions/$slug'
+      fullPath: '/{-$locale}/solutions/$slug'
+      preLoaderRoute: typeof Char123LocaleChar125SolutionsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/{-$locale}/work/': {
+      id: '/{-$locale}/work/'
+      path: '/{-$locale}/work'
+      fullPath: '/{-$locale}/work/'
+      preLoaderRoute: typeof Char123LocaleChar125WorkIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/{-$locale}/work/$slug': {
+      id: '/{-$locale}/work/$slug'
+      path: '/{-$locale}/work/$slug'
+      fullPath: '/{-$locale}/work/$slug'
+      preLoaderRoute: typeof Char123LocaleChar125WorkSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
-  ContactRoute: ContactRoute,
-  CookiesRoute: CookiesRoute,
-  DeliveryRoute: DeliveryRoute,
-  DigitalProductsRoute: DigitalProductsRoute,
-  FaqRoute: FaqRoute,
-  PackagesRoute: PackagesRoute,
-  PrivacyRoute: PrivacyRoute,
-  RefundsRoute: RefundsRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
-  ServicesRoute: ServicesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  TermsRoute: TermsRoute,
+  ApiHealthRoute: ApiHealthRoute,
+  ApiInquiriesRoute: ApiInquiriesRoute,
+  Char123LocaleChar125AboutRoute: Char123LocaleChar125AboutRoute,
+  Char123LocaleChar125ContactRoute: Char123LocaleChar125ContactRoute,
+  Char123LocaleChar125CookiesRoute: Char123LocaleChar125CookiesRoute,
+  Char123LocaleChar125DeliveryRoute: Char123LocaleChar125DeliveryRoute,
+  Char123LocaleChar125DigitalProductsRoute:
+    Char123LocaleChar125DigitalProductsRoute,
+  Char123LocaleChar125FaqRoute: Char123LocaleChar125FaqRoute,
+  Char123LocaleChar125PackagesRoute: Char123LocaleChar125PackagesRoute,
+  Char123LocaleChar125PrivacyRoute: Char123LocaleChar125PrivacyRoute,
+  Char123LocaleChar125RefundsRoute: Char123LocaleChar125RefundsRoute,
+  Char123LocaleChar125ServicesRoute: Char123LocaleChar125ServicesRoute,
+  Char123LocaleChar125TermsRoute: Char123LocaleChar125TermsRoute,
+  Char123LocaleChar125IndexRoute: Char123LocaleChar125IndexRoute,
+  Char123LocaleChar125SolutionsSlugRoute:
+    Char123LocaleChar125SolutionsSlugRoute,
+  Char123LocaleChar125WorkSlugRoute: Char123LocaleChar125WorkSlugRoute,
+  Char123LocaleChar125HowWeWorkIndexRoute:
+    Char123LocaleChar125HowWeWorkIndexRoute,
+  Char123LocaleChar125SolutionsIndexRoute:
+    Char123LocaleChar125SolutionsIndexRoute,
+  Char123LocaleChar125WorkIndexRoute: Char123LocaleChar125WorkIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

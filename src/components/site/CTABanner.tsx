@@ -31,18 +31,18 @@ export function CTABanner({
             {body}
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-3">
-            <Link
-              to={primaryTo}
+            <a
+              href={primaryTo}
               className="inline-flex items-center gap-2 bg-white text-navy px-5 py-3 rounded-md font-medium text-[14px] hover:bg-teal hover:text-white transition-colors"
             >
               {primaryLabel} <ArrowUpRight className="h-4 w-4" />
-            </Link>
-            <Link
-              to={secondaryTo}
+            </a>
+            <a
+              href={secondaryTo}
               className="inline-flex items-center gap-2 border border-white/20 text-white px-5 py-3 rounded-md font-medium text-[14px] hover:bg-white/10 transition-colors"
             >
               {secondaryLabel}
-            </Link>
+            </a>
           </div>
         </div>
       </div>
