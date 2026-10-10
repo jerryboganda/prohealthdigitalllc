@@ -31,4 +31,4 @@ To compile the application for production deployment:
 npm run build
 ```
 
-This creates a highly optimised build output in `.output` configured for cloud deployments.
+This creates a production build in `.vercel/output` configured for Vercel deployments.

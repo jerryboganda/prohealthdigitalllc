@@ -1,7 +1,20 @@
 export function reportError(error: unknown, context: Record<string, unknown> = {}) {
   // In development, error reporting is forwarded to diagnostic tools if present.
   if (typeof window !== "undefined") {
-    const win = window as any;
+    const win = window as Window & {
+      __events?: {
+        captureException?: (
+          error: unknown,
+          context: Record<string, unknown>,
+          options: Record<string, unknown>,
+        ) => void;
+      };
+      __reportRuntimeError?: (details: {
+        message: string;
+        stack?: string;
+        filename: string;
+      }) => void;
+    };
     win.__events?.captureException?.(
       error,
       {
