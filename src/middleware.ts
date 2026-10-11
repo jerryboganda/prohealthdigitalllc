@@ -28,12 +28,16 @@ const securityHeaders: Record<string, string> = {
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const { pathname, search } = context.url;
-  // One canonical form per page: strip trailing slashes with a permanent redirect.
-  if (pathname.length > 1 && pathname.endsWith("/"))
+  // One canonical form per page: strip trailing slashes with a permanent redirect. Leading
+  // slashes are collapsed too, so "//evil.example/" can never become a protocol-relative
+  // (off-site) Location.
+  if (pathname.length > 1 && pathname.endsWith("/")) {
+    const target = "/" + pathname.replace(/^\/+/, "").replace(/\/+$/, "");
     return new Response(null, {
       status: 301,
-      headers: { Location: pathname.replace(/\/+$/, "") + search, ...securityHeaders },
+      headers: { Location: target + search, ...securityHeaders },
     });
+  }
   const response = await next();
   const headers = new Headers(response.headers);
   for (const [key, value] of Object.entries(securityHeaders))

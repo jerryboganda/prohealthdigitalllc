@@ -94,6 +94,11 @@ for (const [old, target] of [
   const response = await fetch(base + "/about/", { redirect: "manual" });
   assert.equal(response.status, 301, "trailing slash");
   assert.equal(response.headers.get("location"), "/about");
+  for (const evil of ["//evil.example/", "///evil.example/", "/%2F%2Fevil.example/"]) {
+    const r = await fetch(base + evil, { redirect: "manual" });
+    const location = r.headers.get("location") || "";
+    assert.ok(!/^(\/\/|\\)|^https?:/i.test(location), `open redirect via ${evil}: ${location}`);
+  }
 }
 for (const path of [
   "/unknown",
