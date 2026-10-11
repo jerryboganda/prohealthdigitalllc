@@ -18,6 +18,7 @@ import NotFound from "../views/NotFound.astro";
 import { resolve } from "../lib/routes.ts";
 import { engagements, projects, faqs, policies } from "../lib/content.ts";
 import { audiences } from "../lib/audiences.ts";
+import { engagementDetails } from "../lib/engagement-details.ts";
 import { glossary } from "../lib/glossary.ts";
 import { meta, clip } from "../lib/meta.ts";
 import { nav } from "../lib/copy.ts";
@@ -76,7 +77,7 @@ if (route.kind === "missing") {
         { name: e.title[locale], path: route.path },
       ];
       schema.push(ld.service(e, locale));
-      if (e.faqs?.length) schema.push(ld.faqPage(e.faqs, locale, route.path));
+      schema.push(ld.faqPage(engagementDetails[e.id].faqs, locale, route.path));
       break;
     }
     case "work":

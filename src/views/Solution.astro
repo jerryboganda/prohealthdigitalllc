@@ -8,6 +8,7 @@ import { engagements, localPath, ui, stages } from "../lib/content.ts";
 import type { Engagement, Locale } from "../lib/content.ts";
 import { nav, pages, common } from "../lib/copy.ts";
 import { entriesFor } from "../site/collections.ts";
+import { engagementDetails } from "../lib/engagement-details.ts";
 
 interface Props {
   locale: Locale;
@@ -23,7 +24,9 @@ const sections = [
   { id: "measures", title: t("measures"), body: [e.measures[locale]] },
   { id: "after", title: t("after"), body: [e.after[locale], t("supportBody")] },
 ];
-const phases = e.phases ?? [];
+const details = engagementDetails[e.id];
+const phases = details.phases;
+const engagementFaqs = details.faqs;
 const related = engagements.filter((x) => x.id !== e.id && x.audience === e.audience);
 const reading = (await entriesFor("insights", locale))
   .filter((a) => a.data.engagements.includes(e.id))
@@ -62,10 +65,10 @@ const audienceName = e.audience === "provider" ? ui.providers[locale] : ui.compa
         ))}
         {phases.length > 0 && (
           <li>
-            <a href="#phases">{e.phasesTitle?.[locale]}</a>
+            <a href="#phases">{details.phasesTitle[locale]}</a>
           </li>
         )}
-        {(e.faqs?.length ?? 0) > 0 && (
+        {engagementFaqs.length > 0 && (
           <li>
             <a href="#questions">{nav.faq[locale]}</a>
           </li>
@@ -95,7 +98,7 @@ const audienceName = e.audience === "provider" ? ui.providers[locale] : ui.compa
       ))}
       {phases.length > 0 && (
         <section id="phases" class="detail-section" data-reveal>
-          <h2>{e.phasesTitle?.[locale]}</h2>
+          <h2>{details.phasesTitle[locale]}</h2>
           <ol class="phase-list">
             {phases.map((p, i) => (
               <li>
@@ -111,10 +114,10 @@ const audienceName = e.audience === "provider" ? ui.providers[locale] : ui.compa
           </ol>
         </section>
       )}
-      {(e.faqs?.length ?? 0) > 0 && (
+      {engagementFaqs.length > 0 && (
         <section id="questions" class="detail-section">
           <h2>{nav.faq[locale]}</h2>
-          <FaqList locale={locale} items={e.faqs!} />
+          <FaqList locale={locale} items={engagementFaqs} />
         </section>
       )}
     </div>

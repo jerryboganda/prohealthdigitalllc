@@ -1,25 +1,30 @@
-# Motion & video toolkit
+# ProHealth Digital site
 
-73 motion/video skills live in `.claude/skills/` (auto-triggered by description). Third-party support files for some skills are in `.claude/vendor/` — skills that cite `sfx/`, `sims/`, `scripts/` mean `.claude/vendor/claude-motion/…` or `.claude/vendor/motion-design-skills/scripts/`.
-
-Installed libraries: `motion`, `gsap` + `@gsap/react`, `lottie-web`, `remotion` + `@remotion/player`, `hyperframes` (dev, CLI: `npx hyperframes doctor|init|lint|preview|render`).
-
-## Which skill for what
-
-| Task | Use |
-| --- | --- |
-| On-site UI motion (this React 19 / TanStack Start app) | `motion-dev-animations` (Motion), `gsap-core` / `gsap-react` / `gsap-scrolltrigger` / `gsap-timeline`, `lottiefiles-motion-design`, `motion-background`, `animation-principles` |
-| Motion direction / audit of the site | `motion-director`, `site-motion-excellence-director`, `web-motion-auditor`, `motion-art-direction` |
-| Remotion video | `remotion-best-practices` (router), `remotion-motion-graphics`, `klik-remotion-method` → `klik-anim` + `klik-cam`, `claude-motion-design`, `review-loop`, `sound-design` |
-| HyperFrames HTML video | `motion-doctrine` first, then `hyperframes`, `hyperframes-cli`, `hyperframes-registry`, `make-a-video`, `website-to-hyperframes`, `edit-video`, `short-form-edit` |
-| Launch / promo / reel | `product-launch-motion`, `launch-video`, `apple-launch-film`, `motion-showreel`, `hyperframes-motion-reel`, `reel-export` |
-| Procedural canvas video with score | `animate` |
-| Logo / brand / color | `logo-animation`, `color-motion`, `brand-intake` |
+Astro 7 + `@astrojs/node` (standalone), Tailwind 4, GSAP, MDX. Bilingual EN (root) / AR (`/ar`, RTL). See `README.md` for structure and `deploy/OVERHAUL.md` for release rules.
 
 ## Rules for this project
 
-- Production site code (`src/`) uses Motion or GSAP; every animation must honour `prefers-reduced-motion`.
-- The site sets `dir`/`lang` (see `src/routes/__root.tsx`): mirror horizontal motion for RTL.
-- Video projects live outside `src/`. `video/` is the Remotion workspace (own `package.json`, `@remotion/cli` + `@remotion/renderer`; `cd video && npx remotion studio src/index.ts`). Render with `--browser-executable` pointing at system Chrome if no headless shell is cached.
-- `.claude/` is excluded from eslint/prettier on purpose (third-party content).
-- Video rendering needs FFmpeg on PATH; run `npx hyperframes doctor` to check the toolchain.
+- Routing: every URL goes through `src/lib/routes.ts` (framework-free, unit-tested) and `src/pages/[...path].astro`. New public pages must be added to `resolve()` and `allPaths()`; `check:routes` and the sitemap derive from them.
+- Copy: every visible string is a `text(en, ar)` pair in `src/lib/*.ts`, or an MDX file in BOTH `src/content/<collection>/en` and `/ar` (unpaired slugs are not routed). `src/lib/*` must never import `astro:*` (tests run them with plain Node).
+- Truthfulness: no invented clients, numbers, testimonials, team members, guarantees or regulatory claims; facts need a primary-source link. We deliver technology; customers own clinical decisions.
+- Motion: GSAP only, through the data-attribute runtime in `src/scripts/motion.ts` (`data-reveal`, `data-reveal-stagger`, `data-split`, `data-draw`, `data-parallax`, `data-pin-track`, `data-magnetic`, `data-tilt`, `data-lottie`, `data-shader`). Content must be visible without JS and under `prefers-reduced-motion: reduce`. Multiply horizontal motion by `dir`; never split, letter-space or italicise Arabic (see `.claude/skills/prohealth-rtl`).
+- CSP is `script-src 'self'`: no inline scripts or inline event handlers; keep `vite.build.assetsInlineLimit: 0`. First-load JS budget is 180 KB (asserted).
+- Deploy parity: build must keep `.output/server/index.mjs` with bundled deps; do not change `deploy/compose.yaml` or `release.sh` without an explicit decision.
+- Verify with `npm run lint && npm test && npm run build && npx astro check`, then `check:routes` and `node scripts/visual-qa.mjs` against the built server.
+- `.claude/` and `video/` are excluded from eslint/prettier on purpose.
+
+## Motion & video toolkit
+
+~80 skills live in `.claude/skills/` (auto-triggered). Support files cited by some skills are in `.claude/vendor/`.
+
+| Task | Use |
+| --- | --- |
+| On-site motion | `gsap-core` / `gsap-scrolltrigger` / `gsap-timeline` / `gsap-plugins` / `gsap-performance`, `lottiefiles-motion-design`, `motion-background`, `animation-principles`, `threejs-shaders` |
+| Motion direction / audit | `motion-director`, `site-motion-excellence-director`, `web-motion-auditor`, `motion-art-direction` |
+| Web quality | `web-quality-audit`, `performance`, `core-web-vitals`, `accessibility`, `seo`, `best-practices`, `web-design-guidelines`, `webapp-testing` |
+| Remotion video (`video/` workspace) | `remotion-best-practices`, `remotion-motion-graphics`, `klik-remotion-method` → `klik-anim` + `klik-cam`, `claude-motion-design`, `review-loop`, `sound-design` |
+| HyperFrames video | `motion-doctrine` first, then `hyperframes`, `hyperframes-cli`, `make-a-video`, `website-to-hyperframes` |
+| Launch / promo / reel | `product-launch-motion`, `launch-video`, `apple-launch-film`, `motion-showreel`, `reel-export` |
+| Logo / brand / color | `logo-animation`, `color-motion`, `brand-intake` |
+
+Video projects live in `video/` (own `package.json`; `cd video && npx remotion studio src/index.ts`); rendering needs FFmpeg on PATH (`npx hyperframes doctor`).

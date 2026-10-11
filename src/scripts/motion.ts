@@ -56,34 +56,58 @@ lazy("[data-inquiry-form]", () => import("./inquiry-form.ts"));
 lazy("[data-lottie]", () => import("./lottie.ts"));
 
 function reveals() {
+  const pending = new Set($$("[data-reveal], [data-reveal-stagger]"));
+  const show = (el: HTMLElement) => {
+    pending.delete(el);
+    io.unobserve(el);
+    if (el.hasAttribute("data-reveal-stagger"))
+      Array.from(el.children).forEach((child, i) => {
+        (child as HTMLElement).style.transitionDelay = `${Math.min(i, 8) * 70}ms`;
+        child.classList.add("is-revealed");
+      });
+    else el.classList.add("is-revealed");
+  };
   const io = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        const el = entry.target as HTMLElement;
-        io.unobserve(el);
-        if (el.hasAttribute("data-reveal-stagger"))
-          Array.from(el.children).forEach((child, i) => {
-            (child as HTMLElement).style.transitionDelay = `${Math.min(i, 8) * 70}ms`;
-            child.classList.add("is-revealed");
-          });
-        else el.classList.add("is-revealed");
-      }
-    },
+    (entries) => entries.forEach((e) => e.isIntersecting && show(e.target as HTMLElement)),
     { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
   );
-  $$("[data-reveal], [data-reveal-stagger]").forEach((el) => io.observe(el));
-  return () => io.disconnect();
+  pending.forEach((el) => io.observe(el));
+  // Fast scrolls and anchor jumps can skip past an element between frames: reveal anything
+  // that is already above the fold line.
+  let ticking = false;
+  const sweep = () => {
+    ticking = false;
+    for (const el of pending)
+      if (el.getBoundingClientRect().top < window.innerHeight * 0.92) show(el);
+    if (!pending.size) window.removeEventListener("scroll", onScroll);
+  };
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(sweep);
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  return () => {
+    io.disconnect();
+    window.removeEventListener("scroll", onScroll);
+  };
 }
 
 function splits() {
   const splitters: SplitText[] = [];
   for (const el of $$("[data-split]")) {
-    const split = SplitText.create(el, { type: "lines", mask: "lines", linesClass: "split-line" });
+    // Arabic: no masks (Naskh dots and descenders overflow the line box) and never split
+    // below the line, so letter joining is untouched.
+    const rtl = dir < 0;
+    const split = SplitText.create(el, {
+      type: "lines",
+      mask: rtl ? undefined : "lines",
+      linesClass: "split-line",
+    });
     splitters.push(split);
     gsap.from(split.lines, {
-      yPercent: 110,
-      duration: 1.1,
+      ...(rtl ? { y: 18, opacity: 0, filter: "blur(4px)" } : { yPercent: 110 }),
+      duration: rtl ? 0.9 : 1.1,
       ease,
       stagger: 0.08,
       scrollTrigger: { trigger: el, start: "top 88%", once: true },

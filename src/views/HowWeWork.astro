@@ -49,9 +49,12 @@ const { locale } = Astro.props;
   <div class="support-glow" aria-hidden="true"></div>
   <div class="container-x relative grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-center">
     <SectionHeading eyebrow="24/7" title={ui.support[locale]} />
-    <p class="lede" data-reveal>
-      {ui.supportBody[locale]}
-    </p>
+    <div class="grid gap-6">
+      <div class="support-pulse" aria-hidden="true" data-lottie="/lottie/pulse.json"></div>
+      <p class="lede" data-reveal>
+        {ui.supportBody[locale]}
+      </p>
+    </div>
   </div>
 </section>
 
@@ -71,6 +74,13 @@ const { locale } = Astro.props;
   .proposal-num {
     font-family: var(--font-display);
     color: var(--color-teal-700);
+  }
+  .support-pulse {
+    inline-size: min(16rem, 70%);
+    aspect-ratio: 5 / 2;
+  }
+  [dir="rtl"] .support-pulse {
+    transform: scaleX(-1);
   }
   .support-glow {
     position: absolute;

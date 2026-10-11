@@ -7,6 +7,7 @@ export default async function init(el: HTMLElement) {
     import("lottie-web/build/player/lottie_light"),
     fetch(src).then((r) => r.json()),
   ]);
+  el.replaceChildren();
   const anim = lottie.loadAnimation({
     container: el,
     renderer: "svg",

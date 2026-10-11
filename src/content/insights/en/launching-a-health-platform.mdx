@@ -1,0 +1,118 @@
+---
+title: "Launching a health platform: scoping a bounded first release"
+description: "This insight explains how to scope, prepare and hand over a health platform's first release, and why launch is not proof of efficacy or approval."
+published: 2026-10-11
+updated: 2026-10-11
+audience: "digital-health-companies"
+engagements: ["platform-launch"]
+summary:
+  - "Define users, journeys and a bounded first release before design and build begin."
+  - "Keep clinical content, rules and approvals with the company, and agree sensitive-data arrangements before any build starts."
+  - "Treat release readiness as recorded evidence: testing in both languages, performance, availability, rollback and a documented handover."
+  - "Working software does not establish clinical efficacy or regulatory approval, and clinical AI needs its own assessment of intended use and oversight."
+topic: "Platform launch"
+---
+
+The first release of a digital health platform sets habits that last well beyond launch day. Scope decisions made in the first weeks shape the data model, the integrations, the support load and the documentation that later teams inherit. This note sets out how to scope and deliver a first release for a digital health or healthcare-education platform: who it serves, what it includes, who owns which decisions, what must be agreed before build, how to judge readiness, and what a launch does and does not prove.
+
+## Start with users and journeys
+
+A feature list is a poor starting point because it hides who needs what, and why. Begin with the people who will use the platform and the tasks they come to complete.
+
+### Who the platform serves
+
+List each user group separately: patients or learners, clinicians or educators, care coordinators, administrators, and your own support and operations staff. For each group, note the language and text direction they will use, the devices they rely on, the permissions they need and any accessibility needs you already know about. A platform for GCC markets usually needs Arabic and English treated as equals from the start; our note on [bilingual Arabic–English health UX](/insights/bilingual-arabic-english-health-ux) explains why.
+
+### The journeys that matter
+
+For each group, describe the few journeys the platform exists to support, end to end: signing up, booking a consultation, completing an intake form, following a course module, receiving a result or a reminder. Write each one as a sequence of steps, including what happens when something goes wrong, such as a failed payment, an expired session or a missing record. These journeys become the backbone of scope, design, testing and support.
+
+## Bound the first release
+
+A first release should do a small number of journeys well rather than many journeys partially. Bounding it is an explicit decision, recorded where everyone can see it.
+
+| Decision | What to record |
+| --- | --- |
+| In the first release | The journeys and user groups supported at launch, with acceptance criteria |
+| Deferred | Features agreed as valuable but scheduled for later releases |
+| Out of scope | Requests deliberately excluded, with the reason |
+| Integrations | Each external system, its owner, its test environment and the fallback if it is unavailable |
+| Markets and languages | Where the platform will be offered at launch, and in which languages |
+| Assumptions | Anything the plan depends on that has not yet been confirmed |
+
+The deferred and out-of-scope lists matter as much as the launch list. They protect the timeline, and they give stakeholders a clear answer when a new request arrives mid-build.
+
+## Clinical responsibilities stay with the company
+
+A digital health company delivers a service that touches care or clinical learning; a technology partner delivers the software. That division needs to be written down.
+
+The company owns, and approves, everything clinical: clinical content and educational material, care pathways, triage or escalation rules, thresholds that trigger alerts, the wording of anything a patient or clinician may act on, and the clinical governance around the service. The technology team implements what has been approved, tests that the software behaves as specified, and raises questions where a specification is ambiguous. It does not decide what is clinically correct.
+
+In practice, this means a named clinical owner, a documented approval step for clinical content and rules, and a way to trace which approved version of a rule or text is live in the platform.
+
+## Agree sensitive-data arrangements before build
+
+Health and personal data shape architecture, hosting and vendor choices, so the arrangements need to be settled before design is finalised, not retrofitted just before launch. Agree, in writing:
+
+- What personal and health data the platform will collect, and why each item is needed.
+- Where the data will be hosted and processed, and which third-party services will handle it.
+- Who can access which data, on what basis, and how that access is logged and reviewed.
+- How consent, retention, deletion and requests from data subjects will be handled.
+- How a suspected incident will be detected, escalated and reported, and by whom.
+- Which data, if any, may be used in test environments, and how it is de-identified.
+
+The applicable rules differ by market. Our note on [health data protection in the GCC and Pakistan](/insights/health-data-protection-gcc-pakistan) sets out the questions to take to your legal and compliance advisers.
+
+## Prepare for release with evidence
+
+Release readiness is a set of checks with recorded results, not a feeling that the platform is nearly there.
+
+### Testing
+
+- Test every in-scope journey against its acceptance criteria, in both languages and both text directions, across the user roles and devices your users rely on.
+- Include failure paths: invalid input, interrupted connections, unavailable integrations and expired sessions.
+- Check accessibility against [WCAG 2.2](https://www.w3.org/TR/WCAG22/), a W3C Recommendation, using automated tools as well as manual review with a keyboard and screen readers.
+- Arrange security testing proportionate to the data the platform holds, and resolve or formally accept its findings before launch.
+
+### Performance and availability
+
+Agree what acceptable performance means for the journeys that matter, measure it under realistic load, and set up monitoring and alerting before launch rather than after the first complaint. Decide what availability the service needs, what happens when a dependency is down, and who is called when something fails out of hours.
+
+### Rollback
+
+Every launch needs a written way back: how the previous state is restored, how database changes are handled, who can make that decision and how users will be told. Rehearse it at least once in a staging environment. Our [platform launch readiness checklist](/resources/platform-launch-readiness-checklist) brings these checks together.
+
+## What a launch does not establish
+
+A platform going live shows that the software has been built, tested and deployed. It does not show that the service improves health or learning outcomes, and it does not amount to regulatory approval.
+
+The regulatory points below summarise two Saudi Food and Drug Authority (SFDA) guidance documents and are current as of October 2026. They are general information, not legal or regulatory advice. Rules in other GCC markets and in Pakistan differ, and your regulatory advisers should confirm what applies to your platform in each market.
+
+### Clinical efficacy is a separate question
+
+Medical device regulators distinguish between software working correctly and software being clinically meaningful. In its [guidance on Software as a Medical Device](https://www.sfda.gov.sa/en/guide/guidance-software-medical-device) (MDS-G23, version 1.0, 2018), the SFDA adopts the principles agreed by the International Medical Device Regulators Forum (IMDRF), presenting them as considerations rather than as SFDA regulatory requirements. Those principles separate analytical validation, whether the software correctly turns input data into accurate and reliable output, from clinical validation, whether that output achieves its intended purpose in the target population in the context of clinical care. Passing release tests speaks, at most, to the first.
+
+### Intended use decides the regulatory question
+
+Under the same principles, Software as a Medical Device (SaMD) is software intended for one or more medical purposes that performs them without being part of a hardware medical device. Intended use is judged from the manufacturer's specifications, instructions and the information it provides, and the guidance notes that sales and marketing materials may count as such information. Launch copy, app-store descriptions and onboarding text are therefore part of the regulatory picture. Whether a particular platform, including a healthcare-education product, falls within a regulator's definition is a question for the company and its regulatory advisers in each market, and is best answered before scope is fixed.
+
+### Clinical AI needs its own assessment
+
+If the platform includes AI that informs diagnosis, triage, monitoring or treatment, treat it as a separate workstream. The SFDA's [guidance on AI and machine learning based medical devices](https://www.sfda.gov.sa/sites/default/files/2023-01/MDS-G010ML.pdf) (MDS-G010, version 1.0, 2022) states that intended use determines whether such technology is regulated as a medical device, expects manufacturers to provide clinical evidence of safety, effectiveness and performance before a device is placed on the Saudi market, and gives human oversight as an example of an operational risk control. The World Health Organization's [guiding principles on AI for health](https://who.int/news/item/28-06-2021-who-issues-first-global-report-on-ai-in-health-and-six-guiding-principles-for-its-design-and-use) likewise hold that humans should remain in control of health-care systems and medical decisions. Define the intended use, the clinical oversight model and the monitoring approach with your clinical and regulatory advisers before an AI component is built into the release.
+
+## Hand over documentation and ownership
+
+A first release is only finished when the company can run it without depending on any one person. Before handover, make sure the following exist and have named owners:
+
+- An architecture overview showing services, integrations and data flows.
+- Environment and configuration notes, including third-party accounts, how credentials are managed and renewal dates.
+- Runbooks for deployment, rollback, known failure modes and incident escalation.
+- The scope record, with deferred items carried into the next release plan.
+- A register of approved clinical content and rules, with the clinical owner of each.
+- Code repositories, domains, cloud accounts and app-store listings held in the company's own name.
+
+Agree how support will work after launch: who triages issues, how severity is classified, which channels and response targets apply, how escalation reaches the clinical owner when an issue touches clinical content, and what any support arrangement covers.
+
+## Where to go next
+
+If you are planning the first release of a digital health or healthcare-education platform, our [Launch a health platform](/solutions/platform-launch) engagement works through these steps with your team, from users and journeys to release readiness and handover. You can read about [how we work](/how-we-work) and, when you are ready, [get in touch](/contact) to arrange a free discovery conversation. Pricing is agreed per project once the scope is clear, and contracted 24/7 support can be arranged for the period after launch.

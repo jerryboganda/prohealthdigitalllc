@@ -27,7 +27,7 @@ const contactHref = `${localPath("/contact", locale)}?source=${encodeURIComponen
 
 <header class="site-header sticky top-0 z-50" data-header>
   <div class="header-shell transition-[background-color,box-shadow] duration-500">
-    <div class="container-x flex h-[var(--header-h)] items-center justify-between gap-6">
+    <div class="container-x flex h-[var(--header-h)] items-center justify-between gap-3 sm:gap-6">
       <Logo locale={locale} animate />
       <nav aria-label={nav.main[locale]} class="hidden items-center gap-7 lg:flex">
         {links.map(([href, label]) => (
@@ -36,7 +36,7 @@ const contactHref = `${localPath("/contact", locale)}?source=${encodeURIComponen
           </a>
         ))}
       </nav>
-      <div class="flex items-center gap-2 sm:gap-3">
+      <div class="flex shrink-0 items-center gap-1.5 sm:gap-3">
         <a
           class="lang-switch"
           href={switchHref}
@@ -45,7 +45,10 @@ const contactHref = `${localPath("/contact", locale)}?source=${encodeURIComponen
           aria-label={nav.switchTo[locale]}
         >
           <Icon name="globe" size={17} />
-          <span>{nav.languageName[other]}</span>
+          <span class="hidden min-[480px]:inline">{nav.languageName[other]}</span>
+          <span class="min-[480px]:hidden" aria-hidden="true">
+            {other === "ar" ? "ع" : "EN"}
+          </span>
         </a>
         <a
           class="btn hidden px-5 py-3 text-[0.95rem] xl:inline-flex"
@@ -107,7 +110,7 @@ const contactHref = `${localPath("/contact", locale)}?source=${encodeURIComponen
     align-items: center;
     gap: 0.4rem;
     min-height: 2.75rem;
-    padding: 0.5rem 0.9rem;
+    padding: 0.5rem clamp(0.65rem, 0.4rem + 1vw, 0.9rem);
     border-radius: 999px;
     font-weight: 600;
     font-size: 0.95rem;

@@ -1,0 +1,139 @@
+---
+title: "Platform launch readiness checklist for digital health teams"
+description: "Use this grouped checklist to confirm a digital health platform is ready to release, from scope and accessibility to support, rollback and sign-off."
+published: 2026-10-11
+updated: 2026-10-11
+audience: "digital-health-companies"
+engagements: ["platform-launch", "platform-improvement"]
+summary:
+  - "Launch readiness is a set of confirmed decisions with named owners, not a feeling that the build is finished."
+  - "Test real user journeys end to end, in every supported language and on the devices your users actually have."
+  - "Agree monitoring, support, escalation and rollback before release day rather than during the first incident."
+  - "Your company approves clinical content and owns clinical decisions; the delivery team builds and operates the technology."
+kind: "checklist"
+---
+
+Use this checklist in the weeks before a digital health platform goes live, whether it is a first release or a significant new version of a platform that is already in use. It is written for product, engineering, operations and clinical leads working together, and it sits alongside our longer insight on [launching a health platform](/insights/launching-a-health-platform).
+
+The checklist is deliberately general. Your platform, markets and regulatory position will add items of their own, and some items here will not apply to you. Mark those as not applicable with a one-line reason rather than deleting them, so the decision is visible later.
+
+## How to use this checklist
+
+Give every item one named owner. An item owned by "the team" is usually owned by no one. Ask for evidence, such as a test report, a signed document, a dashboard link or a ticket, because "done" without evidence is a claim rather than a check. Keep the statuses simple: confirmed, not yet confirmed, or not applicable with a reason. Then review the open items at a fixed go/no-go meeting with named decision-makers, and record the outcome.
+
+A plain tracking table is usually enough:
+
+| Item | Owner | Evidence | Status |
+| --- | --- | --- | --- |
+| Acceptance criteria signed off | Product lead | Signed scope document | Confirmed |
+| Rollback rehearsed in staging | Engineering lead | Rehearsal notes and timings | Not yet confirmed |
+| App store phased release | Mobile lead | Not applicable: web-only release | Not applicable |
+
+## Scope, acceptance and content sign-off
+
+### Scope and acceptance
+
+- The release scope is written down, versioned and agreed, including what is explicitly out of scope for this release.
+- Each feature in scope has acceptance criteria that a tester can verify without having to interpret them.
+- Every acceptance criterion has been tested against the release candidate, not an earlier build, and the results are recorded.
+- Known defects are listed with severity, user impact and a decision for each: fix before launch, accept with a workaround, or defer to a dated release.
+- The people who can sign off the release are named, and their sign-off is recorded in one place.
+
+### Content and clinical-content sign-off
+
+- All clinical content (symptom information, care instructions, triage wording, medication information, and anything else a user might act on) has been reviewed and approved in writing by a named clinician acting for your company, with the version and date recorded.
+- Any feature that supports or informs clinical decisions has been reviewed by your clinical lead, and decisions about how it behaves and how it is presented rest with your company.
+- Wording about emergencies and the limits of the service, such as what a user should do if they need urgent care, is approved by your company and appears where users will see it.
+- Privacy notices, terms of use and consent wording are approved by your legal or compliance adviser for each market you are launching in.
+- Content in each language, for example Arabic and English, has been reviewed by a fluent reviewer for meaning as well as spelling, and both versions say the same thing.
+- If any feature could be regulated as medical device software in a target market, your regulatory adviser has confirmed its status in writing before launch. For example, as of October 2026 the Saudi Food and Drug Authority (SFDA) publishes [guidance on digital health products](https://sfda.gov.sa/en/guide/19247) (MDS-G027, August 2025), which explains that whether an app, telemedicine tool or other software counts as a medical device depends on its intended use, alongside its earlier [guidance on software as a medical device](https://www.sfda.gov.sa/sites/default/files/2020-03/MDS_G23.pdf) (MDS-G23). This is general information, not legal or regulatory advice.
+
+## User journeys and accessibility
+
+### Core user journeys
+
+- The critical journeys are listed, for example registration, sign-in, booking, consultation, payment, results and messaging, and each one has been tested end to end on the release candidate.
+- Journeys have been tested on the device types, operating systems and browsers your users actually use, including older and lower-cost phones where they are part of your audience.
+- Each journey has been tested in every supported language and direction, including right-to-left Arabic layouts, mixed Arabic and English text, names, addresses and phone numbers.
+- Failure paths have been tested: wrong password, expired one-time code, failed payment, lost connection, timed-out session and an appointment slot that has just gone.
+- Notifications sent by email, SMS or push arrive, read correctly in each language and open the right screen.
+- Integrations have been tested against each partner's test environment, and where data is exchanged using a standard such as [HL7 FHIR](https://hl7.org/fhir/overview.html), the version and profiles each partner expects are confirmed in writing.
+
+### Accessibility
+
+- An accessibility target is agreed and written into the acceptance criteria, for example Level AA of [WCAG 2.2](https://www.w3.org/TR/WCAG22/), the current W3C Recommendation as of October 2026.
+- Criteria added in WCAG 2.2 that matter for health journeys have been checked, notably focus not being hidden behind sticky headers or banners (Focus Not Obscured), target size, accessible authentication at sign-in, avoiding redundant entry in multi-step forms and keeping help in a consistent place (see [what is new in WCAG 2.2](https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/)).
+- Automated testing has been combined with manual review, including keyboard-only use and at least one screen reader on each main platform, since the W3C notes that [no tool alone can determine](https://www.w3.org/WAI/test-evaluate/) whether a site meets accessibility standards.
+- Language and text direction are set correctly in the markup for each language, following the W3C guidance on [structural markup and right-to-left text](https://www.w3.org/International/questions/qa-html-dir).
+
+## Performance, availability and security
+
+### Performance and availability targets
+
+- Performance targets are written down for the key journeys and measured on realistic devices and networks in each target market, not only on office connections.
+- The platform has been load-tested at the traffic you realistically expect at launch, including likely peaks such as a campaign or the start of a clinic day, with the margin agreed.
+- An availability target is agreed between your company and whoever operates the platform, together with what counts as an outage, how it is measured and when planned maintenance can take place.
+- Backups run automatically, and a restore from a recent backup into a separate environment has been tested, with the time it took recorded and compared with the recovery targets you have agreed.
+
+### Security basics
+
+- Secure development practices are in place, including dependency scanning and an agreed process for applying security patches after launch; NIST's [Secure Software Development Framework (SP 800-218)](https://csrc.nist.gov/pubs/sp/800/218/final) is one reference.
+- Security requirements, including authentication, session handling, one-time codes and rate limiting, have been verified against an agreed reference such as the [OWASP Application Security Verification Standard](https://owasp.org/www-project-application-security-verification-standard/), at a level suited to the data you handle.
+- An independent penetration test has been completed on the release candidate or a close equivalent, and each finding is either fixed or formally accepted by your company.
+- Secrets such as API keys, credentials and certificates are held in a managed secrets store rather than in code or shared documents, and production access is limited to named people.
+- An incident response plan names who decides and who communicates, and it has been walked through at least once; NIST's [SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final) is a useful reference.
+
+## Sensitive data arrangements
+
+Data protection obligations differ by market and change over time. Our insight on [health data protection in the GCC and Pakistan](/insights/health-data-protection-gcc-pakistan) gives an overview, and your legal adviser confirms what applies to your platform. This checklist is a planning aid, not legal advice.
+
+- A data inventory lists the personal and health data the platform collects, where it is stored, who can access it and why.
+- The legal basis and consent approach for each type of data has been confirmed by your legal or compliance adviser for each launch market.
+- Hosting location and any cross-border transfers have been checked against the laws and contracts that apply to you, and the decision is recorded.
+- Agreements are in place with every vendor that processes personal or health data on your behalf, such as hosting, messaging, analytics, video and payment providers.
+- Access to sensitive data is role-based, logged and periodically reviewed, logs and analytics do not capture health data unnecessarily, and production data is not copied into development or test environments.
+- Retention and deletion rules are defined and implemented, including what happens to a user's data when they close their account.
+- The process for assessing and reporting a personal data breach, including who notifies regulators and users and within what timeframe, has been confirmed with your adviser.
+
+## Monitoring, support and escalation
+
+### Monitoring and alerting
+
+- Uptime and synthetic checks exercise the key journeys, not only the home page.
+- Application errors, failed background jobs and integration failures are captured centrally, with enough context to diagnose them and without recording sensitive data.
+- Alerts are tied to the agreed targets, routed to named people on a rota, and at least one alert has been triggered and handled before launch.
+- Third-party services the platform depends on, such as SMS and one-time codes, payments, video and email, are monitored, and there is a plan for when one is unavailable.
+- A launch-period dashboard shows the few signals that matter in the first days: error rates, sign-up and sign-in success, completion of key journeys and support volume.
+
+### Support model and escalation
+
+- Support hours, channels and languages are defined and shown to users inside the product.
+- Severity levels are defined, with agreed response expectations for each written into the support agreement.
+- The escalation path from first-line support to engineering and to your company's decision-makers is documented with names and contact routes.
+- A separate route exists for any report that may be clinical in nature, so it reaches your clinical team quickly rather than waiting in a technical queue.
+- Support staff have been briefed on the release, known issues and workarounds, and have reply and status-update templates ready in each language.
+
+## Release, rollback and handover
+
+### Release and rollback plan
+
+- A written release plan lists each step, who carries it out, in what order and how success is checked.
+- The release date and time avoid known peaks, public holidays in your markets and times when key people are unavailable for the hours that follow.
+- A rollback plan covers each component, including database changes, has been rehearsed in a staging environment, and states in advance which conditions trigger it and who makes the call.
+- Where the architecture allows, new features can be switched off or released to a limited group first without a full redeployment.
+- For mobile apps, store submission, review and phased release are planned, recognising that a release already on users' phones cannot be withdrawn as quickly as a web release.
+- The go/no-go decision is made by the named decision-makers at the agreed meeting, and the decision and any accepted risks are recorded.
+
+### Documentation and ownership
+
+- Production accounts, including cloud hosting, domains, app stores, analytics and messaging providers, are owned by your company, with access granted to delivery partners rather than held by them.
+- An architecture overview, an environment list and runbooks for common operational tasks are up to date and stored where your team can reach them.
+- Responsibilities after launch are agreed in a simple matrix showing who builds, who operates, who supports and who approves content, including clinical content.
+- Release notes and the known-issues list have been shared with support, partners and anyone else who needs them.
+- A post-launch review is scheduled for the first weeks after release, with an owner and an agenda.
+
+## Working through this with ProHealth Digital
+
+If you are preparing a first release, our [platform launch](/solutions/platform-launch) engagement takes delivery through to a supported go-live. If your platform is already live and each release feels riskier than it should, [improving an existing platform](/solutions/platform-improvement) begins by looking at how releases, monitoring and support work today. In both cases your company keeps responsibility for clinical decisions and clinical content, and we build and operate the technology to the standard you agree with us. Contracted support, including 24/7 cover where it is agreed, is available after launch.
+
+You can read more about [how we work](/how-we-work), use the [bilingual content checklist](/resources/bilingual-content-checklist) alongside this one, or [start a conversation](/contact). Discovery is free, and pricing is set for each project.

@@ -6,6 +6,7 @@ import { meta } from "../src/lib/meta.ts";
 import { audiences } from "../src/lib/audiences.ts";
 import { glossary } from "../src/lib/glossary.ts";
 import { engagements } from "../src/lib/content.ts";
+import { engagementDetails } from "../src/lib/engagement-details.ts";
 
 function visit(value: unknown, at: string) {
   if (!value || typeof value !== "object") return;
@@ -18,7 +19,11 @@ function visit(value: unknown, at: string) {
 }
 
 test("site copy, metadata, audiences, glossary and engagement extras are bilingual", () => {
-  visit({ copy, meta, audiences, glossary, engagements }, "content");
+  visit({ copy, meta, audiences, glossary, engagements, engagementDetails }, "content");
+  for (const e of engagements) {
+    assert.ok(engagementDetails[e.id].phases.length >= 3, `${e.id} phases`);
+    assert.ok(engagementDetails[e.id].faqs.length >= 2, `${e.id} faqs`);
+  }
 });
 
 test("metadata stays within search snippet budgets", () => {

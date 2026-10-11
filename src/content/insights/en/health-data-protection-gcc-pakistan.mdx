@@ -1,0 +1,130 @@
+---
+title: "Health data protection in the GCC and Pakistan: what to settle before you build"
+description: "This overview summarises health data protection rules in the GCC and Pakistan as of October 2026 and lists the design questions to settle with counsel."
+published: 2026-10-11
+updated: 2026-10-11
+audience: "both"
+engagements: ["platform-launch", "care-workflows"]
+summary:
+  - "Saudi Arabia, Qatar, Bahrain and Oman treat health data as a sensitive or special category with added conditions."
+  - "Several regimes add permits, prior authorisations or short breach-notification deadlines that shape product design."
+  - "We could not verify an enacted federal personal data protection law in Pakistan as of October 2026."
+  - "This is general information, not legal advice, so settle hosting, consent, retention and vendor questions with counsel before build."
+topic: "Data protection"
+---
+
+## Read this first
+
+This article is written for product and operations leaders planning a website, care workflow or digital health platform that will handle patient information in the GCC or Pakistan. It summarises what we verified in official sources **as of October 2026** and turns it into practical design questions.
+
+> This is general information, not legal or regulatory advice. Laws, implementing regulations and regulator guidance change. For the national laws below the official text is Arabic, and English versions are translations. Free-zone regimes (such as DIFC and ADGM in the UAE) and health-sector rules (such as those issued by the Dubai Health Authority or the Department of Health – Abu Dhabi) may apply alongside or instead of the national laws below. Confirm your position with qualified counsel before you build.
+
+Our role is to deliver the technology. Decisions about lawful basis, clinical content and regulatory filings stay with you and your advisers.
+
+## Where the main laws stand, as of October 2026
+
+### Saudi Arabia
+
+The Personal Data Protection Law (Royal Decree M/19, amended by Royal Decree M/148), its Implementing Regulation and a separate Regulation on Personal Data Transfer Outside the Kingdom are published on [SDAIA's regulations page](https://sdaia.gov.sa/en/SDAIA/about/Pages/RegulationsAndPolicies.aspx).
+
+- The [law](https://sdaia.gov.sa/en/SDAIA/about/Documents/PersonalDataProtectionLaw.pdf) lists health data as sensitive data and defines it broadly, covering physical, mental and psychological conditions and the health services a person receives (Article 1).
+- Article 23 of the law and Article 26 of the [Implementing Regulation](https://sdaia.gov.sa/en/SDAIA/about/Documents/ImplementingRegulationPersonalDataProtectionLaw.pdf) add health-specific controls: limit access to the minimum number of staff needed to provide care, document every stage of health data processing and who is responsible for it, and carry these obligations into processor agreements. Article 26 also requires controllers to adopt the requirements of health-sector bodies such as the Ministry of Health and the Saudi Health Council.
+- The Implementing Regulation requires notifying the competent authority within 72 hours of becoming aware of a breach that may cause harm, and notifying affected individuals without undue delay where the breach may harm them (Article 24). It also requires a written impact assessment when processing sensitive data (Article 25).
+- The [transfer regulation](https://sdaia.gov.sa/Documents/RegulationonPersonalDataEN.pdf) requires a risk assessment before certain transfers outside the Kingdom, including continuous or widespread transfers of sensitive data (Article 7).
+
+### United Arab Emirates
+
+According to the [UAE Government portal](https://u.ae/en/about-the-uae/digital-uae/data/data-protection-laws), Federal Decree-Law No. 45 of 2021 on personal data protection came into force on 2 January 2022, and the UAE Data Office acts as the federal data regulator.
+
+Health data also has its own federal law. The portal describes Federal Law No. 2 of 2019 as regulating the use of [ICT in the health sector](https://u.ae/en/about-the-uae/digital-uae/whole-of-government-approach/digital-health/ict-in-the-health-sector), including in free zones, and requiring providers to keep health data confidential and not share it without due authorisation.
+
+Financial free zones run their own regimes: [DIFC Law No. 5 of 2020](https://www.difc.com/business/registrars-and-commissioners/commissioner-of-data-protection) and the [ADGM Data Protection Regulations 2021](https://www.adgm.com/operating-in-adgm/office-of-data-protection). Emirate health regulators also publish their own policies; the [Department of Health – Abu Dhabi](https://www.doh.gov.ae/en/resources/policies), for example, has a policy on health information exchange.
+
+### Qatar
+
+Law No. 13 of 2016 on protecting personal data privacy is supervised by the [National Cyber Security Agency (NCSA)](https://ncsa.gov.qa/en/pages/personal-data-privacy-personal-data-privacy-protection-law), which notes that the official version of the law is the one published in the Official Gazette.
+
+- Health, physical or psychological condition and children's data are personal data of a special nature, which may only be processed after obtaining permission (Article 16). NCSA offers a special nature permissions request service.
+- Processors must notify the controller of a breach without delay (Article 13), and controllers must inform the individual and the regulator of a breach that may cause serious damage (Article 14).
+
+### Bahrain
+
+Law No. 30 of 2018 on Personal Data Protection is overseen by the Personal Data Protection Authority. The [English translation](https://www.lloc.gov.bh/FullEn/K3018.docx) published by the Legislation and Legal Opinion Commission is for guidance only.
+
+- Sensitive personal data includes any information relating to a person's health (Article 1). It may not be processed without consent except in listed cases, including processing needed for preventive medicine, diagnosis, care or treatment, or managing health services, carried out by a licensed medical professional or another person bound by a legal duty of confidentiality (Article 5).
+- Transfers outside the Kingdom are limited to countries the Authority lists as adequate, transfers it authorises, or specified exceptions (Articles 12–13).
+- The law requires prior notice to the Authority for wholly or partly automated processing, with listed exceptions, including where a data protection guardian has been appointed (Article 14). Some operations need prior written authorisation, including certain automated processing of sensitive data (Article 15).
+
+### Oman
+
+The Personal Data Protection Law ([Royal Decree 6/2022](https://www.mtcit.gov.om/library-3/legislations-policies-8/laws-75/personal-data-protection-law-1034)) is administered by the Ministry of Transport, Communications and Information Technology (MTCIT). Its [Executive Regulation](https://www.mtcit.gov.om/library-3/legislations-policies-8/regulations-72/executive-regulations-of-the-personal-data-protection-law-1035) was issued by Ministerial Decision 34/2024.
+
+- Article 5 prohibits processing health data, genetic and biometric data, and other listed categories unless the Ministry grants a permit.
+- [Royal Decree 68/2026](https://www.mtcit.gov.om/library-3/legislations-policies-8/laws-75/royal-decree-68-2026-amending-some-provisions-of-the-personal-data-protection-law-1481), issued on 3 September 2026 and published in Official Gazette No. 1664, amended the law. It revises the definition of health data, applies the law to processing of personal data of people in Oman wherever the processing takes place, and adds exemptions from the permit and explicit-consent requirements. It also introduces provisions on automated processing, including a right to object to automated decisions and have them reviewed with human involvement, and requires personal data to be erased once the purpose of processing ends, subject to listed exceptions.
+
+Because the amendment is very recent, check with counsel how it affects your permits and consent design.
+
+### Kuwait
+
+The data privacy instrument we could verify is the Communication and Information Technology Regulatory Authority's [Data Privacy Protection Regulation](https://www.citra.gov.kw/sites/ar/Pages/regulations.aspx), issued by CITRA Decision No. 26 of 2024. It applies to service providers licensed by CITRA that collect, process or store users' personal data, whether processing happens inside or outside Kuwait. It includes obligations on notifying CITRA and affected users of personal data breaches; check the current text for the exact deadlines and conditions. Whether it reaches your platform directly, or through your hosting and communications providers, is a question for counsel.
+
+### Pakistan
+
+We could not verify an enacted federal personal data protection law. The Ministry of IT and Telecommunication [lists the Personal Data Protection Bill (May 2023) as a draft](https://moitt.gov.pk/Legislations), and its [draft Data Governance Policy of June 2026](https://moitt.gov.pk/Policies) describes a personal data protection law as anticipated. Plan to design to good practice now and to revisit the design if legislation is enacted.
+
+## What the frameworks have in common
+
+Across most of the jurisdictions above, a few patterns matter for delivery teams:
+
+- **Health data is treated as a special category.** Expect extra conditions, not just a privacy notice.
+- **Some processing needs permission before it starts.** Qatar, Bahrain and Oman all have permit or authorisation mechanisms that can affect launch timelines.
+- **Breach clocks are short.** Where deadlines are set in hours, incident handling has to be designed and rehearsed before go-live.
+- **Location and transfer matter.** Depending on the law, hosting region, support access from abroad and third-party tools may all count as transfers or disclosures outside the country.
+
+## Design implications for product and operations teams
+
+### Data minimisation
+
+Collect only what the care pathway or service actually needs. Map each field to a purpose and an owner, and remove optional fields that exist "just in case". This is easier at specification stage than after launch.
+
+### Consent and purpose
+
+Decide, with counsel, the lawful basis for each processing purpose. Where consent is used, record what was agreed, when, and in which language, and make withdrawal practical. Keep marketing communications separate from care communications.
+
+### Access control
+
+Design roles around the minimum access each person needs, separate clinical and administrative views, and log access to health records. Plan who reviews those logs and how often.
+
+### Hosting and transfer
+
+Agree where production data, backups, logs and analytics will live before choosing vendors. Include remote support access, email and messaging services, and monitoring tools in that review.
+
+### Retention and deletion
+
+Set retention periods per record type with your counsel and clinical leads, then build deletion or anonymisation into the system rather than leaving it to manual clean-ups. Some laws now set deletion duties directly, as Oman's 2026 amendment does, so check retention choices against them.
+
+### Vendors and processors
+
+List every processor, what data it touches and where. Make sure contracts reflect the obligations above, including breach notice to you and support for data subject requests.
+
+### Incident handling
+
+Write a short runbook: who decides whether an event is a reportable breach, who contacts the regulator and affected people, and how evidence is preserved. The hour-based deadlines above run from when you become aware of a breach, so agree what counts as awareness and how alerts reach the decision-maker out of hours. Test the runbook before launch.
+
+## Questions to settle with counsel before build
+
+- Which laws apply, given where patients are, where your entity is licensed, and whether you operate in a free zone?
+- Does any processing need a permit, authorisation or prior notice, and how long might that take?
+- What is the lawful basis for each purpose, and where is explicit consent required?
+- Where may health data be stored and processed, and does remote support or a third-party tool count as a transfer?
+- What retention periods apply to each record type, including clinical records, messages and logs?
+- Are impact or risk assessments required, and who signs them off?
+- What breach-notification deadlines apply, and to whom?
+- What do processor contracts need to say?
+- Do any health-regulator rules apply on top of the data protection law?
+
+## Where we fit
+
+We help teams turn these decisions into working systems: data inventories, role-based access, audit logging, consent records, retention jobs and hosting set up to match the choices you make with your advisers. We do not provide legal advice, and responsibility for clinical decisions and regulatory approvals stays with you.
+
+If you are planning a new platform, see [Launch a health platform](/solutions/platform-launch) and our [platform launch readiness checklist](/resources/platform-launch-readiness-checklist). If you are digitising existing care processes, see [Improve care workflows](/solutions/care-workflows). When you are ready to talk it through, [contact us](/contact) to arrange a free discovery conversation.

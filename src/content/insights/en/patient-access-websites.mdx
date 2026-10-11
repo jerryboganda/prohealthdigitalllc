@@ -1,0 +1,116 @@
+---
+title: "What a patient-access website must do for clinics and healthcare groups"
+description: "A patient-access website should make services findable, answer real questions, work well in both languages and route every booking request to a clear owner."
+published: 2026-10-11
+updated: 2026-10-11
+audience: "providers"
+engagements: ["digital-presence"]
+summary:
+  - "A patient-access website exists to help people find the right service, clinician and location, then take the next step without friction."
+  - "Accessibility to WCAG 2.2 AA and properly structured Arabic and English content are baseline requirements, not finishing touches."
+  - "Inquiry and booking handoffs must be dependable, with a named owner for every request that arrives."
+  - "Clinical content stays under the provider's approval, and success is measured by findability and task completion rather than promised conversion gains."
+topic: "Patient access"
+---
+
+A clinic or healthcare group website is often the first place a patient checks before calling, travelling or booking. Most visitors arrive with a practical question: does this clinic treat my problem, which clinician should I see, where is the branch, is it open, and how do I get an appointment? A patient-access website exists to answer those questions quickly and honestly, then hand the patient to the right next step. Everything else, including brand presentation, should support that job rather than compete with it.
+
+This insight is written for providers in the GCC and Pakistan, where bilingual content, mobile use and multi-branch operations often shape the brief.
+
+## Make services, clinicians and locations findable
+
+Patients rarely search using an organisation's internal department names. They search for a symptom, a procedure, a specialty, a clinician's name or a neighbourhood, so the site structure should match those entry points.
+
+### On the site
+
+- One clear page per service or specialty, in plain language, stating who it is for and how to access it.
+- Clinician profiles with specialty, languages spoken, locations and clinic days, consistent with what reception staff tell callers.
+- Location pages with address, map link, opening hours, access notes and the correct phone number for that branch.
+- Navigation and on-site search that connect all three, so a patient who starts from a clinician can reach the service and the location, and the other way round.
+
+### In search
+
+Google says its ranking systems prioritise [helpful, reliable, people-first content](https://developers.google.com/search/docs/fundamentals/creating-helpful-content) and give even more weight to signals of expertise and trust on topics that could significantly affect people's health. In practice, that means accurate, reviewed pages rather than keyword padding.
+
+Structured data can help search engines understand a page. Schema.org defines types such as [MedicalClinic](https://schema.org/MedicalClinic), with properties for services, specialties, opening hours and address, and Google [recommends JSON-LD](https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data) for adding it. Google is clear that structured data can make enhanced results more likely, not certain, so treat it as good hygiene rather than a ranking promise.
+
+## Answer the questions patients actually ask
+
+The most useful content is often the least glamorous: what to bring, how to prepare, whether a referral is needed, which insurance arrangements are accepted, how long a visit takes and how to reach the clinic after hours.
+
+The best sources for these questions are already inside the organisation: reception logs, contact-centre notes, recurring emails and front-desk staff. Short, direct answers on the relevant service and location pages reduce confusion for patients and repetitive calls for staff.
+
+Keep three boundaries clear:
+
+- The website informs; it does not diagnose. General service information should not read as individual medical advice.
+- Urgent and emergency guidance should be prominent and unambiguous, directing patients to the appropriate emergency route rather than to an inquiry form.
+- Prices, insurance arrangements and waiting times change. Publish them only where someone owns keeping them current.
+
+## Design for the phone and for every patient
+
+Patients often reach the site on a phone, while travelling or between other tasks. Mobile-first means designing the core tasks for a small screen first: finding a branch, calling, getting directions and starting an inquiry. Phone numbers should be tappable, forms short and key actions easy to reach.
+
+Accessibility belongs in the same conversation. [WCAG 2.2](https://www.w3.org/TR/WCAG22/), a W3C Recommendation since [October 2023](https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/), is a sensible target at Level AA. Several success criteria map directly onto patient tasks:
+
+| Success criterion | Level | What it means for a patient-access site |
+| --- | --- | --- |
+| [1.4.10 Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html) | AA | Content works at a width equivalent to 320 CSS pixels without two-directional scrolling, which also supports zoomed text |
+| 2.5.8 Target Size (Minimum) | AA | Buttons and links are at least 24 by 24 CSS pixels or adequately spaced, with defined exceptions |
+| 3.2.6 Consistent Help | A | Where contact details or other help mechanisms repeat across pages, they appear in the same order relative to other page content |
+| 3.3.1 Error Identification | A | Form errors are identified and described in text |
+| 3.3.2 Labels or Instructions | A | Form fields come with labels or instructions |
+| 3.3.7 Redundant Entry | A | Information already given in the same process is filled in automatically or offered for selection rather than typed again, with defined exceptions |
+
+These are minimums. They do not replace testing with real assistive technology and, where possible, with patients who use it.
+
+## Treat Arabic and English as equal versions
+
+The Arabic site should not be a delayed or partial copy of the English one. Patients choosing Arabic need the same services, clinicians, locations and next steps, written natively rather than translated line by line. Our insight on [bilingual Arabic and English health UX](/insights/bilingual-arabic-english-health-ux) goes deeper. The essentials:
+
+- Declare language and direction in the markup. WCAG success criterion 3.1.1 requires the [language of each page](https://www.w3.org/TR/WCAG22/#language-of-page) to be programmatically determinable, and the [W3C recommends](https://www.w3.org/International/questions/qa-html-dir) setting `dir="rtl"` on the root element of Arabic pages rather than relying on CSS. The same guidance notes that a language declaration does not set direction, so both are needed.
+- Mirror layout and directional icons, and handle mixed content carefully, such as medicine names, clinician names in Latin script and phone numbers.
+- Link each English page to its Arabic equivalent. Google's [guidance on localised versions](https://developers.google.com/search/docs/specialty/international/localized-versions) expects each language version to list itself and all alternates, and states that Google does not use the `lang` attribute to detect a page's language.
+- Keep both versions under the same review process, so a change to opening hours or a clinician's schedule reaches both at once.
+
+## Make the inquiry and booking handoff dependable
+
+The website usually does not hold the appointment book. Its job is to pass each request to the system or people who do, reliably and with clear ownership. A polished form that delivers to an unmonitored inbox serves patients worse than a visible phone number.
+
+Questions worth settling before launch:
+
+- Where does each request go, by branch and service: a practice management system, a booking platform, a contact-centre queue or a monitored mailbox?
+- Who owns the response, and in which hours? Tell patients honestly when to expect a reply, based on what the team can sustain.
+- What happens when an integration fails? Requests should be logged and retried or routed to a fallback, with someone alerted, never lost silently.
+- What does the patient see afterwards? A confirmation that explains what happens next and how to reach the clinic directly.
+- What data is collected? Ask only for what is needed to respond. Inquiry forms can capture personal and health-related information, so handling must meet the data protection rules that apply to you; see [health data protection in the GCC and Pakistan](/insights/health-data-protection-gcc-pakistan).
+
+Where online booking is offered, test the full journey in both languages and on mobile, including cancellations and the messages patients receive.
+
+## Govern content, with clinical approval kept by the provider
+
+A patient-access website is never finished. Clinicians join and leave, services change and branches move. Without governance, an outdated clinician profile or opening time becomes a direct problem for patients.
+
+A workable model assigns:
+
+- An owner for each content type: services, clinician profiles, locations, prices and general information.
+- A clinical reviewer, appointed by the provider, who approves any content describing conditions, treatments, preparation or risks. A technology partner can structure pages, draft copy and publish, but clinical accuracy and approval remain with the provider.
+- A review date on every page, with a routine to check pages before they lapse.
+- A simple route for front-desk staff to report errors on the site.
+
+Health advertising and claims may also be subject to rules set by the regulator in your jurisdiction. This article does not cover those rules and is not legal advice; your team and advisers should confirm what applies before publication.
+
+## Measure findability and task completion
+
+Measure whether patients can do what they came to do, not only how many arrived. Useful signals include:
+
+- Search queries and landing pages that bring patients to service, clinician and location pages, in each language.
+- On-site search terms, especially those that return no results.
+- Where people abandon or hit errors on inquiry and booking forms, and checks that every submitted request reached its destination.
+- Moderated task testing: asking a few patients or staff to find a clinician, a branch's hours or how to book, and watching where they struggle.
+- What callers tell reception and contact-centre staff they could not find online.
+
+These measures show whether the site is working and where to improve it. They do not predict bookings or revenue, and we do not promise a particular conversion gain. The aim is a site that patients can use and staff can trust.
+
+## Next steps
+
+If you are planning a new patient-access website or reviewing an existing one, the [patient-access website checklist](/resources/patient-access-website-checklist) is a practical starting point, and the [bilingual content checklist](/resources/bilingual-content-checklist) covers Arabic and English parity. Our [Establish your digital presence](/solutions/digital-presence) engagement describes how we approach this work with providers, and discovery is free. When it suits you, [get in touch](/contact) to talk it through.

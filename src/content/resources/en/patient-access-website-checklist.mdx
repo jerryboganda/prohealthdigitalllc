@@ -1,0 +1,137 @@
+---
+title: "Patient-access website checklist for clinics and healthcare groups"
+description: "This checklist helps you plan or review a clinic or healthcare group website, from service details and booking handoff to accessibility and launch."
+published: 2026-10-11
+updated: 2026-10-11
+audience: providers
+engagements: ["digital-presence"]
+summary:
+  - "Plan the site around the tasks patients come to complete, such as finding a service, a clinician, a location or a way to get in touch."
+  - "Every inquiry or booking route should end in a clear handoff that tells the patient what happens next and who will respond."
+  - "Accessibility and bilingual Arabic and English content belong in the core build, not in a later polish step."
+  - "Your organisation owns and approves clinical content; the delivery team builds, structures and maintains the site around it."
+kind: checklist
+---
+
+## How to use this checklist
+
+Use it twice: once when you plan a new site or a redesign, and again in the weeks before launch. It also works as a periodic review of a site that is already live.
+
+Work through it with the people who own each area: practice management for locations and hours, your clinical lead for service descriptions, the front desk or call centre for inquiry handling, and whoever manages your privacy and compliance obligations. For each item, record one of three states.
+
+| State | Meaning |
+| --- | --- |
+| Done | Checked on the live or staging site, not just agreed in a meeting |
+| Owner assigned | Not done yet, but a named person is responsible and has a date |
+| Not applicable | Does not apply to your organisation, with a one-line reason |
+
+This checklist is a planning aid. It is not legal or regulatory advice, and it does not replace guidance from your health regulator or data protection authority.
+
+## Services, clinicians and locations
+
+### Services and specialties
+
+- Each service or specialty has its own page, or a clearly separated section, written in plain language a patient can follow.
+- Service pages say who the service is for, how to access it (referral, walk-in or appointment) and which locations offer it.
+- Service descriptions make no promises about results and are approved by the responsible clinician before publication.
+- Services you no longer offer are removed or clearly marked, rather than left live.
+- Insurance, self-pay or referral requirements are stated where they affect whether a patient can book, or the page explains how to ask.
+
+### Clinicians
+
+- Each clinician profile shows name, title, specialty, languages spoken, and the locations and days they practise.
+- Professional titles and qualifications are accurate, current and consistent with each clinician's licence or registration.
+- Each clinician has agreed to their profile, including the photograph, and profiles are updated when someone joins, leaves or changes schedule.
+- Patients can move from a clinician profile straight to that clinician's booking or inquiry route.
+
+### Locations, hours and access
+
+- Every location has its own page or section with the full address, a map link, a phone number and opening hours.
+- Hours cover public holidays and Ramadan, and a named person updates them before each change.
+- Each location page explains parking, public transport, entrances and step-free access where known.
+- After-hours and emergency guidance is visible: the site says it is not for emergencies and tells patients to call the local emergency number.
+- Location name, address, phone and hours match exactly across the website, map listings and social profiles.
+- Structured data, such as the schema.org [MedicalClinic](https://schema.org/MedicalClinic) type with address, telephone and opening hours, carries the same details as the visible page.
+
+## Inquiry and booking handoff
+
+Whether the site hands patients to a phone line, a messaging channel, a booking system or a form, each handoff needs an owner on the other side.
+
+- Each page has one primary next step that suits it: book, call, message or send an inquiry.
+- Every inquiry route is documented: who receives it, during which hours, and the response time your team can actually sustain.
+- Forms ask only for what the team needs to respond, and avoid collecting clinical detail unless the receiving system is set up to protect it.
+- Every form has visible labels, clear error messages and a confirmation that says what happens next.
+- If you use a third-party booking tool, the move from your site to that tool is clearly signposted and carries the chosen location, service or clinician where it can.
+- Messaging links (for example WhatsApp) open the right number for the right location and are monitored during the stated hours.
+- A named person tests each route end to end on a regular schedule, including what happens outside opening hours.
+
+## Mobile tasks and accessibility
+
+### Mobile tasks
+
+Test these on a mid-range phone using mobile data, not only in a desktop browser.
+
+- A patient can find a location's phone number and tap to call from the home page without hunting for it.
+- Address, directions and opening hours are within easy reach from any page, without digging through menus.
+- The inquiry or booking flow can be completed on a phone without zooming or scrolling sideways.
+- Pages load acceptably on mobile data; large images and videos are compressed and are not needed to understand the page.
+
+### Accessibility
+
+These checks are drawn from [WCAG 2.2](https://www.w3.org/TR/WCAG22/), the W3C Web Content Accessibility Guidelines. They are a starting point, not a full audit.
+
+- Text has enough contrast against its background: at least 4.5:1 for normal-size text (success criterion [1.4.3 Contrast (Minimum)](https://www.w3.org/TR/WCAG22/#contrast-minimum)).
+- Every function, including menus, forms and booking steps, works with a keyboard alone, and the focus indicator stays visible (2.1.1 and 2.4.7).
+- Sticky headers, chat widgets and cookie banners never entirely hide the element that has keyboard focus ([2.4.11 Focus Not Obscured (Minimum)](https://www.w3.org/TR/WCAG22/#focus-not-obscured-minimum), new in WCAG 2.2), and they do not cover the main action on small screens.
+- Buttons and links are large enough to tap: at least 24 by 24 CSS pixels, or with enough spacing around them ([2.5.8 Target Size (Minimum)](https://www.w3.org/TR/WCAG22/#target-size-minimum), also new in WCAG 2.2).
+- Content reflows at a width equivalent to 320 CSS pixels, and text can be resized to 200 percent without losing content or function ([1.4.10 Reflow](https://www.w3.org/TR/WCAG22/#reflow) and [1.4.4 Resize Text](https://www.w3.org/TR/WCAG22/#resize-text)).
+- Images that carry meaning have text alternatives, and decorative images are marked so screen readers can skip them (1.1.1).
+- Contact and help options appear in the same relative order across pages (3.2.6 Consistent Help).
+- Form fields have labels, errors are described in text, and in multi-step forms, details the patient already entered are filled in or offered for selection rather than typed again (3.3.1, 3.3.2 and [3.3.7 Redundant Entry](https://www.w3.org/TR/WCAG22/#redundant-entry)).
+
+## Arabic and English content
+
+For more detail, see the [bilingual content checklist](/resources/bilingual-content-checklist) and our insight on [bilingual Arabic and English health UX](/insights/bilingual-arabic-english-health-ux).
+
+- Each language version is written for its own readers rather than machine-translated and left unreviewed; a fluent reviewer and the clinical owner sign off service and clinical wording in both languages.
+- The Arabic version sets `dir="rtl"` on the root html element, and layout, directional icons and navigation mirror correctly ([W3C guidance](https://www.w3.org/International/questions/qa-html-dir)).
+- Each page declares its language with the lang attribute, and passages in the other language are marked as such (3.1.1 and 3.1.2; [W3C guidance](https://www.w3.org/International/questions/qa-html-language-declarations)).
+- The language switch is visible on every page and takes the patient to the equivalent page, not back to the home page.
+- Both versions carry the same services, locations, hours and policies, are updated together, and have a named owner for keeping them in step.
+- Phone numbers, dates, times and English terms inside Arabic text display correctly in right-to-left layout.
+- Forms accept Arabic names and input, and confirmation messages go out in the patient's chosen language.
+
+## Trust, policies and content ownership
+
+Requirements for health websites differ between countries and regulators. Treat the items below as prompts to confirm with your regulator or legal adviser, not as a statement of what the law requires.
+
+### Trust and policy pages
+
+- An About page states the organisation's legal name and the facilities it operates; confirm with your regulator whether facility licence numbers or advertising approvals must appear on the site.
+- A privacy notice explains, in plain language and in both languages, what the site and its forms collect, why, who receives it, how long it is kept and how to ask about it. Our insight on [health data protection in the GCC and Pakistan](/insights/health-data-protection-gcc-pakistan) covers the wider context.
+- Analytics, advertising pixels and embedded third-party tools are listed and reviewed, so you know what data leaves the site and why, and your consent approach matches the law that applies to you.
+- Promotional claims, offers, patient testimonials and before-and-after images are checked against your regulator's advertising rules before publication. For example, as of October 2026 the Dubai Health Authority publishes [Standards for Medical Advertisement Content on Social Media](https://dha.gov.ae/uploads/042022/Standards%20for%20Medical%20Advertisement%20Content%20in%20Social%20Media2022433965.pdf) (version 1.1, issued August 2022); that document covers social media, so confirm with your regulator what applies to your website.
+- Terms of use and a medical disclaimer explain that website content is general information and does not replace a consultation.
+- A complaints and feedback route is easy to find and reaches a monitored inbox or team.
+
+### Content ownership and review
+
+- Every page or content type has a named owner and a review date.
+- Clinical content is written or approved by your clinical team; the web team structures and publishes it but does not change its clinical meaning without sign-off.
+- For each clinical page, a simple record shows who drafted it, who approved it and when.
+- Clinician moves, new services, changes to hours and closures trigger a website update within the same internal process, not as a separate afterthought.
+- At least two people in your organisation can publish urgent notices, such as a branch closure, without waiting on an external team.
+
+## Launch checks
+
+- All inquiry and booking routes have been tested end to end on staging and again on the live site, by someone outside the project team.
+- Redirects take old URLs to their new equivalents, so existing links, bookmarks and search listings keep working.
+- Every phone number, address, map link and email address on the site has been checked against your organisation's source of truth.
+- Both language versions have been reviewed on real iOS and Android phones.
+- Accessibility has been checked with automated tools and then by hand with a keyboard and a screen reader, with issues logged and assigned.
+- Analytics and form notifications are confirmed working, and no personal or health data is sent in URLs or to analytics tools.
+- There is a rollback plan, a named contact for the launch window and a date for a post-launch review in the first few weeks.
+
+## Where we can help
+
+If you are planning a new clinic website or reviewing one that is already live, our [digital presence engagement](/solutions/digital-presence) covers the structure, build and handoffs described here, while clinical content approval stays with your team. Discovery is free, and pricing depends on the scope we agree together. You can [contact us](/contact) to talk it through, or read our insight on [patient-access websites](/insights/patient-access-websites) for the thinking behind this checklist.

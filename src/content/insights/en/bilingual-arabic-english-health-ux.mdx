@@ -1,0 +1,118 @@
+---
+title: "Designing bilingual Arabic–English healthcare experiences"
+description: "Arabic and English work best when planned together, from right-to-left layout and bidirectional text to Arabic typography, forms, terminology and testing."
+published: 2026-10-11
+updated: 2026-10-11
+audience: "both"
+engagements: ["digital-presence", "platform-launch"]
+summary:
+  - "Plan Arabic and English together from the first wireframe instead of translating a finished English product."
+  - "Set language and direction in markup, build with logical layout properties and mirror only what expresses reading direction."
+  - "Isolate phone numbers, email addresses, drug names and Latin acronyms so they display in the right order inside Arabic text."
+  - "Use native Arabic writing, a shared terminology glossary, qualified review and real-content testing in both languages."
+topic: "Bilingual UX"
+---
+
+Healthcare websites and platforms in the GCC commonly need to work in Arabic and English, and the same patient or clinician may switch between the two in a single visit. A bilingual experience that holds up treats both languages as first-class: Arabic is not a translated afterthought, and English is not a layout that Arabic has to squeeze into. Much of what follows also applies to other right-to-left languages such as Urdu, although each script has its own typographic needs.
+
+## Plan both languages together
+
+The most expensive bilingual projects are the ones where Arabic arrives last. Components are sized around English word lengths, icons assume left-to-right flow, and content is approved in one language before the other exists. Planning both languages together means:
+
+- Designing key screens in Arabic and English side by side from the first wireframe.
+- Giving every piece of content an owner in both languages, so neither version quietly drifts.
+- Letting text grow, shrink and wrap differently, rather than fixing buttons and labels to English widths.
+- Deciding the URL and language-switching model early, for example a parallel `/ar` path that keeps the user on the equivalent page.
+- Agreeing who approves clinical content in each language. That approval stays with the healthcare organisation; the delivery team makes sure both versions are built and displayed faithfully.
+
+## Right-to-left layout: what to mirror and what not to
+
+Direction belongs in markup. The W3C recommends adding `dir="rtl"` to the `html` element whenever the overall document is right-to-left, declaring `lang` as well, and never using CSS to apply the base direction ([W3C: Structural markup and right-to-left text in HTML](https://www.w3.org/International/questions/qa-html-dir)). With styles written in logical properties (start and end rather than left and right), one stylesheet mirrors cleanly for both languages.
+
+Mirroring is not all-or-nothing. Mirror whatever expresses reading order or progression; leave alone whatever represents a physical object, a fixed convention or real-world orientation.
+
+| Mirror in Arabic | Do not mirror |
+| --- | --- |
+| Page layout, navigation order, sidebars and breadcrumbs | Logos and brand marks |
+| Back and next arrows, chevrons, carousel direction | Media controls such as play and pause |
+| Progress steppers and multi-step forms | Checkmarks, clocks and icons of physical objects |
+| Text alignment and form label position | Anatomical diagrams and clinical images, where left and right carry clinical meaning |
+| Table column order | Phone numbers, codes, dosages and other left-to-right sequences |
+
+Charts deserve an explicit decision: agree a convention for axes and timelines with the people who will read them, then apply it consistently. Motion follows layout, so anything that slides horizontally should enter from the inline-start side in each language.
+
+## Bidirectional text: numbers, contacts, drug names and acronyms
+
+Arabic runs right to left, but numbers, even in Arabic text, run left to right ([W3C: Arabic & Persian Layout Requirements](https://www.w3.org/TR/alreq/)). Healthcare content is full of mixed runs: phone numbers, email addresses, booking references, drug names, strengths, units and acronyms such as HL7 FHIR. Without help, a phone number can show its plus sign at the wrong end, or a dose can stop reading in the intended order.
+
+The W3C's guidance is to tightly wrap every opposite-direction phrase in markup that sets its direction, and to use `dir="auto"` or the `bdi` element when the direction is not known in advance ([W3C: Inline markup and bidirectional text in HTML](https://www.w3.org/International/articles/inline-bidi-markup/)). In practice:
+
+- Mark phone numbers, email addresses and URLs as left-to-right, including `tel:` and `mailto:` links.
+- Use `bdi` or `dir="auto"` for content from databases or users, such as patient and clinician names, which may arrive in either script.
+- Keep a drug name, its strength and its unit together as one isolated run.
+- Keep Latin acronyms and product names in Latin script and isolate them, unless the customer's style guide says otherwise.
+- Use ordinary parentheses and brackets; paired characters mirror automatically in right-to-left contexts (same W3C article).
+- Test these strings at the start, middle and end of Arabic sentences. The end is where ordering problems most often show.
+
+## Arabic typography
+
+Arabic is a cursive, joined script, and several Latin design habits damage it.
+
+### No letter-spacing
+
+CSS Text Level 3 advises authors to avoid letter-spacing on cursive scripts unless they accept non-interoperable results, and it does not allow justification to open gaps between joined Arabic letters ([W3C: CSS Text Module Level 3](https://www.w3.org/TR/css-text-3/)). If your English design system uses tracked-out labels, scope that style to Latin text.
+
+### No faux italics
+
+Fonts sometimes omit Arabic from their italic face, and browsers may then synthesise an oblique by slanting upright letters; CSS Fonts Level 4 uses disabling synthetic Arabic obliques as an example of `font-synthesis` ([W3C: CSS Fonts Module Level 4](https://www.w3.org/TR/css-fonts-4/)). Use weight, colour or size for emphasis in Arabic instead.
+
+### Line height and size
+
+Arabic ascenders and descenders extend much further than Latin ones (Arabic & Persian Layout Requirements, above). Give Arabic more generous line height than English, and often a slightly larger body size, so marks above and below the letters are not clipped. Set these per language with the `lang` attribute, which the W3C notes can be used to vary styling such as fonts and line spacing ([W3C: Why use the language attribute?](https://www.w3.org/International/questions/qa-lang-why)). Choose an Arabic typeface designed for screen reading, with a Latin companion that sits comfortably beside it, and prefer start-aligned text to full justification.
+
+## Forms, validation, dates and numerals
+
+### Labels and error messages
+
+In Arabic, labels, hints, required markers and error messages align to the start (right) side, and focus order follows the reading direction. WCAG 2.2 asks for labels or instructions where input is required, for detected input errors to be identified and described in text, and for correction suggestions where they are known ([W3C: WCAG 2.2, success criteria 3.3.1 to 3.3.3](https://www.w3.org/TR/WCAG22/)). Those descriptions need to exist natively in both languages; an English error on an Arabic form leaves the user stuck.
+
+Write each message as a complete sentence in each language. Arabic grammar agrees in gender and number, and Unicode CLDR defines six plural categories for Arabic ([Unicode CLDR: Language plural rules](https://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html)), so messages assembled from fragments rarely survive translation. Use message formats that support plural rules.
+
+### Input direction and accepted characters
+
+- Set `dir="auto"` on free-text fields so each follows the first strong character typed, and consider `dirname` to send that direction with the form (W3C structural markup article, above).
+- Keep phone, email and identifier fields left-to-right.
+- Accept both European digits (0–9) and Arabic-Indic digits (٠–٩), which are used in different Arabic-speaking regions (Arabic & Persian Layout Requirements, above). Normalise on input rather than rejecting what an Arabic keyboard produces.
+- Do not restrict name fields to Latin characters.
+
+### Dates and numerals
+
+Choose one numeral style for each language and apply it everywhere, including tables, charts and notifications. Spell out month names rather than relying on numeric date formats that read differently across locales, and agree with the customer whether any dates need a Hijri equivalent. Use the platform's locale-aware formatting, such as the JavaScript `Intl` APIs, instead of hand-assembled strings.
+
+## Terminology, translation and native review
+
+Keep a shared bilingual glossary covering clinical terms, service and department names, interface verbs and status labels. The WHO Regional Office for the Eastern Mediterranean maintains the [Unified Medical Dictionary](https://umd.emro.who.int/WHODictionary/Home/AboutUs), an English–Arabic medical reference that is a sensible starting point; the customer's clinicians confirm the final choices.
+
+Different content needs different treatment:
+
+- **Translate precisely** clinical information, instructions, consent and privacy text, form labels and error messages. Meaning must match, and the customer approves it.
+- **Transcreate** headlines, service descriptions and calls to action: rewrite them to read naturally in Modern Standard Arabic and carry the same intent, without following English word order.
+
+Native review should happen in context, on the rendered page, by a qualified Arabic writer. Machine translation, if used at all, is a draft for that reviewer, not a finished text. When content changes in one language, flag its counterpart.
+
+## Accessibility and testing in both languages
+
+WCAG 2.2 requires the default language of each page, and of passages in another language, to be programmatically determinable (3.1.1 and 3.1.2), with exceptions that include proper names and technical terms ([W3C: WCAG 2.2](https://www.w3.org/TR/WCAG22/)). Correct `lang` values help speech synthesisers and braille translators produce usable output (W3C language attribute article, above). Keep source order the same as reading order (WCAG 1.3.2), and let `dir` and logical properties handle direction instead of reordering elements visually.
+
+Before launch, and after every significant change:
+
+- Review every template in both languages at mobile and desktop widths, with real content such as long Arabic names and mixed-direction strings.
+- Run a screen reader pass in Arabic and in English, and check that keyboard focus moves in the reading direction.
+- Confirm there is no horizontal overflow and no clipped diacritics or descenders.
+- Test emails, SMS messages, PDFs and notifications as well as web pages.
+
+The [bilingual content checklist](/resources/bilingual-content-checklist) turns these points into a reusable review.
+
+## Where to start
+
+If you are planning a bilingual website, the [digital presence](/solutions/digital-presence) engagement covers this work from the first wireframes through testing. For a new product, the [platform launch](/solutions/platform-launch) engagement builds both languages into the release plan from the start. When you are ready, [get in touch](/contact) to arrange a free discovery conversation about your languages, users and constraints.

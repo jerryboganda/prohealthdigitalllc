@@ -1,0 +1,114 @@
+---
+title: "Improving a live health platform: evidence before changes"
+description: "This insight explains how to diagnose a live health platform from operational evidence, then prioritise, release and document improvements."
+published: 2026-10-11
+updated: 2026-10-11
+audience: "digital-health-companies"
+engagements: ["platform-improvement"]
+summary:
+  - "Diagnose from operational evidence such as errors, response times, availability, support tickets and task completion before deciding what to change."
+  - "Reproduce each problem and agree acceptance criteria so a fix can be verified rather than assumed."
+  - "Sequence improvements by user impact, risk and dependency, and pair every release with regression checks and a rollback plan."
+  - "Give each part of the platform a named owner and keep documentation current so improvements survive team changes."
+topic: "Platform improvement"
+---
+
+A health platform that people already use carries a different kind of risk from one that is still being built. Patients, clinicians and operations staff depend on it every day, and every change lands on top of existing data, integrations and habits. When something feels wrong, the temptation is to rebuild whatever looks worst. A more reliable path is to gather evidence, reproduce the problem, agree what "fixed" means, then change things in small, reversible steps.
+
+## Start with operational evidence
+
+Opinions about what is wrong are hypotheses, not a plan. Start with how the platform actually behaves.
+
+### Technical signals
+
+- Errors: application exceptions, failed API calls, failed background jobs and integration errors, grouped by type and by the user journey they affect.
+- Response times: latency for key requests, read as a distribution rather than an average, which can hide a slow tail that some users meet every day.
+- Availability: when the platform or a dependency was unreachable or degraded, and for how long.
+- Releases and changes: what was deployed and when, so problems can be lined up against the changes that may have introduced them.
+
+### Human signals
+
+- Support tickets: categorised by journey and by the group raising them (patients, clinicians, administrators), with duplicates merged so volume reflects real problems.
+- Task completion: whether people finish the tasks the platform exists for, such as booking an appointment, completing an intake form or submitting a result, and where they stop.
+- Direct observation: a few sessions watching real users or the staff who support them, with their consent, often explain patterns that the numbers only hint at.
+
+### Handle the evidence with care
+
+Logs, recordings and tickets in a health platform can contain personal and health information. Collect only what the diagnosis needs, restrict who can see it, and follow the data protection obligations that apply to your platform and markets; your legal or compliance advisers should confirm which those are. For the GCC and Pakistan, see our note on [health data protection in the GCC and Pakistan](/insights/health-data-protection-gcc-pakistan). If the evidence itself is hard to obtain because logging is thin or monitoring is missing, that is a finding in its own right, and often the first improvement to make.
+
+## Reproduce before you fix
+
+A problem that cannot be reproduced cannot be confirmed as fixed. For each significant issue, write down:
+
+- The steps, user role, device, browser or app version, language and data conditions under which it occurs.
+- The expected behaviour and the actual behaviour.
+- Whether it happens every time, intermittently, or only under load.
+- The environment where it was reproduced, ideally a staging environment with realistic but non-identifying data.
+
+Some problems only appear in production, such as race conditions or slowness under load. There, add targeted logging or tracing and wait for the next occurrence rather than guessing. Bilingual platforms deserve particular attention: an issue may appear only in the Arabic interface, in right-to-left layout, or with mixed-script input such as names and addresses. Our note on [bilingual Arabic–English health UX](/insights/bilingual-arabic-english-health-ux) covers where these problems tend to hide.
+
+## Prioritise with dependencies and acceptance criteria
+
+Once problems are understood, turn them into a short, ordered list of improvements. A useful item carries enough information for someone else to pick it up:
+
+| Field | What it captures |
+| --- | --- |
+| Problem | The observed issue and the evidence behind it |
+| Affected users | Who is affected, in which journey, and how often |
+| Proposed change | The smallest change likely to resolve it |
+| Dependencies | Other work, integrations, vendors or approvals it relies on |
+| Acceptance criteria | Observable conditions that show it is resolved |
+| Risk and rollback | What could go wrong and how the change would be reversed |
+| Owner | The person accountable for delivering and verifying it |
+
+Order the list by the effect on users and on safe operation, then by effort and risk, and let dependencies shape the sequence. Write acceptance criteria that can be checked, such as "the appointment confirmation shows the correct clinic and time in both English and Arabic", rather than "booking works better". Anything that could affect patient safety or expose personal data should go straight to the people responsible for clinical governance and data protection, not wait its turn in the list.
+
+Where an item touches clinical content, clinical rules, triage logic or anything else that informs a care decision, the clinical behaviour is yours to define and approve. The technology team implements and tests what has been approved; it does not decide what is clinically correct.
+
+## Release safely: regression checks and rollback
+
+Every change to a live platform should be planned on the assumption that something might break.
+
+### Regression checks
+
+- Keep a list of critical journeys (sign-in, booking, forms, payments where relevant, notifications and integrations) and check them before each release, automated where practical.
+- Cover both languages and both text directions, the main device and browser combinations your users rely on, and user roles with different permissions.
+- Re-test the acceptance criteria of the item being released and the neighbouring features it touches.
+
+### Release and rollback planning
+
+- Release in small increments so the cause of any problem is easy to identify.
+- Decide in advance how a release will be reversed: redeploying the previous version, switching off a feature flag or restoring a configuration. Database changes need particular care, because not all of them can be undone simply.
+- Agree a release window with the people who depend on the platform, and brief support teams on what is changing.
+- Watch the same evidence you gathered at the start for a period after release, so a regression is spotted by the team before it is reported by users.
+
+Our [platform launch readiness checklist](/resources/platform-launch-readiness-checklist) covers many of the same release checks and is useful for live improvements too.
+
+## Treat performance and accessibility as measurable work
+
+### Performance
+
+For the web parts of a platform, Google's [Core Web Vitals](https://web.dev/articles/vitals) give a shared vocabulary: Largest Contentful Paint (LCP) for loading, Interaction to Next Paint (INP) for responsiveness and Cumulative Layout Shift (CLS) for visual stability. That guidance recommends assessing them from field data at the 75th percentile of page loads, separately for mobile and desktop, and notes that Lighthouse cannot measure INP because a lab run has no real user input; Total Blocking Time (TBT) is the suggested lab proxy. In practice, use field data to decide what matters, and lab tools to investigate and to catch regressions before release. For signed-in areas, native apps and APIs, measure the response times of the tasks users actually perform.
+
+### Accessibility
+
+Accessibility problems rarely show up in error logs, but they are very visible to the people who meet them. [WCAG 2.2](https://www.w3.org/TR/WCAG22/), a W3C Recommendation, provides testable success criteria at three conformance levels: A, AA and AAA. Automated scanners find some issues quickly, but the W3C [notes](https://www.w3.org/WAI/test-evaluate/) that no tool alone can determine whether a site meets accessibility standards and that knowledgeable human evaluation is required. Add keyboard-only use, screen readers in both languages, form error messages and focus order to your regression list.
+
+## Make ownership and documentation explicit
+
+Improvements fade when nobody owns them. For each area of the platform (each major journey, integration and shared component) name an owner who decides on changes, watches its health after release and is the first point of contact when something goes wrong. Tie ownership to roles as well as individuals, so it survives team changes.
+
+Keep documentation proportionate and current:
+
+- An architecture overview showing services, integrations and where data flows.
+- Runbooks for known failure modes: what to check, whom to contact and how to roll back.
+- A change log that links each release to the problems it addressed.
+- Notes on environment configuration, third-party accounts and renewal dates, so that nothing depends on one person's memory.
+
+## What to expect, and what not to
+
+A responsible improvement engagement does not start with promised results. Until the evidence is gathered and the problems reproduced, nobody can honestly say how much faster, more reliable or easier to use a platform will become. What can be committed to is a clear process: a diagnosis that shows its evidence, a prioritised list with acceptance criteria, small and reversible releases, and verification against the agreed criteria. Some findings will be quick fixes; others will need their own plan and budget.
+
+## Where to go next
+
+If you run a live health platform and want an outside view of where it stands, our [Improve an existing platform](/solutions/platform-improvement) engagement starts with this kind of evidence-led diagnosis. You can read more about [how we work](/how-we-work) and, when you are ready, [get in touch](/contact) to arrange a free discovery conversation. Pricing is agreed per project once the scope is clear, and contracted 24/7 support can be arranged where ongoing cover is needed.

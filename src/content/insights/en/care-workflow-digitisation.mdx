@@ -1,0 +1,115 @@
+---
+title: "Digitising care workflows without disrupting care"
+description: "Digitising intake, referrals, follow-up and handoffs works best when you map real work, check integrations, test with staff and measure from a baseline."
+published: 2026-10-11
+updated: 2026-10-11
+audience: "providers"
+engagements: ["care-workflows"]
+summary:
+  - "Map the current workflow with the people who run it before choosing any tool."
+  - "Prioritise a few high-friction steps and confirm what each connected system actually supports."
+  - "Test with operational users, train for real shift patterns, and name an owner for every system."
+  - "Measure against a baseline recorded before go-live, not against expectations."
+topic: "Care workflows"
+---
+
+Much of the friction that patients and staff feel in a clinic sits around care rather than inside it: the intake form completed twice, the referral waiting in a shared inbox, the follow-up call nobody was assigned, the appointment changed in one system but not another. Digitising these operational workflows can reduce rework and make handoffs visible. Done carelessly, it can also add another screen to an already busy shift, or move a gap from paper into software, where it is harder to see.
+
+This insight sets out a practical sequence for providers digitising intake, referrals, follow-up, scheduling coordination and task handoffs. It is written from the position of a technology delivery partner: we design and build the tooling, while clinical decisions, clinical content and the approval of anything patient-facing stay with the provider's own clinical and governance teams.
+
+## Start with the workflow, not the software
+
+A workflow digitisation project is easy to frame as a product choice: which form builder, which scheduling tool, which task board. That framing skips the question that decides whether the project helps: what actually happens today, step by step, and why?
+
+The documented process and the real one rarely match. Front-desk teams keep a paper list because the system does not show what they need. Nurses phone a colleague because a message queue has no clear owner. These workarounds are information. They show where the current tools fall short, and a new system that ignores them tends to recreate them.
+
+## Map the current workflow with the people who run it
+
+Map each workflow with the people who perform it, where they perform it, rather than from a policy document or a manager's summary. Receptionists, care coordinators, nurses, contact-centre agents and the staff who handle referrals usually hold different parts of the picture.
+
+### What to capture
+
+For each workflow, record:
+
+- The trigger: what starts it, such as a booking, a referral letter, a discharge or a test result becoming available.
+- Each step, who performs it, and which system, form, phone line or spreadsheet they use.
+- Every handoff between people, teams or systems, and how the receiver knows that work has arrived.
+- Where information is re-entered, copied or checked by hand.
+- Where work waits, and what happens when the usual person is absent.
+- Which steps involve clinical judgement, so that they can be supported but not automated or altered without clinical sign-off.
+
+Our [care workflow mapping guide](/resources/care-workflow-mapping-guide) offers a structure for these sessions.
+
+## Prioritise before you build
+
+A full map usually reveals more problems than one project should take on. Prioritise steps that are frequent, error-prone or leave patients waiting without anyone noticing, and that can be changed without redesigning clinical practice.
+
+A few questions help to rank each candidate:
+
+| Question | Why it matters |
+| --- | --- |
+| How often does this step happen? | Frequent steps repay the effort; rare ones may be better served by a clear procedure. |
+| What goes wrong today, and who notices? | Silent failures, such as an unassigned follow-up, are often the most valuable to fix. |
+| Does it touch clinical decision-making? | If so, the clinical team defines the rules and the technology implements them. |
+| Which systems does it depend on? | Integration effort often decides the real scope. |
+| Can it be piloted in one site or team? | A contained pilot limits disruption and produces honest feedback. |
+
+Start with one or two workflows, run them end to end, and expand once they are stable.
+
+## Integration realities
+
+Most operational workflows cross systems: an electronic health record or practice management system, a scheduling tool, a contact-centre platform, messaging and billing. What is possible depends less on what a standard allows than on what each system and vendor actually exposes and permits.
+
+### Confirm what each system supports
+
+Before committing to a design, establish for every system involved:
+
+- Which APIs are documented and supported for production use, and in which version.
+- Whether the vendor or system owner must approve access, and how long that usually takes.
+- Which data can be read, which can be written, and whether writes are allowed at all.
+- Rate limits, test environments, and how changes on the vendor's side are announced.
+
+Where no supported interface exists, a manual step with clear ownership may be safer than an unsupported workaround such as screen scraping.
+
+### Standards such as HL7 FHIR
+
+Where systems support it, [HL7 FHIR](https://hl7.org/fhir/overview.html) provides a shared model for exchanging healthcare information electronically, and several of its resources map closely onto operational workflows. [Questionnaire](https://hl7.org/fhir/questionnaire.html) and QuestionnaireResponse describe forms and the answers given to them, which suits structured intake. [ServiceRequest](https://hl7.org/fhir/servicerequest.html) can represent a referral or a transfer-of-care request. [Appointment](https://hl7.org/fhir/appointment.html), together with Schedule and Slot, covers booking. [Task](https://hl7.org/fhir/task.html) describes an activity to be performed and tracks its state of completion, which is close to what a handoff needs.
+
+Support for FHIR varies between products and versions. A FHIR server's [CapabilityStatement](https://hl7.org/fhir/capabilitystatement.html) documents the capabilities it declares, such as the resources and interactions it supports. Read it before any design depends on a particular resource, then confirm the behaviour in the vendor's test environment. Where applications are authorised to access FHIR data, the [SMART App Launch](https://hl7.org/fhir/smart-app-launch/) framework builds on OAuth 2.0 and uses scopes to define what a connected application may access.
+
+### Data protection and access
+
+Every integration moves health data, so access should be limited to what each workflow needs, and it should be logged. Requirements for data residency, consent and retention differ across the GCC and Pakistan. Our overview of [health data protection in the GCC and Pakistan](/insights/health-data-protection-gcc-pakistan) covers the questions to settle early with your legal and compliance advisers. This section is general guidance as of October 2026, not legal advice.
+
+## Test with the people who will use it
+
+Technical testing confirms that the system works; operational testing confirms that the workflow works. Both are needed.
+
+- Test with the receptionists, coordinators and nurses who will use the tool, on realistic scenarios and at a realistic pace.
+- Include the awkward cases: a patient whose national ID is not on file, a referral with missing information, a cancellation after a reminder has gone out, a handoff at shift change.
+- Test patient-facing forms on mobile phones, in Arabic and English where both are offered, and against [WCAG 2.2](https://www.w3.org/TR/WCAG22/), the W3C Recommendation for making web content more accessible.
+- Agree a fallback: what staff do if the new tool is unavailable, and how work captured during an outage is reconciled afterwards.
+
+Clinical content inside a workflow, such as screening questions or triage wording, should be reviewed and approved by the provider's clinical team before it reaches patients.
+
+## Training, adoption and ownership
+
+A workflow tool is adopted when it makes someone's shift easier, not when it is switched on. Train in short sessions close to go-live, built around the roles people actually hold, and include night and weekend staff. Identify a few colleagues in each team who can answer day-to-day questions. Plan a period of side-by-side support after launch, and collect issues in one place.
+
+Each system and each workflow needs a named owner inside the organisation: someone who decides on changes, approves new users and is accountable when something breaks. Without one, small issues accumulate and staff drift back to their old workarounds. Ownership should cover the business rules, for example who picks up an unclaimed referral, as well as the technical configuration. Where a delivery partner provides ongoing support, its scope, hours and escalation path should be written into the support agreement rather than assumed.
+
+## Measure against a baseline
+
+Decide what you will measure before anything changes, and record the current values. Useful measures are usually operational and close to the workflow:
+
+- Time from a referral being received to it being acknowledged or booked.
+- The share of intake forms completed before the visit.
+- Follow-ups due compared with follow-ups completed in a given period.
+- How often the same data is re-entered across systems.
+- Friction reported by staff, gathered in short, regular check-ins.
+
+Compare like with like: the same workflow and the same part of the week or month, before and after. Treat early results with caution, because adoption takes time and novelty colours both enthusiasm and complaint. If a measure does not move, the workflow map is often the best place to look for the reason.
+
+## Where to go from here
+
+If you are planning to digitise intake, referrals, follow-up or handoffs, our [care workflows engagement](/solutions/care-workflows) begins with mapping and prioritisation, and [how we work](/how-we-work) describes the delivery approach. Discovery is free, and pricing depends on the scope agreed. If it would help to talk through a specific workflow, you can [contact us](/contact).

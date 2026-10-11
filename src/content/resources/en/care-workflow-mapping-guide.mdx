@@ -1,0 +1,157 @@
+---
+title: "Care workflow mapping guide: map before you digitise"
+description: "This step-by-step guide shows how to map one care-adjacent workflow, including its handoffs, delays and dependencies, before any digitisation begins."
+published: 2026-10-11
+updated: 2026-10-11
+audience: "providers"
+engagements: ["care-workflows"]
+summary:
+  - "Map one bounded workflow as it is actually performed today, not as the policy document describes it."
+  - "Record steps, roles, systems and handoffs together so that duplicate entry and waiting points become visible."
+  - "Capture a simple baseline and the common exceptions before deciding what to change."
+  - "List system access, APIs, vendors and data arrangements early, because they shape what can be delivered and when."
+kind: "guide"
+---
+
+Digitising a workflow that nobody has written down tends to move its existing problems into new software. This guide walks through mapping one current, care-adjacent operational workflow (the scheduling, intake, referral, results routing or follow-up work that surrounds clinical care) so that any digital change starts from an accurate picture.
+
+The guide covers operational steps only. Clinical decisions, clinical protocols and the approval of clinical content stay with your clinicians and your governance processes. Where a step involves clinical judgement, the map should simply mark it and name the accountable role.
+
+## Before you start: what a useful map looks like
+
+A useful workflow map is:
+
+- **Specific.** One workflow, with a clear start and a clear end.
+- **Observed.** It describes what people actually do today, including workarounds, rather than what the policy document says.
+- **Shared.** The people who do the work recognise it as accurate.
+- **Plain.** A table and a simple swimlane sketch are enough. If your organisation already uses a formal notation such as [BPMN (Business Process Model and Notation)](https://www.omg.org/spec/BPMN/), published by the Object Management Group, keep using it; otherwise, do not let notation slow the work down.
+
+## Step 1: Choose one workflow and set its boundaries
+
+### Pick the workflow
+
+Good first candidates are workflows that happen often, involve several handoffs, and are a known source of frustration for staff or patients. For example:
+
+- Referral intake, from receipt of a referral to a booked appointment.
+- New patient registration and pre-visit forms.
+- Routing of laboratory or imaging results to the responsible clinician, and then to the patient.
+- Discharge or post-visit follow-up scheduling.
+- Insurance eligibility checks or pre-authorisation requests.
+
+Avoid starting with a workflow that is in the middle of a restructure, or one whose ownership is disputed.
+
+### Set the boundaries
+
+Write down, in a sentence or two each:
+
+- **Trigger:** the event that starts the workflow.
+- **End point:** the outcome that means it is finished.
+- **In scope:** sites, departments, patient groups and channels (phone, walk-in, web, messaging).
+- **Out of scope:** anything you are deliberately leaving for later.
+
+If the boundary keeps moving during mapping sessions, pause and agree it again before continuing.
+
+## Step 2: Gather the right people
+
+Mapping often goes wrong when the people who do the work are not in the room. Include:
+
+- Front-line staff who perform each step, across shifts and sites where practice differs.
+- A clinical representative wherever the workflow touches clinical judgement, to confirm which steps are clinical and who is accountable for them.
+- The workflow owner: the person who can approve changes to how the work is done.
+- Someone who knows the systems involved, such as your IT lead or the vendor contact for each system.
+- Where relevant, the people responsible for data protection, information governance or compliance.
+
+Keep sessions short and focused. Walk through a few recent, real cases from start to finish rather than discussing the process in the abstract, and remove patient identifiers from any material brought into the session.
+
+## Step 3: Map steps, roles, systems and handoffs
+
+### Record each step
+
+For every step, capture who does it, what they do, which system or tool they use, what information goes in and comes out, and where the work goes next. A handoff is any point where work passes between people, teams, systems or channels. Delays and errors tend to gather at handoffs, so record each one explicitly.
+
+If your service is bilingual, also note the language at each step: which forms, messages and screens are in Arabic, in English, or in both. The [bilingual content checklist](/resources/bilingual-content-checklist) can help here.
+
+### A simple template
+
+Copy this table into a shared document or spreadsheet, with one row per step.
+
+| # | Step | Role | System or tool | Information in | Information out / handoff to | Wait before next step | Data re-entered? | Common exceptions | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Receive referral | Intake coordinator | Shared email inbox | Referral letter (PDF) | Referral logged; passed to registration | Record the observed range | Yes: patient details retyped from the letter | Missing contact number | Arrives through several channels |
+| 2 | Register patient | Registration staff | Practice management system | Patient details | Patient record; passed to scheduling | Record the observed range | Yes: details re-keyed from the intake log | Existing record under a different spelling | |
+| 3 | ... | | | | | | | | |
+
+The first two rows are an illustration only. Replace them with your own observations.
+
+### Sketch the flow
+
+Below the table, draw a simple swimlane: one lane per role or system, a box for each step and an arrow for each handoff. Mark clinical decision points clearly and label the role accountable for each one. Then share the draft with everyone who took part and correct it before moving on.
+
+## Step 4: Find duplicate entry, delays and exceptions
+
+With the map in front of the group, work through it deliberately.
+
+### Duplicate entry
+
+Highlight every place where the same information is typed, copied or re-keyed into more than one system, or transcribed from paper or PDF. For each data item, agree the source of truth: the one system that should hold the authoritative version.
+
+### Delays
+
+Mark where work waits: queues, batch processing, waiting for a signature, a call-back or an external party. Separate waiting that is necessary, such as waiting for a clinician's review, from waiting that the process itself creates.
+
+### Exceptions
+
+Record what happens when things do not go to plan: incomplete referrals, duplicate patient records, patients who cannot be reached, system downtime, out-of-hours requests and urgent cases. Exceptions are easy to leave off a map, yet they often take up staff time and are easily missed when software requirements are written. For each exception, note who handles it and how.
+
+### Workarounds
+
+Ask directly about spreadsheets, personal notebooks, messaging groups and sticky notes. A workaround is evidence of a need the current systems do not meet; it is not a failing of the staff who rely on it. Messaging groups that carry patient information also deserve a careful conversation with your information governance lead.
+
+## Step 5: Define a baseline and prioritise improvements
+
+### Set a baseline
+
+Before changing anything, record how the workflow performs today, so that you can tell later whether a change has helped. Keep the measures few and simple, and agree how each one will be collected:
+
+- Elapsed time from trigger to end point, sampled over a period the team agrees on.
+- Number of handoffs and number of systems involved.
+- Number of times key data items are entered.
+- How often the common exceptions occur, and how they are resolved.
+- Staff feedback, and patient feedback where appropriate, on the main points of friction.
+
+Where something cannot be measured reliably, record a qualitative description and the date. An honest, rough baseline is more useful than a precise-looking guess.
+
+### Prioritise
+
+List the candidate improvements and, in a short discussion, rate each one on expected benefit to staff and patients, effort and cost, dependence on other systems or vendors, and risk, including clinical safety and data protection. Changes to the process itself, such as removing an unnecessary approval or standardising a form, can sometimes achieve more than new software and can often come first.
+
+| Improvement | Benefit | Effort | Dependencies | Risk | Decision |
+| --- | --- | --- | --- | --- | --- |
+| | | | | | |
+
+## Step 6: Document dependencies
+
+Digitisation timelines are often shaped by things outside the project team's direct control, so record them early.
+
+### What to capture
+
+- **System access:** which systems are involved, who administers them, and what access a delivery partner would need, including test environments, accounts and the approval route.
+- **Interfaces and APIs:** whether each system offers an interface, what it supports, and whether documentation and a test environment are available. If a system supports [HL7 FHIR](https://hl7.org/fhir/overview.html), a standard for exchanging healthcare information electronically, note the version and which data it exposes.
+- **Vendors:** contract terms that affect integration, change requests or data export, and who to contact for each.
+- **Data arrangements:** where data is hosted, any data sharing agreements, consent and retention requirements, and which laws and policies apply in each market you operate in. Confirm these with your legal and compliance advisers; our overview of [health data protection in the GCC and Pakistan](/insights/health-data-protection-gcc-pakistan) is a starting point, not legal advice.
+- **People and decisions:** who signs off process changes, clinical content and data arrangements.
+
+### A dependency log
+
+| Dependency | Type | Owner | Current status | Open questions |
+| --- | --- | --- | --- | --- |
+| Test environment for the practice management system | System access | IT lead | Requested | Lead time for vendor approval |
+| ... | | | | |
+
+As before, the first row is an illustration; replace it with your own entries.
+
+## Where to go from here
+
+A completed map, an agreed baseline and a dependency log give any delivery team, internal or external, a firm starting point. For a broader view of the work that follows, read [care workflow digitisation](/insights/care-workflow-digitisation).
+
+If it would help to review your map with someone outside the organisation, our [care workflows engagement](/solutions/care-workflows) begins with a free discovery conversation. You can read more about [how we work](/how-we-work) or [get in touch](/contact). We deliver the technology; clinical decisions and the approval of clinical content remain with your team.

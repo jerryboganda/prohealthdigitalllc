@@ -288,7 +288,12 @@ const selected = engagement || "not-sure";
     <p class="muted text-[0.95rem]">{t("followup")}</p>
   </form>
   <div class="inquiry-success" role="status" tabindex="-1" hidden>
-    <span class="success-icon" aria-hidden="true">
+    <span
+      class="success-icon"
+      aria-hidden="true"
+      data-lottie="/lottie/check.json"
+      data-loop="false"
+    >
       <Icon name="check" size={28} />
     </span>
     <h2>{t("thanks")}</h2>
@@ -357,8 +362,13 @@ const selected = engagement || "not-sure";
     inline-size: 3.5rem;
     block-size: 3.5rem;
     border-radius: 999px;
-    background: var(--color-teal);
-    color: #fff;
+    background: #fff;
+    color: var(--color-teal-700);
+    box-shadow: 0 0 0 1px var(--color-line);
+  }
+  .success-icon :global(svg) {
+    inline-size: 100%;
+    block-size: 100%;
   }
   fieldset[disabled] {
     opacity: 0.65;

@@ -1,0 +1,112 @@
+---
+title: "English–Arabic bilingual content and interface checklist"
+description: "Use this grouped checklist to plan, write, build and test English and Arabic healthcare content and interfaces, from glossary to QA."
+published: 2026-10-11
+updated: 2026-10-11
+audience: "both"
+engagements: ["digital-presence", "platform-launch"]
+summary:
+  - "Treat Arabic as a full product language with its own owner, glossary and native reviewers, not as a late translation step."
+  - "Set language and direction in markup, build layouts with logical CSS properties and isolate mixed-direction text deliberately."
+  - "Decide numerals, dates, form behaviour and search metadata per language before build, then test every journey in both languages."
+  - "Clinical wording and final content approval stay with your clinical team; this checklist covers how that content is delivered."
+kind: "checklist"
+---
+
+Many bilingual health websites and platforms are designed in one language and adapted to the other near the end of the project. The symptoms are familiar: Arabic pages that read like translations, layouts that are only partly mirrored, phone numbers that display in the wrong order, and search results that show English titles to Arabic readers.
+
+Use this checklist twice: once during planning and design, and again before launch. It covers how bilingual content is planned, written, built and tested. It does not cover clinical accuracy. Clinical content, and its approval in both languages, remains with your clinical team.
+
+## Planning and ownership
+
+- Record which language is the source for each content type, for example service pages drafted in English and appointment reminders drafted in Arabic.
+- Give Arabic its own content owner. It should be a product language in its own right, not a translation of the English site added at the end.
+- Name a clinical approver for each language. Translated clinical content needs the same sign-off as the source text.
+- Decide whether every page will exist in both languages. Where a page will not, decide what the user sees instead and say so plainly on the page.
+- Give each language version its own URL. Google [recommends different URLs for each language version](https://developers.google.com/search/docs/specialty/international/managing-multi-regional-sites) rather than switching language with cookies or browser settings.
+- Put a visible language switch on every page that leads to the equivalent page, not the home page. Avoid redirecting users automatically by assumed language; [Google notes](https://developers.google.com/search/docs/specialty/international/managing-multi-regional-sites) that such redirects can stop users and search engines reaching every version.
+- Plan time for Arabic review in every content release, not only at launch.
+
+## Terminology and transcreation
+
+- Build a bilingual terminology glossary before writing starts: specialties, service and department names, appointment and billing terms, and interface labels.
+- For each term, record the approved Arabic, any wording to avoid, and whether a Latin-script term is kept as it is (product names and acronyms such as HL7 FHIR usually are).
+- Choose and document the Arabic register. Modern Standard Arabic suits most formal health content; decide whether any channel, such as short reminders, may use a regional variety.
+- Decide how the interface addresses the reader in Arabic, for example with gender-neutral or plural forms, and apply it consistently in every component.
+- Write Arabic from an agreed brief (transcreation) rather than translating sentence by sentence, while keeping meaning, intent and clinical caveats identical.
+- Keep strict parity for anything with clinical or legal weight, such as consent text, preparation instructions and safety information, so both versions say exactly the same thing.
+- Have every Arabic text reviewed by a native Arabic writer who did not write it, and every clinical statement checked by a bilingual clinical reviewer your team nominates.
+- Do not publish machine translation without review. If it is used as a drafting aid, the human review steps stay the same.
+
+## Layout, mirroring and typography
+
+### Layout and mirroring
+
+- Set `lang` and `dir` on the `html` element of every page, for example `lang="ar" dir="rtl"` for Arabic. The W3C advises [not using CSS to set base direction](https://www.w3.org/International/questions/qa-html-dir), so that direction is still correct when stylesheets are not applied.
+- Build layouts with [CSS logical properties](https://www.w3.org/TR/css-logical-1/), such as `margin-inline-start` and `text-align: start`, instead of left and right, so one stylesheet serves both directions.
+- Mirror the order of navigation, breadcrumbs, step indicators, carousels and progress bars in Arabic.
+- Mirror icons that imply direction, such as back and forward arrows. Leave logos, media playback controls, clocks, checkmarks and pictures of real objects unmirrored, and review each icon individually.
+- Make horizontal motion, slide-in panels and swipe gestures follow the reading direction.
+- Review images that contain text or a directional composition, such as a person facing or pointing towards the content, and plan Arabic variants where needed.
+- Make table column order follow the reading direction, and decide deliberately how chart axes run in Arabic, then keep that choice consistent.
+
+### Typography
+
+- Choose an Arabic typeface designed for screen reading at body sizes, with the weights you need, and pair it with the Latin typeface so that mixed lines look balanced.
+- Test line height and font size with real Arabic text. W3C's [Arabic and Persian layout requirements](https://www.w3.org/TR/alreq/) note that Arabic ascenders and descenders extend further than Latin ones, so mixed-script text needs careful alignment.
+- Do not rely on letter-spacing, uppercase styling or synthetic italics for emphasis or hierarchy in Arabic, and check that no style breaks the joins between letters.
+- Test components with the longest realistic label in each language, and avoid fixed-width buttons or truncation of clinical text.
+
+## Bidirectional text, numerals and dates
+
+- Wrap any opposite-direction phrase, such as an English device name in Arabic text, in an element with its own `dir` and `lang`, as the [W3C inline bidi guidance](https://www.w3.org/International/articles/inline-bidi-markup/) recommends.
+- Wrap text inserted at run time, such as patient names, clinic names and search terms, in a `bdi` element or a `span` with `dir="auto"`, so its direction is detected rather than inherited.
+- Test opposite-direction phrases that begin with a number, begin or end with punctuation or other neutral characters, or are followed by a number: phone numbers, reference codes, doses with units, times and trailing punctuation. The [W3C](https://www.w3.org/International/articles/inline-bidi-markup/) lists these situations as ones where unwrapped text displays incorrectly.
+- Use Arabic punctuation (، ؛ ؟) in Arabic text, and check that brackets and quotation marks display the right way round.
+- Choose one digit style for Arabic content and use it everywhere. The [W3C Arabic layout requirements](https://www.w3.org/TR/alreq/) record European digits (0–9) as typical in western Arabic-speaking countries such as Morocco, and Arabic-Indic digits in eastern ones such as Saudi Arabia, so neither is a safe default. Write your choice into the style guide.
+- Format dates, times and numbers with locale-aware functions rather than hand-built strings, and show dates in an unambiguous form, for example with the month written out.
+- Decide whether any dates need a Hijri equivalent and, where both calendars appear, label which is which.
+- Store machine-readable values such as dates, phone numbers and prices separately from their display format, so each language can format them correctly.
+
+## Forms and validation
+
+- Give email, URL, reference-code and number fields an explicit `dir="ltr"`. The [HTML standard](https://html.spec.whatwg.org/multipage/dom.html#the-dir-attribute) already gives telephone inputs left-to-right directionality by default.
+- Use `dir="auto"` on free-text fields where people may write in either language, such as messages or reasons for a visit, and consider `dirname` to submit the detected direction with the form, as the [W3C describes](https://www.w3.org/International/questions/qa-html-dir).
+- Accept digits typed in European or Arabic-Indic form in numeric fields, including the Eastern Arabic-Indic forms that Persian and Urdu keyboards produce, and normalise them before validation and storage.
+- Write labels, hints and error messages in each language. WCAG 2.2 requires that a detected input error is [identified and described to the user in text](https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html) (Level A), and an error shown only in English is of little use to an Arabic reader.
+- Decide how names are captured. Records, insurance or travel documents may need both Arabic and Latin-script names, so do not force a Latin-only pattern on name fields.
+- Place required-field markers, character counters and inline errors on the correct side in each direction, and check that error summaries link to the right field.
+- Send confirmation messages, emails and SMS in the language the user chose when they submitted the form.
+
+## Search metadata and accessibility
+
+### Search
+
+- Write the title and meta description of each Arabic page in Arabic, based on how Arabic-speaking users search, rather than translating the English metadata.
+- Add hreflang annotations to both versions, each listing itself and the other with fully qualified URLs. Google [ignores annotations that are not reciprocal](https://developers.google.com/search/docs/specialty/international/localized-versions); add `x-default` where a fallback page is useful.
+- Keep each page in one language, including navigation and boilerplate. Google determines page language [from visible content, not the `lang` attribute](https://developers.google.com/search/docs/specialty/international/managing-multi-regional-sites).
+- Localise structured data, social sharing titles and image alternative text, not only the visible copy.
+- List both language versions in the XML sitemap and keep each page pair stable over time, so annotations and links stay valid.
+
+### Accessibility
+
+- Check that the language declared on the `html` element matches the content on every template, including error pages and shared layouts. WCAG 2.2 [Language of Page](https://www.w3.org/WAI/WCAG22/Understanding/language-of-page.html) (Level A) depends on it, and the [W3C recommends](https://www.w3.org/International/questions/qa-html-language-declarations) declaring it on every page.
+- Mark passages in the other language with `lang`. [Language of Parts](https://www.w3.org/WAI/WCAG22/Understanding/language-of-parts.html) (Level AA) requires this, with exceptions such as proper names and technical terms.
+- Write alternative text, accessible names and ARIA labels in the page language; an English `aria-label` left on an Arabic page is easy to miss.
+- Test with screen readers in Arabic as well as English, including how passages marked in the other language are announced.
+- Keep focus order and keyboard navigation consistent with the visual order of the mirrored layout.
+
+## Quality assurance in both languages
+
+- Run every critical journey end to end in each language: finding a service, booking, submitting a form, confirmation messages, error states and empty states.
+- Test on real devices set to Arabic, with Arabic keyboards, not only by switching the site language on an English device.
+- Test with real content at realistic lengths, including the longest service names and mixed-direction strings, rather than placeholder text.
+- Have a native Arabic reviewer approve each release in context, on the page rather than in a spreadsheet, and record that approval alongside the clinical sign-off.
+- Automate the cheap checks: every page has `lang` and `dir`, hreflang pairs resolve, and visual regression screenshots are captured in both directions.
+- Keep a bilingual issues log grouped by category (terminology, layout, bidirectional text, content parity), so recurring problems feed back into the glossary and components.
+
+## Next steps
+
+For a new or rebuilt bilingual website, [Establish your digital presence](/solutions/digital-presence) describes how we approach the work. For a platform preparing to launch in both languages, see [Launch a health platform](/solutions/platform-launch) and the [platform launch readiness checklist](/resources/platform-launch-readiness-checklist). The insight on [bilingual Arabic–English health UX](/insights/bilingual-arabic-english-health-ux) explains the reasoning behind several items above.
+
+If you would like to work through this checklist against your own site or product, [get in touch](/contact). Discovery is free, and it is a practical place to decide which items to prioritise for your situation.

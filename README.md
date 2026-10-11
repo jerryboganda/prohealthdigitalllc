@@ -1,50 +1,48 @@
 # ProHealth Digital Website
 
-Web application built for ProHealth Digital LLC.
+Bilingual (English/Arabic) website for ProHealth Digital LLC — healthcare technology delivery for providers and digital health companies in the GCC and South Asia.
 
-## Features
+## Stack
 
-- Built with React, TanStack Start (SSR), and TypeScript.
-- Styled with Tailwind CSS v4.
-- Optimised for speed, accessibility, and search engine optimization (SEO).
-- Fully responsive layout for all viewports.
+- **Astro 7** with `@astrojs/node` (standalone server, per-request rendering) and MDX content collections.
+- **Tailwind CSS 4** design tokens (`src/styles/global.css`), self-hosted fonts via the Astro Fonts API (Newsreader, IBM Plex Sans, Noto Naskh Arabic, IBM Plex Sans Arabic).
+- **GSAP** motion runtime (`src/scripts/motion.ts`): ScrollTrigger, SplitText, DrawSVG, a lazy raw-WebGL hero shader, Lottie micro-icons and native cross-document view transitions. Everything honours `prefers-reduced-motion` and mirrors in RTL.
+- No React on the client, no analytics, no cookies, no third-party requests; strict CSP and security headers from `src/middleware.ts`.
+
+## Structure
+
+| Path | Purpose |
+| --- | --- |
+| `src/pages/[...path].astro` | Single catch-all page; `src/lib/routes.ts` resolves every URL to a page, a 301 redirect or a localized 404. English at `/`, Arabic at `/ar`. |
+| `src/views/*` | Page templates (home, solutions, audiences, work, insights, resources, glossary, policies, contact…). |
+| `src/components/*` | Design-system components (header, footer, section heading, engagement cards, process timeline, inquiry form, mockups…). |
+| `src/lib/content.ts`, `copy.ts`, `meta.ts`, `audiences.ts`, `glossary.ts`, `engagement-details.ts` | All structured copy as `text(en, ar)` pairs; tests require both languages. |
+| `src/content/{insights,resources}/{en,ar}/*.mdx` | Long-form articles; a slug is published only when both languages exist. |
+| `src/lib/schema.ts`, `seo.ts` | JSON-LD graph and head metadata; per-page OG images are generated at build (`src/pages/og/[...route].ts`). |
+| `src/lib/inquiry.ts`, `inquiry.server.ts`, `src/pages/api/inquiries.ts` | Inquiry validation and authenticated SMTP delivery (unchanged security model). |
 
 ## Development
 
-To run the development server locally, ensure you have Node.js installed, then execute:
-
 ```sh
-# Install dependencies
 npm install
-
-# Start local dev server
 npm run dev
 ```
 
-The application will run locally at `http://localhost:8080` (or the next available port).
-
-## Production Build
-
-To compile the application for production deployment:
+## Verification
 
 ```sh
-npm run build
+npm run lint && npm test && npm run build && npm run check
 ```
 
-This creates a production Node.js server build in `.output`.
-
-To start the production server:
+With the production build running (`PORT=3100 HOST=127.0.0.1 node .output/server/index.mjs`):
 
 ```sh
-npm start
+npm run check:routes          # every page × locale: lang/dir, canonical, hreflang, single h1, unique meta, JSON-LD, CSP-safe scripts, OG images, redirects, 404s, sitemap
+node scripts/visual-qa.mjs    # Playwright (system Chrome): no overflow, no console errors, nothing left hidden, Lottie renders — mobile, desktop, reduced motion
 ```
 
-Set `PORT` and `HOST` in the hosting environment to configure the listening address.
+Regenerate brand rasters with `node scripts/brand-assets.mjs` and Lottie icons with `node scripts/lottie-icons.mjs`.
 
-## Bilingual services and inquiries
+## Production
 
-The website presents four scoped healthcare technology engagements in English and Arabic. Shared copy is in `src/lib/content.ts`; Arabic routes use `/ar`. Old service/package/product URLs permanently redirect to the current sections.
-
-Project inquiries use `/api/inquiries`, bounded Zod validation, authenticated SMTP, honeypot and proxy-authenticated rate limiting. Success requires mail-server acceptance. Credentials belong only in the private VPS environment; use `deploy/configure-mail.ps1` for the Hostinger sales mailbox.
-
-Run `npm test`, `npm run lint`, `npm run build`, then `npx tsc --noEmit`. With the production server running, `npm run check:routes` verifies all public pages and redirects. See [deployment and acceptance notes](deploy/OVERHAUL.md) for configuration, staging, rollback and remaining human review gates.
+`npm run build` writes `.output/server/index.mjs` plus static files in `.output/client`; the server bundle includes its dependencies, so the read-only production container mounts only `.output`. See [deployment and acceptance notes](deploy/OVERHAUL.md).

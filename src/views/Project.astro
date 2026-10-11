@@ -36,7 +36,7 @@ const steps = [pages.serviceContext, ui.projectRole, pages.userJourney];
 <section class="section">
   <div class="container-x grid gap-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
     <figure class="grid gap-5" aria-label={pages.diagramLabel[locale]}>
-      <div class="relative" data-reveal>
+      <div class="relative isolate" data-reveal>
         <div class="project-glow" aria-hidden="true"></div>
         <UiMockup variant={variants[slug as keyof typeof variants]} class="relative" />
       </div>
@@ -87,7 +87,9 @@ const steps = [pages.serviceContext, ui.projectRole, pages.userJourney];
 <style>
   .project-glow {
     position: absolute;
-    inset: -10%;
+    inset: 0;
+    z-index: -1;
+    scale: 1.15;
     background: radial-gradient(closest-side, rgb(0 178 169 / 0.2), transparent 70%);
     filter: blur(20px);
   }

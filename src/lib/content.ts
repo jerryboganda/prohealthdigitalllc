@@ -73,10 +73,6 @@ export interface Engagement {
   exclusions: Localized;
   measures: Localized;
   after: Localized;
-  /** Optional deeper content (typical delivery phases and engagement-specific questions). */
-  phasesTitle?: Localized;
-  phases?: { title: Localized; body: Localized }[];
-  faqs?: { q: Localized; a: Localized }[];
 }
 export const engagements: Engagement[] = [
   {
@@ -409,8 +405,8 @@ export const policies: Record<
       {
         title: text("Third parties and your choices", "الأطراف الأخرى وخياراتك"),
         body: text(
-          "External project links take you to independently operated websites. Fonts are requested from Google Fonts, which receives connection information such as your IP address. We do not add advertising trackers or automated marketing emails. Contact sales@prohealthdigitalllc.com to ask about access, correction or deletion of your inquiry information. Sensitive data in customer projects is governed by separately agreed arrangements.",
-          "تنقلك روابط المشاريع الخارجية إلى مواقع تديرها جهات مستقلة. تُطلب الخطوط من Google Fonts الذي يتلقى معلومات الاتصال مثل عنوان IP. لا نضيف أدوات تتبع إعلانية ولا رسائل تسويق آلية. راسل sales@prohealthdigitalllc.com للاستفسار عن الوصول إلى بيانات استفسارك أو تصحيحها أو حذفها. تخضع البيانات الحساسة في مشاريع العملاء لترتيبات منفصلة متفق عليها.",
+          "External project links take you to independently operated websites. Fonts, scripts and images are served from this website’s own domain; no third-party font, analytics or advertising services are loaded. We do not add advertising trackers or automated marketing emails. Contact sales@prohealthdigitalllc.com to ask about access, correction or deletion of your inquiry information. Sensitive data in customer projects is governed by separately agreed arrangements.",
+          "تنقلك روابط المشاريع الخارجية إلى مواقع تديرها جهات مستقلة. تُقدَّم الخطوط والبرمجيات والصور من نطاق هذا الموقع نفسه، ولا تُحمَّل أي خدمات خطوط أو تحليلات أو إعلانات تابعة لجهات أخرى. لا نضيف أدوات تتبع إعلانية ولا رسائل تسويق آلية. راسل sales@prohealthdigitalllc.com للاستفسار عن الوصول إلى بيانات استفسارك أو تصحيحها أو حذفها. تخضع البيانات الحساسة في مشاريع العملاء لترتيبات منفصلة متفق عليها.",
         ),
       },
     ],
@@ -445,17 +441,17 @@ export const policies: Record<
     title: text("Cookies and website technology", "ملفات تعريف الارتباط وتقنيات الموقع"),
     sections: [
       {
-        title: text("No advertising tracking", "دون تتبع إعلاني"),
+        title: text("No cookies or tracking", "دون ملفات تعريف ارتباط أو تتبع"),
         body: text(
-          "This release does not set advertising or analytics cookies. Language is selected through the page URL rather than a tracking preference. We do not use an advertising consent banner because these trackers are not installed.",
-          "لا يضبط هذا الإصدار ملفات تعريف ارتباط إعلانية أو تحليلية. تُحدد اللغة من عنوان الصفحة بدلًا من تفضيل تتبع. لا نستخدم لافتة موافقة إعلانية لأن أدوات التتبع هذه غير مثبتة.",
+          "This website does not set cookies and does not use advertising or analytics trackers. Language is selected through the page URL rather than a stored preference. One session-storage entry in your browser records that the logo introduction has already played during your visit; it is never sent to us and is cleared when you close the tab. We do not show a consent banner because no trackers are installed.",
+          "لا يضبط هذا الموقع ملفات تعريف ارتباط ولا يستخدم أدوات تتبع إعلانية أو تحليلية. تُحدد اللغة من عنوان الصفحة بدلًا من تفضيل محفوظ. يسجّل إدخال واحد في ذاكرة الجلسة بمتصفحك أن مقدمة الشعار قد عُرضت خلال زيارتك؛ ولا يُرسل إلينا أبدًا ويُحذف عند إغلاق علامة التبويب. لا نعرض لافتة موافقة لعدم تثبيت أي أدوات تتبع.",
         ),
       },
       {
         title: text("Connections and security", "الاتصالات والأمن"),
         body: text(
-          "The browser loads the website, its assets and Google Fonts. Operational request logs and temporary server-side rate limits protect the inquiry form. External websites linked from our work pages may use their own cookies; consult their policies.",
-          "يحمل المتصفح الموقع وموارده وخطوط Google Fonts. تحمي سجلات الطلبات التشغيلية وحدود الطلبات المؤقتة على الخادم نموذج الاستفسار. قد تستخدم المواقع الخارجية المرتبطة بصفحات الأعمال ملفاتها الخاصة؛ راجع سياساتها.",
+          "The browser loads the website and its assets from this domain only. Operational request logs and temporary server-side rate limits protect the inquiry form. External websites linked from our work pages may use their own cookies; consult their policies.",
+          "يحمّل المتصفح الموقع وموارده من هذا النطاق فقط. تحمي سجلات الطلبات التشغيلية وحدود الطلبات المؤقتة على الخادم نموذج الاستفسار. قد تستخدم المواقع الخارجية المرتبطة بصفحات الأعمال ملفاتها الخاصة؛ راجع سياساتها.",
         ),
       },
     ],
