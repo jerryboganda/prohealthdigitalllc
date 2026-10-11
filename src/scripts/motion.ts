@@ -30,11 +30,32 @@ const syncHeader = () => header?.setAttribute("data-scrolled", String(window.scr
 window.addEventListener("scroll", syncHeader, { passive: true });
 syncHeader();
 
+const menu = document.getElementById("mobile-menu");
 /* Close the mobile popover after choosing a link (same-page anchors). */
-document.getElementById("mobile-menu")?.addEventListener("click", (event) => {
-  if ((event.target as Element).closest("a"))
-    document.getElementById("mobile-menu")?.hidePopover?.();
+menu?.addEventListener("click", (event) => {
+  if ((event.target as Element).closest("a")) menu.hidePopover?.();
 });
+/* While the full-screen menu is open, the page behind it is inert (focus and AT stay in the menu).
+   Inert is lifted on beforetoggle so the browser can return focus to "Open menu". */
+const behindMenu = () =>
+  document.querySelectorAll<HTMLElement>("body > :not(header, script), .header-shell");
+menu?.addEventListener("toggle", (event) => {
+  if ((event as ToggleEvent).newState === "open") behindMenu().forEach((el) => (el.inert = true));
+});
+menu?.addEventListener("beforetoggle", (event) => {
+  if ((event as ToggleEvent).newState === "closed")
+    behindMenu().forEach((el) => (el.inert = false));
+});
+/* No Popover API (e.g. Safari < 17): drive the menu with a class instead (see global.css). */
+if (menu && !("showPopover" in HTMLElement.prototype)) {
+  document.addEventListener("click", (event) => {
+    const target = event.target as Element;
+    const toggle = target.closest("[popovertarget='mobile-menu']");
+    if (toggle)
+      menu.classList.toggle("is-open", toggle.getAttribute("popovertargetaction") !== "hide");
+    else if (target.closest("#mobile-menu a")) menu.classList.remove("is-open");
+  });
+}
 
 /* Lazy behaviour modules (needed with or without motion). */
 function lazy(selector: string, load: () => Promise<{ default: (el: HTMLElement) => void }>) {
@@ -45,7 +66,14 @@ function lazy(selector: string, load: () => Promise<{ default: (el: HTMLElement)
       for (const entry of entries)
         if (entry.isIntersecting) {
           io.unobserve(entry.target);
-          load().then((m) => m.default(entry.target as HTMLElement));
+          load()
+            .then((m) => m.default(entry.target as HTMLElement))
+            // Chunk failed (e.g. a deploy swapped hashes): show the form's pre-rendered fallback.
+            .catch(() =>
+              (entry.target as HTMLElement)
+                .querySelector<HTMLElement>("[data-form-alert]")
+                ?.removeAttribute("hidden"),
+            );
         }
     },
     { rootMargin: "300px 0px" },
@@ -73,10 +101,10 @@ function reveals() {
     io.unobserve(el);
     if (el.hasAttribute("data-reveal-stagger"))
       Array.from(el.children).forEach((child, i) => {
-        (child as HTMLElement).style.transitionDelay = `${Math.min(i, 8) * 70}ms`;
-        child.classList.add("is-revealed");
+        (child as HTMLElement).style.setProperty("--reveal-delay", `${Math.min(i, 8) * 70}ms`);
+        child.classList.add("is-revealed", "is-revealing");
       });
-    else el.classList.add("is-revealed");
+    else el.classList.add("is-revealed", "is-revealing");
   };
   const io = new IntersectionObserver(
     (entries) => entries.forEach((e) => e.isIntersecting && show(e.target as HTMLElement)),
@@ -101,6 +129,8 @@ function reveals() {
   return () => {
     io.disconnect();
     window.removeEventListener("scroll", onScroll);
+    // Already revealed: must not replay when motion-ready is toggled by a media-query change.
+    $$(".is-revealing").forEach((el) => el.classList.remove("is-revealing"));
   };
 }
 
@@ -116,6 +146,8 @@ function splits() {
         if (!entry.isIntersecting) continue;
         const el = entry.target as HTMLElement;
         io.unobserve(el);
+        // Already painted on screen (anchor jump, scrollbar drag, fast fling): leave it visible rather than hide-then-rise.
+        if (entry.boundingClientRect.top < window.innerHeight) continue;
         const split = SplitText.create(el, {
           type: "lines",
           mask: rtl ? undefined : "lines",
@@ -142,10 +174,13 @@ function splits() {
 
 function draws() {
   for (const svg of $$("[data-draw]")) {
+    // Already on screen at boot: leave it drawn (no erase/redraw flash), same as reveals/splits.
+    if (svg.dataset.draw !== "scrub" && inView(svg)) continue;
     const paths = $$("[data-draw-path]", svg);
     gsap.fromTo(
       paths.length ? paths : $$("path, line, polyline, circle", svg),
-      { drawSVG: "0%" },
+      // The pulse lines are never mirrored, so in RTL they draw from their right (inline-start) end.
+      { drawSVG: dir < 0 ? "100% 100%" : "0%" },
       {
         drawSVG: "100%",
         duration: 1.8,
@@ -187,7 +222,11 @@ function pinTracks() {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
-        start: "top top",
+        // Clear the sticky header; centre the track in the space below it when it fits.
+        start: () => {
+          const top = header?.offsetHeight ?? 0;
+          return `top ${Math.max(top, (window.innerHeight + top - section.offsetHeight) / 2)}px`;
+        },
         end: () => `+=${distance() + window.innerHeight * 0.4}`,
         pin: true,
         scrub: 0.8,
@@ -315,9 +354,10 @@ const boot = () =>
       motion: "(prefers-reduced-motion: no-preference)",
       fine: "(hover: hover) and (pointer: fine)",
       desktop: "(min-width: 1024px)",
+      wide: "(min-width: 1100px)", // must match ProcessTimeline.astro horizontal-track media query
     },
     (context) => {
-      const { motion, fine, desktop } = context.conditions as Record<string, boolean>;
+      const { motion, fine, desktop, wide } = context.conditions as Record<string, boolean>;
       if (!motion) {
         root.classList.remove("motion-ready");
         return;
@@ -328,15 +368,25 @@ const boot = () =>
       draws();
       parallax();
       progressBars();
-      if (desktop) pinTracks();
+      if (wide) pinTracks();
       if (fine) {
         magnetic();
         tilt();
       }
       // WebGL only where it is cheap and visible enough to matter: desktop with a fine pointer.
-      if (desktop && fine) lazy("[data-shader]", () => import("./shader.ts"));
+      // The shader pauses itself off-screen; it is disposed whenever these conditions change.
+      let live = true;
+      let stopShader: (() => void) | void;
+      const shaderHost =
+        desktop && fine ? document.querySelector<HTMLElement>("[data-shader]") : null;
+      if (shaderHost)
+        import("./shader.ts").then((m) => {
+          if (live) stopShader = m.default(shaderHost);
+        });
       document.fonts?.ready.then(() => ScrollTrigger.refresh());
       return () => {
+        live = false;
+        stopShader?.();
         stopReveals();
         revertSplits();
         root.classList.remove("motion-ready");

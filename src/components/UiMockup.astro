@@ -334,7 +334,7 @@ const { variant, class: className } = Astro.props;
     inline-size: 28px;
     color: var(--color-royal);
   }
-  [dir="rtl"] .m-arrow svg {
+  :global([dir="rtl"]) .m-arrow svg {
     transform: scaleX(-1);
   }
   .m-search {

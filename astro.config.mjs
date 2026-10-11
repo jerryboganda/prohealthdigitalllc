@@ -44,7 +44,8 @@ export default defineConfig({
       // One face: Arabic display text is set at 600; lighter requests resolve to it.
       weights: [600],
       styles: ["normal"],
-      subsets: ["arabic"],
+      // Latin too: spaces, digits and Latin names in Arabic headings must not fall back to Times.
+      subsets: ["arabic", "latin"],
       fallbacks: ["serif"],
     },
     {

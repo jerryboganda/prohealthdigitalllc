@@ -2,7 +2,7 @@
 export default async function init(el: HTMLElement) {
   const src = el.dataset.lottie;
   if (!src) return;
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
   const [{ default: lottie }, data] = await Promise.all([
     import("lottie-web/build/player/lottie_light"),
     fetch(src).then((r) => r.json()),
@@ -12,14 +12,19 @@ export default async function init(el: HTMLElement) {
     container: el,
     renderer: "svg",
     loop: el.dataset.loop !== "false",
-    autoplay: !reduce,
+    autoplay: !mq.matches,
     animationData: data,
     rendererSettings: { preserveAspectRatio: "xMidYMid meet", progressiveLoad: true },
   });
-  if (reduce)
-    anim.addEventListener("DOMLoaded", () => anim.goToAndStop(anim.totalFrames - 1, true));
-  else
-    new IntersectionObserver(([entry]) =>
-      entry.isIntersecting ? anim.play() : anim.pause(),
-    ).observe(el);
+  // Reduced motion shows one meaningful still (data-static-frame, else the last frame).
+  const still = () =>
+    anim.goToAndStop(Number(el.dataset.staticFrame ?? anim.totalFrames - 1), true);
+  let visible = false;
+  const sync = () => (mq.matches ? still() : visible ? anim.play() : anim.pause());
+  anim.addEventListener("DOMLoaded", sync);
+  mq.addEventListener("change", sync);
+  new IntersectionObserver(([entry]) => {
+    visible = entry.isIntersecting;
+    sync();
+  }).observe(el);
 }

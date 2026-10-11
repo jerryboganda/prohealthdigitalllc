@@ -4,8 +4,10 @@ import type { Locale, Localized } from "../lib/content.ts";
 interface Props {
   locale: Locale;
   items: Localized[];
+  /** Label for the pause control (shown only while the marquee moves). */
+  pauseLabel: string;
 }
-const { locale, items } = Astro.props;
+const { locale, items, pauseLabel } = Astro.props;
 const words = items.map((i) => i[locale]);
 ---
 
@@ -22,6 +24,10 @@ const words = items.map((i) => i[locale]);
       </ul>
     ))}
   </div>
+  <label class="marquee-toggle">
+    <input type="checkbox" />
+    <span>{pauseLabel}</span>
+  </label>
 </div>
 
 <style>

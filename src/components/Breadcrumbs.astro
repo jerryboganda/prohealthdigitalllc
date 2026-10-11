@@ -43,7 +43,8 @@ const items = [{ name: nav.home[locale], path: "/" }, ...trail];
     gap: 0.6rem;
   }
   .breadcrumbs li + li::before {
-    content: "/";
+    content: "/"; /* fallback for browsers without alt-text support */
+    content: "/" / ""; /* decorative: hidden from the accessibility tree */
     color: var(--color-line-strong);
   }
   .breadcrumbs a {

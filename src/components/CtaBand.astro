@@ -36,10 +36,12 @@ const params = new URLSearchParams({ ...(engagement ? { engagement } : {}), sour
             {ui.cta[locale]}
             <Icon name="arrow" size={18} directional />
           </a>
-          <a class="text-link text-[0.95rem]" href={`mailto:${EMAIL}`}>
-            <Icon name="mail" size={17} />
+          <a class="text-link flex-wrap text-[0.95rem]" href={`mailto:${EMAIL}`}>
+            <Icon name="mail" size={17} class="shrink-0" />
             <span>{ui.email[locale]}</span>
-            <span dir="ltr">{EMAIL}</span>
+            <span dir="ltr" class="[overflow-wrap:anywhere]">
+              {EMAIL}
+            </span>
           </a>
           {WHATSAPP && (
             <a
@@ -48,7 +50,7 @@ const params = new URLSearchParams({ ...(engagement ? { engagement } : {}), sour
               target="_blank"
               rel="noopener"
             >
-              <Icon name="whatsapp" size={17} />
+              <Icon name="whatsapp" size={17} class="shrink-0" />
               {common.whatsapp[locale]}
             </a>
           )}
@@ -93,9 +95,12 @@ const params = new URLSearchParams({ ...(engagement ? { engagement } : {}), sour
     }
     @keyframes orb {
       to {
-        translate: -3rem 2rem;
+        translate: calc(-3rem * var(--dirx, 1)) 2rem;
         scale: 1.15;
       }
     }
+  }
+  :global([dir="rtl"]) .cta-orbs span {
+    --dirx: -1;
   }
 </style>

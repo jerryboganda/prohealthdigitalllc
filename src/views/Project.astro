@@ -61,20 +61,22 @@ const steps = [pages.serviceContext, ui.projectRole, pages.userJourney];
         <span class="sr-only">{common.external[locale]}</span>
         <Icon name="arrow-up-right" size={18} />
       </a>
-      <p class="muted border-t border-[var(--color-line)] pt-5 text-[0.9rem]">
-        {ui.proofNote[locale]}
-      </p>
     </div>
   </div>
 </section>
 
 <section class="section-tight">
   <div class="container-x grid gap-6 md:grid-cols-2">
+    <h2 class="text-[clamp(1.6rem,1.3rem+1.2vw,2.3rem)] md:col-span-2">
+      {pages.relevantWork[locale]}
+    </h2>
     {others.map((o) => (
       <a class="other card card-hover" href={localPath(`/work/${o.id}`, locale)}>
         <span class="grid gap-1">
           <span class="eyebrow">{o.category[locale]}</span>
-          <span class="text-[1.6rem] font-[var(--font-display)]">{o.name[locale]}</span>
+          <span class="font-display text-[1.6rem] leading-[var(--lh-heading)]">
+            {o.name[locale]}
+          </span>
         </span>
         <Icon name="arrow" size={22} directional />
       </a>

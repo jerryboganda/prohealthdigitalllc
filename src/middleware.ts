@@ -44,9 +44,6 @@ export const onRequest = defineMiddleware(async (context, next) => {
     if (!headers.has(key)) headers.set(key, value);
   if (headers.get("content-type")?.startsWith("text/html") && !headers.has("Cache-Control"))
     headers.set("Cache-Control", "no-cache");
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers,
-  });
+  // No statusText: Node then sends the standard reason phrase (e.g. "404 Not Found").
+  return new Response(response.body, { status: response.status, headers });
 });

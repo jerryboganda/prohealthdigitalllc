@@ -7,8 +7,10 @@ import { common } from "../lib/copy.ts";
 
 interface Props {
   locale: Locale;
+  level?: "h2" | "h3";
 }
-const { locale } = Astro.props;
+const { locale, level = "h3" } = Astro.props;
+const Heading = level;
 const variants = {
   "oet-with-dr-hesham": "learning",
   mediq: "platform",
@@ -24,11 +26,11 @@ const variants = {
           0{i + 1}
         </span>
         <p class="eyebrow">{p.category[locale]}</p>
-        <h3 class="text-[clamp(1.75rem,1.3rem+1.8vw,2.75rem)]">
+        <Heading class="project-title text-[clamp(1.75rem,1.3rem+1.8vw,2.75rem)]">
           <a class="project-link" href={localPath(`/work/${p.id}`, locale)}>
             {p.name[locale]}
           </a>
-        </h3>
+        </Heading>
       </div>
       <div class="grid content-start gap-4">
         <p class="muted">{p.context[locale]}</p>
@@ -89,10 +91,10 @@ const variants = {
       transform: scale(1) rotate(0);
     }
   }
-  .project-row:hover h3 {
+  .project-row:hover .project-title {
     color: var(--color-royal);
   }
-  .project-row h3 {
+  .project-row .project-title {
     transition: color var(--dur-base);
   }
   .project-row:focus-within {

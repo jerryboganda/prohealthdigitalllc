@@ -28,7 +28,8 @@ float fade=smoothstep(.0,.55,uv.x);
 col=mix(paper,col,.35+.65*fade);
 gl_FragColor=vec4(col,1.);}`;
 
-export default function init(host: HTMLElement) {
+/** Mounts the shader into `host`; returns a disposer (idempotent), or nothing if WebGL is unavailable. */
+export default function init(host: HTMLElement): (() => void) | void {
   const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
   if (conn?.saveData) return;
   const canvas = document.createElement("canvas");
@@ -64,16 +65,16 @@ export default function init(host: HTMLElement) {
   const uRes = gl.getUniformLocation(program, "u_res");
   const uTime = gl.getUniformLocation(program, "u_time");
   const uPointer = gl.getUniformLocation(program, "u_pointer");
-  gl.uniform1f(
-    gl.getUniformLocation(program, "u_dir"),
-    document.documentElement.dir === "rtl" ? -1 : 1,
-  );
+  const rtl = document.documentElement.dir === "rtl";
+  gl.uniform1f(gl.getUniformLocation(program, "u_dir"), rtl ? -1 : 1);
 
   const mobile = window.matchMedia("(max-width: 767px)").matches;
   const dpr = Math.min(window.devicePixelRatio || 1, mobile ? 1 : 1.5);
   const frameBudget = mobile ? 1000 / 30 : 0;
   const pointer = { x: 0.7, y: 0.5, tx: 0.7, ty: 0.5 };
   let visible = false;
+  let dead = false;
+  let mountId = 0;
   let raf = 0;
   let last = 0;
   const start = performance.now();
@@ -97,30 +98,50 @@ export default function init(host: HTMLElement) {
   };
   const run = () => {
     cancelAnimationFrame(raf);
-    if (visible && !document.hidden) raf = requestAnimationFrame(frame);
+    if (!dead && visible && !document.hidden) raf = requestAnimationFrame(frame);
   };
 
-  new ResizeObserver(resize).observe(host);
-  new IntersectionObserver(([entry]) => {
+  const ro = new ResizeObserver(resize);
+  ro.observe(host);
+  const io = new IntersectionObserver(([entry]) => {
     visible = entry.isIntersecting;
     run();
-  }).observe(host);
+  });
+  io.observe(host);
   document.addEventListener("visibilitychange", run);
-  host.addEventListener("pointermove", (e) => {
+  // The host sits behind the hero content (z-index -1), so listen on the hero section itself.
+  const area = host.parentElement ?? host;
+  const onMove = (e: PointerEvent) => {
     const r = host.getBoundingClientRect();
-    pointer.tx = (e.clientX - r.left) / r.width;
+    const x = (e.clientX - r.left) / r.width;
+    pointer.tx = rtl ? 1 - x : x; // the fragment shader mirrors uv.x in RTL
     pointer.ty = 1 - (e.clientY - r.top) / r.height;
-  });
-  canvas.addEventListener("webglcontextlost", () => {
+  };
+  area.addEventListener("pointermove", onMove, { passive: true });
+
+  const dispose = () => {
+    if (dead) return;
+    dead = true;
     cancelAnimationFrame(raf);
+    ro.disconnect();
+    io.disconnect();
+    document.removeEventListener("visibilitychange", run);
+    area.removeEventListener("pointermove", onMove);
+    if ("cancelIdleCallback" in window) window.cancelIdleCallback(mountId);
+    else clearTimeout(mountId);
     canvas.remove();
-  });
+    gl.getExtension("WEBGL_lose_context")?.loseContext();
+  };
+  canvas.addEventListener("webglcontextlost", dispose);
 
   const mount = () => {
+    if (dead) return;
     resize();
     host.appendChild(canvas);
     requestAnimationFrame(() => canvas.classList.add("is-live"));
   };
-  if ("requestIdleCallback" in window) window.requestIdleCallback(mount, { timeout: 1500 });
-  else setTimeout(mount, 300);
+  if ("requestIdleCallback" in window)
+    mountId = window.requestIdleCallback(mount, { timeout: 1500 });
+  else mountId = self.setTimeout(mount, 300);
+  return dispose;
 }

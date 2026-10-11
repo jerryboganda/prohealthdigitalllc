@@ -13,8 +13,20 @@ interface Props {
   date?: Date;
   minutes?: number;
   index?: number;
+  level?: "h2" | "h3";
 }
-const { locale, href, title, description, label, date, minutes, index = 0 } = Astro.props;
+const {
+  locale,
+  href,
+  title,
+  description,
+  label,
+  date,
+  minutes,
+  index = 0,
+  level = "h3",
+} = Astro.props;
+const Heading = level;
 const hues = [
   ["#d6f1ec", "#e3ebfd"],
   ["#e3ebfd", "#edf5f2"],
@@ -30,7 +42,7 @@ const fmt = new Intl.DateTimeFormat(locale === "ar" ? "ar-u-nu-latn" : "en-GB", 
 
 <article class="article-card card card-hover group" data-tilt>
   <div class="article-art" style={`--a:${a};--b:${b}`} aria-hidden="true">
-    <svg viewBox="0 0 320 140" fill="none" class="rtl:-scale-x-100">
+    <svg viewBox="0 0 320 140" fill="none">
       <path
         d={
           index % 2
@@ -46,15 +58,15 @@ const fmt = new Intl.DateTimeFormat(locale === "ar" ? "ar-u-nu-latn" : "en-GB", 
       <circle cx={index % 2 ? 140 : 160} cy={index % 2 ? 40 : 120} r="5" fill="#00B2A9"></circle>
     </svg>
   </div>
-  <div class="grid gap-3 p-6 md:p-7">
+  <div class="flex flex-col gap-3 p-6 md:p-7">
     <p class="eyebrow">{label}</p>
-    <h3 class="text-[1.4rem] leading-snug">
+    <Heading class="text-[1.4rem] leading-snug">
       <a class="article-link" href={localPath(href, locale)}>
         {title}
       </a>
-    </h3>
+    </Heading>
     <p class="muted line-clamp-3 text-[0.97rem]">{description}</p>
-    <p class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.85rem] text-muted">
+    <p class="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-2 text-[0.85rem] text-muted">
       {date && <time datetime={date.toISOString()}>{fmt.format(date)}</time>}
       {minutes && (
         <span>

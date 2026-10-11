@@ -173,7 +173,9 @@ const audienceName = e.audience === "provider" ? ui.providers[locale] : ui.compa
       {related.map((r) => (
         <a class="related card card-hover" href={localPath(`/solutions/${r.id}`, locale)}>
           <span class="grid gap-2">
-            <span class="text-[1.3rem] font-[var(--font-display)]">{r.title[locale]}</span>
+            <span class="font-display text-[1.3rem] leading-[var(--lh-heading)]">
+              {r.title[locale]}
+            </span>
             <span class="muted text-[0.95rem]">{r.problem[locale]}</span>
           </span>
           <Icon name="arrow" size={20} directional />

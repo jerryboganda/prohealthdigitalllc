@@ -17,12 +17,16 @@ interface Props {
 }
 const { locale, slug } = Astro.props;
 const a = audiences.find((x) => x.id === slug)!;
-const reading = (await entriesFor("insights", locale))
-  .filter((e) => e.data.audience === a.id || e.data.audience === "both")
-  .slice(0, 3);
+// Audience-specific entries before "both" (sort is stable); one slot is reserved for a resource.
+const own = (e: { data: { audience: string } }) => (e.data.audience === a.id ? 0 : 1);
 const resources = (await entriesFor("resources", locale))
   .filter((e) => e.data.audience === a.id || e.data.audience === "both")
-  .slice(0, 2);
+  .sort((x, y) => own(x) - own(y))
+  .slice(0, 1);
+const reading = (await entriesFor("insights", locale))
+  .filter((e) => e.data.audience === a.id || e.data.audience === "both")
+  .sort((x, y) => own(x) - own(y))
+  .slice(0, 3 - resources.length);
 const icons = ["globe", "mail", "flow", "book"] as const;
 ---
 
@@ -104,14 +108,14 @@ const icons = ["globe", "mail", "flow", "book"] as const;
             index={i}
           />
         ))}
-        {resources.slice(0, Math.max(0, 3 - reading.length)).map((e, i) => (
+        {resources.map((e, i) => (
           <ArticleCard
             locale={locale}
             href={`/resources/${e.slug}`}
             title={e.data.title}
             description={e.data.description}
             label={nav.resources[locale]}
-            index={i + 1}
+            index={reading.length + i}
           />
         ))}
       </div>

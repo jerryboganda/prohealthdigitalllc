@@ -24,7 +24,7 @@ const { locale } = Astro.props;
 
 <section class="section">
   <div class="container-x">
-    <ProcessTimeline locale={locale} />
+    <ProcessTimeline locale={locale} level="h2" />
   </div>
 </section>
 
@@ -50,7 +50,12 @@ const { locale } = Astro.props;
   <div class="container-x relative grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-center">
     <SectionHeading eyebrow="24/7" title={ui.support[locale]} />
     <div class="grid gap-6">
-      <div class="support-pulse" aria-hidden="true" data-lottie="/lottie/pulse.json"></div>
+      <div
+        class="support-pulse"
+        aria-hidden="true"
+        data-lottie="/lottie/pulse.json"
+        data-static-frame="70"
+      ></div>
       <p class="lede" data-reveal>
         {ui.supportBody[locale]}
       </p>
@@ -78,9 +83,6 @@ const { locale } = Astro.props;
   .support-pulse {
     inline-size: min(16rem, 70%);
     aspect-ratio: 5 / 2;
-  }
-  [dir="rtl"] .support-pulse {
-    transform: scaleX(-1);
   }
   .support-glow {
     position: absolute;

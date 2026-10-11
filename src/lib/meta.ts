@@ -6,8 +6,8 @@ export const meta: Record<string, { title: Localized; description: Localized }> 
   home: {
     title: text("Healthcare Technology Delivery Partner", "شريك تنفيذ التكنولوجيا الصحية"),
     description: text(
-      "Websites, care workflows and digital health platforms for providers and health companies in the GCC and South Asia — from free discovery to 24/7 support.",
-      "مواقع وإجراءات رعاية ومنصات صحة رقمية لمقدمي الرعاية وشركات الصحة في الخليج وجنوب آسيا، من فهم الاحتياجات مجانًا إلى الدعم على مدار الساعة.",
+      "Websites, care workflows and digital health platforms for providers and health companies in the GCC and South Asia — from free discovery to contracted 24/7 support.",
+      "مواقع وإجراءات رعاية ومنصات صحة رقمية لمقدمي الرعاية وشركات الصحة في الخليج وجنوب آسيا، من فهم الاحتياجات مجانًا إلى الدعم التعاقدي على مدار الساعة.",
     ),
   },
   solutions: {
@@ -107,15 +107,15 @@ export const meta: Record<string, { title: Localized; description: Localized }> 
   cookies: {
     title: text("Cookies and Website Technology", "ملفات تعريف الارتباط وتقنيات الموقع"),
     description: text(
-      "This website sets no advertising or analytics cookies, loads no third-party trackers and serves its fonts and assets from its own domain.",
-      "لا يضبط هذا الموقع ملفات تعريف ارتباط إعلانية أو تحليلية، ولا يحمّل أدوات تتبع خارجية، ويقدم خطوطه وموارده من نطاقه الخاص.",
+      "This website sets no cookies, loads no third-party trackers and serves its fonts and assets from its own domain.",
+      "لا يضبط هذا الموقع أي ملفات تعريف ارتباط، ولا يحمّل أدوات تتبع خارجية، ويقدم خطوطه وموارده من نطاقه الخاص.",
     ),
   },
   refunds: {
     title: text("Cancellation and Refunds", "الإلغاء والاسترداد"),
     description: text(
       "There is no online checkout on this website. Cancellation, milestone payments and refunds are defined in each signed engagement agreement.",
-      "لا توجد عملية دفع عبر هذا الموقع. يُحدد الإلغاء ودفعات المراحل والاسترداد في اتفاق كل مشروع موقع.",
+      "لا توجد عملية دفع عبر هذا الموقع. يُحدد الإلغاء ودفعات المراحل والاسترداد في الاتفاق الموقَّع لكل مشروع.",
     ),
   },
   delivery: {
@@ -123,6 +123,41 @@ export const meta: Record<string, { title: Localized; description: Localized }> 
     description: text(
       "How proposals define outputs, milestones and acceptance, and how ongoing and contracted 24/7 support, response targets and escalation are agreed.",
       "كيف تحدد العروض المخرجات والمراحل والقبول، وكيف يُتفق على الدعم المستمر والدعم التعاقدي على مدار الساعة وأهداف الاستجابة والتصعيد.",
+    ),
+  },
+  /* Solution (engagement) pages; the H1, breadcrumbs and OG card keep the engagement title. */
+  "digital-presence": {
+    title: text(
+      "Websites for Clinics and Healthcare Groups",
+      "مواقع إلكترونية للعيادات والمجموعات الصحية",
+    ),
+    description: text(
+      "Clearer websites for clinics and healthcare groups: service information organized around patient questions and a dependable inquiry or booking handoff.",
+      "مواقع أوضح للعيادات والمجموعات الصحية: معلومات خدمات منظمة حول أسئلة المرضى ومسار موثوق للاستفسار أو الانتقال إلى الحجز.",
+    ),
+  },
+  "care-workflows": {
+    title: text(
+      "Healthcare Workflow Digitisation and Integration",
+      "رقمنة إجراءات العمل الصحية وربط الأنظمة",
+    ),
+    description: text(
+      "Reduce repeated data entry, disconnected tools and manual follow-up with a mapped workflow, agreed integrations and staff-facing tools for your care team.",
+      "قلّل تكرار إدخال البيانات والأدوات المنفصلة والمتابعة اليدوية عبر خريطة لإجراءات العمل وتكاملات متفق عليها وأدوات مخصصة للموظفين.",
+    ),
+  },
+  "platform-launch": {
+    title: text("Launch a Digital Health Platform", "أطلق منصة صحة رقمية"),
+    description: text(
+      "A delivery partner for new digital health and healthcare education products, from discovery and a defined first-release scope to launch and handover.",
+      "شريك تنفيذ لمنتجات الصحة الرقمية والتعليم الصحي الجديدة، من فهم الاحتياجات ونطاق محدد للإصدار الأول حتى الإطلاق والتسليم.",
+    ),
+  },
+  "platform-improvement": {
+    title: text("Improve an Existing Digital Health Platform", "طوّر منصة الصحة الرقمية القائمة"),
+    description: text(
+      "Diagnose usability, integration, performance or reliability problems in a live health platform, then deliver prioritized, verified improvements.",
+      "شخّص مشكلات الاستخدام أو التكامل أو الأداء أو الموثوقية في منصتك الصحية القائمة، ثم نفّذ تحسينات مرتبة حسب الأولوية ومتحقق منها.",
     ),
   },
 };

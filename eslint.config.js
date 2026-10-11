@@ -5,7 +5,7 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: [".output", ".astro", ".claude", "video", "node_modules", "public"] },
+  { ignores: [".output", ".astro", ".claude", ".qa-tmp", "video", "node_modules", "public"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,mjs,js}"],

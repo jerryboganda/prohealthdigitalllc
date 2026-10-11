@@ -24,7 +24,14 @@ const fmt = new Intl.DateTimeFormat(locale === "ar" ? "ar-u-nu-latn" : "en-GB", 
   dateStyle: "long",
 });
 const related = engagements.filter((e) => entry.data.engagements.includes(e.id));
-const more = (await entriesFor(collection, locale)).filter((e) => e.slug !== slug).slice(0, 3);
+// Rank by shared engagements, then same audience (publish dates tie), before slicing.
+const score = (d: typeof entry.data) =>
+  d.engagements.filter((id) => entry.data.engagements.includes(id)).length * 2 +
+  (d.audience === entry.data.audience ? 1 : 0);
+const more = (await entriesFor(collection, locale))
+  .filter((e) => e.slug !== slug)
+  .sort((a, b) => score(b.data) - score(a.data))
+  .slice(0, 3);
 const sectionName = collection === "insights" ? nav.insights : nav.resources;
 const kindLabel =
   "kind" in entry.data
@@ -94,7 +101,7 @@ const kindLabel =
         </ol>
       </nav>
     </aside>
-    <div class="grid max-w-3xl gap-12">
+    <div class="grid max-w-3xl grid-cols-[minmax(0,1fr)] gap-12">
       <div class="key-points" data-reveal>
         <p class="eyebrow mb-4">{common.keyPoints[locale]}</p>
         <ul class="grid gap-3">
@@ -173,7 +180,7 @@ const kindLabel =
     transform-origin: left;
     transform: scaleX(0);
   }
-  [dir="rtl"] .reading-progress span {
+  :global([dir="rtl"]) .reading-progress span {
     transform-origin: right;
   }
   .head-glow {

@@ -22,13 +22,7 @@ const steps = [
         <span class="pulse-dot"></span>
       </span>
     </div>
-    <svg
-      class="journey-line rtl:-scale-x-100"
-      viewBox="0 0 400 80"
-      fill="none"
-      aria-hidden="true"
-      data-draw
-    >
+    <svg class="journey-line" viewBox="0 0 400 80" fill="none" aria-hidden="true" data-draw>
       <path
         data-draw-path
         d="M0 50H120L140 50L156 18L178 70L194 34L206 50H400"
@@ -105,7 +99,7 @@ const steps = [
       0 0 0 1px var(--color-teal),
       0 12px 24px -16px rgb(0 178 169 / 0.6);
   }
-  [dir="rtl"] .journey-step {
+  :global([dir="rtl"]) .journey-step {
     --dirx: -1;
   }
   .journey-icon {

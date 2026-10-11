@@ -26,8 +26,8 @@ export const audiences: Audience[] = [
       "اجعل الرعاية أسهل في الوصول وأبسط في الإدارة.",
     ),
     intro: text(
-      "Clinics, hospitals and healthcare groups use our engagements to give patients clearer digital front doors and to give staff connected, less repetitive workflows.",
-      "تستعين العيادات والمستشفيات والمجموعات الصحية بخدماتنا لتقديم واجهات رقمية أوضح للمرضى، ولتمكين الموظفين من إجراءات عمل مترابطة وأقل تكرارًا.",
+      "Our engagements are designed for clinics, hospitals and healthcare groups that want to give patients clearer digital front doors and give staff connected, less repetitive workflows.",
+      "صُممت خدماتنا للعيادات والمستشفيات والمجموعات الصحية التي تريد تقديم واجهات رقمية أوضح للمرضى، وتمكين الموظفين من إجراءات عمل مترابطة وأقل تكرارًا.",
     ),
     who: text(
       "Independent clinics, specialist centres, multi-site healthcare groups and hospital departments.",

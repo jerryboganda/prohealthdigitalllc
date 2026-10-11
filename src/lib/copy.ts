@@ -16,7 +16,6 @@ export const nav = {
   openMenu: text("Open menu", "فتح القائمة"),
   closeMenu: text("Close menu", "إغلاق القائمة"),
   languageName: text("English", "العربية"),
-  switchTo: text("Switch to Arabic", "التبديل إلى الإنجليزية"),
   breadcrumbs: text("Breadcrumb", "مسار التنقل"),
   home: text("Home", "الرئيسية"),
 };
@@ -33,6 +32,7 @@ export const footer = {
   company: text("Company", "الشركة"),
   knowledge: text("Knowledge", "المعرفة"),
   policies: text("Policies", "السياسات"),
+  otherPolicies: text("Other policies", "سياسات أخرى"),
   footerNav: text("Footer navigation", "التنقل في تذييل الصفحة"),
   ready: text("Have a healthcare service to improve?", "لديك خدمة صحية تريد تطويرها؟"),
   markets: text(
@@ -106,6 +106,7 @@ export const home = {
     text("Documented handover", "تسليم موثق"),
     text("Contracted 24/7 support", "دعم تعاقدي على مدار الساعة"),
   ],
+  marqueePause: text("Pause scrolling", "إيقاف الحركة"),
   audienceTitle: text(
     "Two kinds of teams. One delivery standard.",
     "نوعان من الفرق. معيار تنفيذ واحد.",
@@ -135,8 +136,8 @@ export const home = {
     {
       title: text("Evidence at every milestone", "أدلة في كل مرحلة"),
       body: text(
-        "You review working progress with representative users, not slide decks.",
-        "تراجع تقدمًا فعليًا مع مستخدمين تمثيليين، لا مجرد عروض تقديمية.",
+        "You review working progress at agreed milestones, with representative users where access can be arranged.",
+        "تراجع تقدمًا فعليًا في المراحل المتفق عليها، ومع مستخدمين تمثيليين متى أمكن ترتيب ذلك.",
       ),
     },
     {
@@ -174,6 +175,10 @@ export const pages = {
   specialistTitle: text(
     "Specialist capabilities, within a defined engagement",
     "قدرات متخصصة ضمن نطاق محدد",
+  ),
+  specialistBody: text(
+    "Clinical AI can be a specialist part of a platform engagement. Intended use, clinical oversight, evaluation, sensitive-data handling and applicable requirements must be assessed before scope or claims are agreed. We do not provide medical advice or claim certified diagnostics.",
+    "يمكن أن يكون الذكاء الاصطناعي الطبي قدرة متخصصة ضمن مشروع منصة. يجب تقييم الاستخدام المقصود والإشراف الطبي والتقييم والتعامل مع البيانات الحساسة والمتطلبات المطبقة قبل الاتفاق على النطاق أو الادعاءات. لا نقدم نصائح طبية ولا ندعي تقديم تشخيصات معتمدة.",
   ),
   nextStep: text("Define the right next step", "حدد الخطوة المناسبة التالية"),
   workTitle: text(

@@ -94,7 +94,7 @@ export const engagements: Engagement[] = [
       ),
       text(
         "Accessible, responsive website design and implementation",
-        "تصميم وتنفيذ موقع متجاوب وسهل الاستخدام",
+        "تصميم وتنفيذ موقع متجاوب يراعي إمكانية الوصول",
       ),
       text(
         "Working inquiry flow or handoff to your agreed booking system",
@@ -110,12 +110,12 @@ export const engagements: Engagement[] = [
       "توفر معلومات الخدمات المعتمدة، وتفاصيل مقدمي الرعاية، ومواد الهوية، ومسؤولًا للمراجعة. يتطلب ربط الحجز الوصول إلى النظام وواجهات مدعومة وترتيبات متفقًا عليها للبيانات.",
     ),
     exclusions: text(
-      "A website does not replace clinical triage or care. Advertising, clinical content approval and a new booking platform are included only if separately scoped.",
-      "لا يحل الموقع محل الفرز الطبي أو الرعاية. لا تشمل الخدمة الإعلانات أو اعتماد المحتوى الطبي أو إنشاء منصة حجز جديدة إلا ضمن نطاق منفصل.",
+      "A website does not replace clinical triage or care, and clinical content approval stays with your clinical team. Advertising and a new booking platform are included only if separately scoped.",
+      "لا يحل الموقع محل الفرز الطبي أو الرعاية، ويبقى اعتماد المحتوى الطبي مسؤولية فريقك الطبي. لا تشمل الخدمة الإعلانات أو إنشاء منصة حجز جديدة إلا ضمن نطاق منفصل.",
     ),
     measures: text(
       "Review service findability, mobile task completion and inquiry or booking completion against an agreed baseline where available. No conversion gain is guaranteed.",
-      "نراجع سهولة العثور على الخدمات وإنجاز المهام عبر الهاتف وإتمام الاستفسار أو الحجز مقابل خط أساس متفق عليه عند توفره. لا نضمن زيادة محددة في التحويلات.",
+      "نراجع سهولة العثور على الخدمات وإنجاز المهام عبر الهاتف وإتمام الاستفسار أو الحجز مقابل خط أساس متفق عليه عند توفره. لا نضمن أي زيادة في التحويلات.",
     ),
     after: text(
       "We hand over content ownership and editing guidance. Maintenance and support can be agreed for the launched website.",
@@ -317,8 +317,8 @@ export const stages = [
     id: "delivery",
     label: text("Visible delivery", "تنفيذ قابل للمتابعة"),
     body: text(
-      "Review progress at agreed milestones, test with representative users and resolve issues before acceptance.",
-      "نراجع التقدم في المراحل المتفق عليها، ونختبر مع مستخدمين تمثيليين، ونعالج المشكلات قبل القبول.",
+      "Review progress at agreed milestones, test with representative users where access can be arranged, and resolve issues before acceptance.",
+      "نراجع التقدم في المراحل المتفق عليها، ونختبر مع مستخدمين تمثيليين متى أمكن ترتيب ذلك، ونعالج المشكلات قبل القبول.",
     ),
   },
   {
@@ -391,8 +391,8 @@ export const policies: Record<
       {
         title: text("Business inquiry information", "معلومات الاستفسارات التجارية"),
         body: text(
-          "When you submit an inquiry, we use your name, work email, organization, country/time zone, project selections, preferred language and brief to assess and respond to your request. Optional budget information is used only to understand scope. Do not submit patient-identifying information or medical histories.",
-          "عند إرسال استفسار، نستخدم الاسم والبريد المهني والمؤسسة والدولة والمنطقة الزمنية واختيارات المشروع واللغة المفضلة والوصف لتقييم الطلب والرد عليه. تستخدم معلومات الميزانية الاختيارية لفهم النطاق فقط. لا ترسل معلومات تكشف هوية المرضى أو تاريخهم الطبي.",
+          "When you submit an inquiry, we use your name, work email, organization, country/time zone, project selections, preferred language and brief, together with the site page you started from and the website language, to assess and respond to your request. Optional budget information is used only to understand scope. Do not submit patient-identifying information or medical histories.",
+          "عند إرسال استفسار، نستخدم الاسم والبريد المهني والمؤسسة والدولة والمنطقة الزمنية واختيارات المشروع واللغة المفضلة والوصف، إضافةً إلى صفحة الموقع التي بدأت منها ولغة الموقع، لتقييم الطلب والرد عليه. تستخدم معلومات الميزانية الاختيارية لفهم النطاق فقط. لا ترسل معلومات تكشف هوية المرضى أو تاريخهم الطبي.",
         ),
       },
       {
@@ -463,7 +463,7 @@ export const policies: Record<
         title: text("Agreed per engagement", "حسب اتفاق المشروع"),
         body: text(
           "There is no checkout or sale of digital toolkits on this website. Discovery is free. Cancellation, milestone payments and any refund entitlement for paid services are defined in the signed engagement agreement and applicable requirements. Contact sales@prohealthdigitalllc.com about an existing engagement.",
-          "لا توجد عملية دفع أو بيع أدوات رقمية في هذا الموقع. جلسة فهم الاحتياجات مجانية. يُحدد الإلغاء ودفعات المراحل وأي استحقاق لاسترداد المدفوعات في اتفاق المشروع الموقع والمتطلبات المطبقة. راسل sales@prohealthdigitalllc.com بشأن أي مشروع قائم.",
+          "لا توجد عملية دفع أو بيع أدوات رقمية في هذا الموقع. جلسة فهم الاحتياجات مجانية. يُحدد الإلغاء ودفعات المراحل وأي استحقاق لاسترداد المدفوعات في اتفاق المشروع الموقَّع والمتطلبات المطبقة. راسل sales@prohealthdigitalllc.com بشأن أي مشروع قائم.",
         ),
       },
     ],

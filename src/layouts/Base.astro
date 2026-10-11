@@ -73,7 +73,7 @@ const dir = locale === "ar" ? "rtl" : "ltr";
         type="application/ld+json"
         set:html={JSON.stringify({ "@context": "https://schema.org", "@graph": schema }).replace(
           /</g,
-          "\u003c",
+          "\\u003c",
         )}
       />
     )}

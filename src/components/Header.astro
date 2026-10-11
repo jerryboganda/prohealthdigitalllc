@@ -37,15 +37,9 @@ const contactHref = `${localPath("/contact", locale)}?source=${encodeURIComponen
         ))}
       </nav>
       <div class="flex shrink-0 items-center gap-1.5 sm:gap-3">
-        <a
-          class="lang-switch"
-          href={switchHref}
-          lang={other}
-          hreflang={other}
-          aria-label={nav.switchTo[locale]}
-        >
+        <a class="lang-switch" href={switchHref} lang={other} hreflang={other}>
           <Icon name="globe" size={17} />
-          <span class="hidden min-[480px]:inline">{nav.languageName[other]}</span>
+          <span class="sr-only min-[480px]:not-sr-only">{nav.languageName[other]}</span>
           <span class="min-[480px]:hidden" aria-hidden="true">
             {other === "ar" ? "ع" : "EN"}
           </span>
@@ -60,7 +54,7 @@ const contactHref = `${localPath("/contact", locale)}?source=${encodeURIComponen
         </a>
         <button
           type="button"
-          class="menu-toggle lg:hidden"
+          class="menu-toggle grid lg:hidden"
           popovertarget="mobile-menu"
           aria-label={nav.openMenu[locale]}
         >
@@ -74,10 +68,11 @@ const contactHref = `${localPath("/contact", locale)}?source=${encodeURIComponen
       <Logo locale={locale} />
       <button
         type="button"
-        class="menu-toggle"
+        class="menu-toggle grid"
         popovertarget="mobile-menu"
         popovertargetaction="hide"
         aria-label={nav.closeMenu[locale]}
+        autofocus
       >
         <Icon name="close" size={22} />
       </button>
@@ -125,7 +120,6 @@ const contactHref = `${localPath("/contact", locale)}?source=${encodeURIComponen
     box-shadow: inset 0 0 0 1px var(--color-ink);
   }
   .menu-toggle {
-    display: grid;
     place-items: center;
     inline-size: 2.75rem;
     block-size: 2.75rem;

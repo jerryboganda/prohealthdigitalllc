@@ -4,7 +4,7 @@ import SectionHeading from "../components/SectionHeading.astro";
 import EngagementCards from "../components/EngagementCards.astro";
 import CtaBand from "../components/CtaBand.astro";
 import Icon from "../components/Icon.astro";
-import { faqs, localPath, ui } from "../lib/content.ts";
+import { localPath, ui } from "../lib/content.ts";
 import type { Locale } from "../lib/content.ts";
 import { nav, pages } from "../lib/copy.ts";
 
@@ -52,7 +52,7 @@ const { locale } = Astro.props;
   <div class="container-narrow grid gap-6">
     <SectionHeading title={pages.specialistTitle[locale]} />
     <div class="prose" data-reveal>
-      <p>{faqs[5].a[locale]}</p>
+      <p>{pages.specialistBody[locale]}</p>
       <p class="callout">{ui.scope[locale]}</p>
     </div>
   </div>

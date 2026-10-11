@@ -49,8 +49,11 @@ const date = new Intl.DateTimeFormat(locale === "ar" ? "ar-u-nu-latn" : "en-GB",
         </section>
       ))}
     </article>
-    <nav aria-label={footer.policies[locale]} class="grid content-start gap-3 lg:sticky lg:top-28">
-      <p class="eyebrow">{footer.policies[locale]}</p>
+    <nav
+      aria-label={footer.otherPolicies[locale]}
+      class="grid content-start gap-3 lg:sticky lg:top-28"
+    >
+      <p class="eyebrow">{footer.otherPolicies[locale]}</p>
       {others.map(([k, o]) => (
         <a class="text-link w-fit" href={localPath(`/${k}`, locale)}>
           {o.title[locale]}

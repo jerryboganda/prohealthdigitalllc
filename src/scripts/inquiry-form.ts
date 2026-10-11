@@ -2,7 +2,9 @@
  * Inquiry form behaviour. Native constraint checks give fast, localized feedback;
  * the server's strict zod schema (src/lib/inquiry.ts) remains the authority.
  */
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Mirrors zod 4 z.regexes.email used by src/lib/inquiry.ts; keep in sync on zod upgrades.
+const EMAIL_RE =
+  /^(?:[A-Za-z0-9_'+-]+\.)*[A-Za-z0-9_'+-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9-]*\.)+[A-Za-z]{2,}$/;
 const hasControl = (v: string) =>
   [...v].some((c) => c.charCodeAt(0) < 32 && ![9, 10, 13].includes(c.charCodeAt(0)));
 
@@ -14,6 +16,8 @@ export default function init(host: HTMLElement) {
   const fieldset = form?.querySelector("fieldset");
   const button = form?.querySelector<HTMLButtonElement>("button[type=submit]");
   if (!form || !success || !alert || !label || !fieldset || !button) return;
+  // Rendered disabled so the form never posts natively without this script.
+  fieldset.disabled = button.disabled = false;
   const msg = (key: string) => host.dataset[`msg${key[0].toUpperCase()}${key.slice(1)}`] || "";
   const sendLabel = label.textContent || "";
   const email = form.querySelector("a[href^='mailto:']")?.getAttribute("href") || "";
@@ -99,6 +103,8 @@ export default function init(host: HTMLElement) {
       source: host.dataset.source || "/contact",
     };
     busy = true;
+    // Disabling the focused control drops focus to <body>; restore it if the request fails.
+    const returnFocus = document.activeElement as HTMLElement | null;
     fieldset.disabled = true;
     button.disabled = true;
     button.setAttribute("aria-busy", "true");
@@ -108,7 +114,8 @@ export default function init(host: HTMLElement) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
-        signal: AbortSignal.timeout(30000),
+        // Optional: AbortSignal.timeout is missing before Safari 16; send without a timeout there.
+        signal: AbortSignal.timeout?.(30000),
       });
       if (response.ok) {
         form.hidden = true;
@@ -116,7 +123,10 @@ export default function init(host: HTMLElement) {
         success.focus();
         return;
       }
-      showAlert(response.status === 429 ? "rate" : "error");
+      // A 400 cannot succeed on retry, so it must not show the "please retry" copy.
+      showAlert(
+        response.status === 429 ? "rate" : response.status === 400 ? "validation" : "error",
+      );
     } catch {
       showAlert("error");
     } finally {
@@ -125,6 +135,8 @@ export default function init(host: HTMLElement) {
       button.disabled = false;
       button.removeAttribute("aria-busy");
       label.textContent = sendLabel;
+      if (!form.hidden && document.activeElement === document.body)
+        (returnFocus && form.contains(returnFocus) ? returnFocus : button).focus();
     }
   });
 }

@@ -42,7 +42,7 @@ const all = engagements.map((e) => e.id);
         </a>
       </h3>
       <p class="muted mt-4 max-w-md">{e.problem[locale]}</p>
-      <span class="text-link mt-8" aria-hidden="true">
+      <span class="text-link mt-auto self-start pt-8" aria-hidden="true">
         {ui.explore[locale]}
         <Icon name="arrow" size={18} directional />
       </span>
@@ -52,6 +52,8 @@ const all = engagements.map((e) => e.id);
 
 <style>
   .engagement {
+    display: flex;
+    flex-direction: column;
     padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
     overflow: hidden;
     transform-style: preserve-3d;

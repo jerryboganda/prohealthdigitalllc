@@ -60,7 +60,7 @@ const audienceLabel = (a: string) =>
   </div>
 </section>
 
-<Marquee locale={locale} items={home.marquee} />
+<Marquee locale={locale} items={home.marquee} pauseLabel={home.marqueePause[locale]} />
 
 <section class="section relative overflow-hidden">
   <div class="container-x grid gap-16">
@@ -289,7 +289,7 @@ const audienceLabel = (a: string) =>
     box-shadow: 0 0 0 1px rgb(255 255 255 / 0.1);
     backdrop-filter: blur(6px);
   }
-  .chapter-dark :global(.process-step h3) {
+  .chapter-dark :global(.process-step .process-title) {
     color: #fff;
   }
   .chapter-dark :global(.process-bar) {

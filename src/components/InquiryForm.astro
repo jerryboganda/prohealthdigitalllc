@@ -116,7 +116,8 @@ const selected = engagement || "not-sure";
       <Icon name="shield" size={20} class="shrink-0 text-teal-700" />
       <span>{t("warning")}</span>
     </p>
-    <fieldset class="grid gap-7">
+    {/* Disabled until inquiry-form.ts enables it: the form never posts natively to the JSON API. */}
+    <fieldset class="grid gap-7" disabled>
       <legend class="sr-only">{t("legend")}</legend>
       <div class="grid gap-6 md:grid-cols-2">
         <div class="field">
@@ -278,9 +279,14 @@ const selected = engagement || "not-sure";
         </span>
       </label>
     </fieldset>
-    <div role="alert" class="form-error" data-form-alert hidden></div>
+    <div role="alert" class="form-error" data-form-alert hidden>
+      {t("error")}{" "}
+      <a href={`mailto:${EMAIL}`} dir="ltr">
+        {EMAIL}
+      </a>
+    </div>
     <div class="flex flex-wrap items-center gap-5">
-      <button class="btn" type="submit" data-magnetic>
+      <button class="btn" type="submit" disabled data-magnetic>
         <span data-submit-label>{t("send")}</span>
         <Icon name="arrow" size={18} directional />
       </button>

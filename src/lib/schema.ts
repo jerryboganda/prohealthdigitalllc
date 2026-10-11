@@ -103,14 +103,18 @@ export function service(e: Engagement, locale: Locale) {
     "@id": `${url(`/solutions/${e.id}`, locale)}#service`,
     name: e.title[locale],
     description: `${e.problem[locale]} ${e.fit[locale]}`,
-    serviceType: e.title.en,
+    serviceType: e.title[locale],
     url: url(`/solutions/${e.id}`, locale),
     provider: { "@id": ORG },
     areaServed,
-    availableLanguage: ["English", "Arabic"],
+    availableChannel: {
+      "@type": "ServiceChannel",
+      serviceUrl: url(`/solutions/${e.id}`, locale),
+      availableLanguage: ["English", "Arabic"],
+    },
     audience: {
       "@type": "BusinessAudience",
-      audienceType: e.audience === "provider" ? "Healthcare providers" : "Digital health companies",
+      audienceType: (e.audience === "provider" ? ui.providers : ui.companies)[locale],
     },
     hasOfferCatalog: {
       "@type": "OfferCatalog",

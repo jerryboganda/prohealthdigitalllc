@@ -67,11 +67,7 @@ if (route.kind === "missing") {
       break;
     case "solution": {
       const e = engagements.find((x) => x.id === route.slug)!;
-      page = {
-        ...base,
-        title: e.title[locale],
-        description: clip(`${e.problem[locale]} ${e.fit[locale]}`),
-      };
+      page = { ...base, ...fromMeta(e.id) };
       trail = [
         { name: nav.solutions[locale], path: "/solutions" },
         { name: e.title[locale], path: route.path },
