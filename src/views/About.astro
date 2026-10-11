@@ -1,0 +1,122 @@
+---
+import PageIntro from "../components/PageIntro.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import ProjectList from "../components/ProjectList.astro";
+import CtaBand from "../components/CtaBand.astro";
+import LogoMark from "../components/LogoMark.astro";
+import { ui } from "../lib/content.ts";
+import type { Locale } from "../lib/content.ts";
+import { nav, pages, home } from "../lib/copy.ts";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+---
+
+<PageIntro
+  locale={locale}
+  eyebrow={nav.about[locale]}
+  title={pages.aboutTitle[locale]}
+  description={ui.intro[locale]}
+  trail={[{ name: nav.about[locale], path: "/about" }]}
+/>
+
+<section class="section">
+  <div class="container-x grid gap-16 lg:grid-cols-[1fr_1fr]">
+    <div class="grid content-start gap-6" data-reveal>
+      <h2>ProHealth Digital LLC</h2>
+      <p class="muted">{pages.aboutBodyA[locale]}</p>
+      <p class="muted">{pages.aboutBodyB[locale]}</p>
+    </div>
+    <div class="about-mark card relative grid place-items-center overflow-hidden p-12" data-reveal>
+      <div class="about-rings" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <LogoMark class="relative w-48" title="ProHealth Digital" />
+    </div>
+  </div>
+</section>
+
+<section class="section bg-mint/60">
+  <div class="container-x grid gap-14 lg:grid-cols-[0.9fr_1.1fr]">
+    <SectionHeading eyebrow={pages.expectTitle[locale]} title={home.principlesTitle[locale]}>
+      <p class="muted" data-reveal>
+        {pages.expectA[locale]}
+      </p>
+      <p class="muted" data-reveal>
+        {pages.expectB[locale]}
+      </p>
+    </SectionHeading>
+    <ol class="grid gap-4" data-reveal-stagger>
+      {home.principles.map((p) => (
+        <li class="card grid gap-2 p-7">
+          <h3>{p.title[locale]}</h3>
+          <p class="muted">{p.body[locale]}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container-x grid gap-12">
+    <SectionHeading title={pages.relevantWork[locale]} />
+    <ProjectList locale={locale} />
+  </div>
+</section>
+
+<CtaBand locale={locale} source="/about" />
+
+<style>
+  .about-mark {
+    min-block-size: 22rem;
+    background: radial-gradient(circle at 50% 50%, #fff 20%, var(--color-mint));
+  }
+  .about-rings span {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    translate: -50% -50%;
+    border-radius: 999px;
+    border: 1px solid rgb(0 178 169 / 0.25);
+  }
+  .about-rings span:nth-child(1) {
+    inline-size: 16rem;
+    block-size: 16rem;
+  }
+  .about-rings span:nth-child(2) {
+    inline-size: 24rem;
+    block-size: 24rem;
+    border-color: rgb(27 78 216 / 0.15);
+  }
+  .about-rings span:nth-child(3) {
+    inline-size: 32rem;
+    block-size: 32rem;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .about-rings span {
+      animation: ring 6s var(--ease-out-expo) infinite;
+    }
+    .about-rings span:nth-child(2) {
+      animation-delay: 0.8s;
+    }
+    .about-rings span:nth-child(3) {
+      animation-delay: 1.6s;
+    }
+    @keyframes ring {
+      0% {
+        scale: 0.85;
+        opacity: 0;
+      }
+      40% {
+        opacity: 1;
+      }
+      100% {
+        scale: 1.1;
+        opacity: 0;
+      }
+    }
+  }
+</style>

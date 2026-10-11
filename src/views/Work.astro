@@ -1,0 +1,27 @@
+---
+import PageIntro from "../components/PageIntro.astro";
+import ProjectList from "../components/ProjectList.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { ui } from "../lib/content.ts";
+import type { Locale } from "../lib/content.ts";
+import { nav, pages } from "../lib/copy.ts";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+---
+
+<PageIntro
+  locale={locale}
+  eyebrow={nav.work[locale]}
+  title={pages.workTitle[locale]}
+  description={ui.proofNote[locale]}
+  trail={[{ name: nav.work[locale], path: "/work" }]}
+/>
+<section class="section">
+  <div class="container-x">
+    <ProjectList locale={locale} />
+  </div>
+</section>
+<CtaBand locale={locale} source="/work" />

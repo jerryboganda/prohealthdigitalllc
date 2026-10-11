@@ -1,0 +1,92 @@
+---
+import { Font } from "astro:assets";
+import "../styles/global.css";
+import { VERIFICATION } from "../lib/content.ts";
+import { headFor, SITE_NAME } from "../lib/seo.ts";
+import type { PageMeta } from "../lib/seo.ts";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+  meta: PageMeta;
+  schema?: object[];
+  bodyClass?: string;
+}
+const { meta, schema = [], bodyClass } = Astro.props;
+const head = headFor(meta);
+const { locale } = meta;
+const dir = locale === "ar" ? "rtl" : "ltr";
+---
+
+<!doctype html>
+<html lang={locale} dir={dir}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{head.title}</title>
+    <meta name="description" content={head.description} />
+    {meta.noindex && <meta name="robots" content="noindex, follow" />}
+    {!meta.noindex && <link rel="canonical" href={head.canonical} />}
+    {!meta.noindex &&
+      head.alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+    <meta name="theme-color" content="#FBFBF8" />
+    <meta name="color-scheme" content="light" />
+    <meta name="author" content="ProHealth Digital LLC" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:type" content={head.type} />
+    <meta property="og:title" content={head.ogTitle} />
+    <meta property="og:description" content={head.description} />
+    <meta property="og:url" content={head.canonical} />
+    <meta property="og:locale" content={head.ogLocale} />
+    <meta property="og:locale:alternate" content={head.ogLocaleAlternate} />
+    <meta property="og:image" content={head.ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={head.ogTitle} />
+    {meta.published && (
+      <meta property="article:published_time" content={meta.published.toISOString()} />
+    )}
+    {meta.updated && <meta property="article:modified_time" content={meta.updated.toISOString()} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={head.ogTitle} />
+    <meta name="twitter:description" content={head.description} />
+    <meta name="twitter:image" content={head.ogImage} />
+    {VERIFICATION.google && <meta name="google-site-verification" content={VERIFICATION.google} />}
+    {VERIFICATION.bing && <meta name="msvalidate.01" content={VERIFICATION.bing} />}
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    {locale === "ar" ? (
+      <>
+        <Font cssVariable="--font-naskh" preload={[{ weight: "400 700" }]} />
+        <Font cssVariable="--font-plex-arabic" />
+      </>
+    ) : (
+      <>
+        <Font cssVariable="--font-newsreader" preload={[{ style: "normal" }]} />
+        <Font cssVariable="--font-plex" />
+      </>
+    )}
+    {schema.length > 0 && (
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify({ "@context": "https://schema.org", "@graph": schema }).replace(
+          /</g,
+          "\u003c",
+        )}
+      />
+    )}
+  </head>
+  <body class:list={["site", bodyClass]}>
+    <a class="skip-link" href="#main">
+      {locale === "ar" ? "انتقل إلى المحتوى" : "Skip to content"}
+    </a>
+    <Header locale={locale} path={meta.path} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer locale={locale} />
+    <script src="../scripts/motion.ts"></script>
+  </body>
+</html>

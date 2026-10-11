@@ -1,0 +1,115 @@
+---
+import { stages } from "../lib/content.ts";
+import type { Locale } from "../lib/content.ts";
+
+interface Props {
+  locale: Locale;
+  /** Pin and scroll horizontally on desktop. */
+  pinned?: boolean;
+}
+const { locale, pinned = false } = Astro.props;
+---
+
+<div class:list={["process", pinned && "process-pinned"]} data-pin-track={pinned ? "" : undefined}>
+  {pinned && (
+    <div class="process-bar" aria-hidden="true">
+      <span data-track-progress />
+    </div>
+  )}
+  <ol class="process-track" data-track data-reveal-stagger>
+    {stages.map((s, i) => (
+      <li class="process-step">
+        <span class="process-num" aria-hidden="true">
+          {String(i + 1).padStart(2, "0")}
+        </span>
+        <span class="process-node" aria-hidden="true" />
+        <h3>{s.label[locale]}</h3>
+        <p class="muted">{s.body[locale]}</p>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<style>
+  .process-track {
+    display: grid;
+    gap: 1.25rem;
+    counter-reset: step;
+  }
+  @media (min-width: 768px) {
+    .process-track {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1100px) {
+    .process-track {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .process-pinned .process-track {
+      display: flex;
+      gap: 1.5rem;
+      inline-size: max-content;
+    }
+    .process-pinned .process-step {
+      inline-size: min(34rem, 42vw);
+      min-block-size: 22rem;
+    }
+    .process-pinned {
+      overflow: hidden;
+    }
+  }
+  .process-step {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 1rem;
+    padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    border-radius: var(--radius-card);
+    background: #fff;
+    box-shadow: 0 0 0 1px var(--color-line);
+  }
+  .process-num {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 2rem + 4vw, 5.5rem);
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--color-teal);
+  }
+  .process-node {
+    position: absolute;
+    inset-block-start: 1.6rem;
+    inset-inline-end: 1.6rem;
+    inline-size: 0.75rem;
+    block-size: 0.75rem;
+    border-radius: 99px;
+    background: var(--color-teal);
+    box-shadow: 0 0 0 6px var(--color-teal-100);
+  }
+  .process-step h3 {
+    font-size: clamp(1.35rem, 1.15rem + 0.8vw, 1.85rem);
+  }
+  .process-bar {
+    display: none;
+  }
+  @media (min-width: 1100px) {
+    .process-pinned .process-bar {
+      display: block;
+      block-size: 2px;
+      margin-block-end: 2rem;
+      background: var(--color-line);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .process-bar span {
+      display: block;
+      block-size: 100%;
+      background: linear-gradient(90deg, var(--color-teal), var(--color-royal));
+      transform-origin: left;
+      transform: scaleX(0.02);
+    }
+    [dir="rtl"] .process-bar span {
+      transform-origin: right;
+      background: linear-gradient(-90deg, var(--color-teal), var(--color-royal));
+    }
+  }
+</style>

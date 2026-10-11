@@ -1,0 +1,40 @@
+---
+import Icon from "../components/Icon.astro";
+import LogoMark from "../components/LogoMark.astro";
+import { localPath } from "../lib/content.ts";
+import type { Locale } from "../lib/content.ts";
+import { nav, pages } from "../lib/copy.ts";
+
+interface Props {
+  locale: Locale;
+  error?: boolean;
+}
+const { locale, error = false } = Astro.props;
+const links = [
+  ["/solutions", nav.solutions],
+  ["/insights", nav.insights],
+  ["/contact", nav.contact],
+] as const;
+---
+
+<section class="relative isolate overflow-hidden">
+  <div class="container-x grid min-h-[70vh] place-items-center py-24 text-center">
+    <div class="hero-enter grid justify-items-center gap-6">
+      <LogoMark class="w-24 opacity-90" />
+      <p class="eyebrow">{error ? "500" : "404"}</p>
+      <h1>{error ? pages.errorTitle[locale] : pages.notFoundTitle[locale]}</h1>
+      <p class="lede">{error ? pages.errorBody[locale] : pages.notFoundBody[locale]}</p>
+      <div class="flex flex-wrap justify-center gap-3">
+        <a class="btn" href={localPath("/", locale)}>
+          {pages.goHome[locale]}
+          <Icon name="arrow" size={18} directional />
+        </a>
+        {links.map(([href, label]) => (
+          <a class="btn btn-ghost" href={localPath(href, locale)}>
+            {label[locale]}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,363 @@
+---
+/**
+ * Abstract, code-drawn interface mockups. Purely illustrative: generic shapes only,
+ * no third-party UI, no figures, no claims. Labelled for screen readers by the caller.
+ */
+interface Props {
+  variant: "access" | "workflow" | "platform" | "improve" | "learning" | "directory";
+  class?: string;
+}
+const { variant, class: className } = Astro.props;
+---
+
+<div class:list={["mockup", `mockup-${variant}`, className]} aria-hidden="true">
+  <div class="mockup-chrome">
+    <i></i>
+    <i></i>
+    <i></i>
+    <b></b>
+  </div>
+  <div class="mockup-body">
+    {variant === "access" && (
+      <>
+        <div class="m-hero">
+          <span class="m-line w-3/5" />
+          <span class="m-line w-2/5 m-soft" />
+          <span class="m-pill" />
+        </div>
+        <div class="m-grid3">
+          {[1, 2, 3].map(() => (
+            <div class="m-card">
+              <span class="m-dot" />
+              <span class="m-line w-4/5" />
+              <span class="m-line w-3/5 m-soft" />
+            </div>
+          ))}
+        </div>
+      </>
+    )}
+    {variant === "workflow" && (
+      <div class="m-flow">
+        {[0, 1, 2].map((i) => (
+          <div class="m-col">
+            <span class="m-line w-1/2" />
+            {Array.from({ length: 3 - (i % 2) }).map(() => (
+              <div class="m-task">
+                <span class="m-dot" />
+                <span class="m-line w-3/4 m-soft" />
+              </div>
+            ))}
+          </div>
+        ))}
+        <svg class="m-connector" viewBox="0 0 300 120" fill="none">
+          <path
+            d="M40 60C90 60 90 20 150 20S210 100 260 100"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-dasharray="4 6"
+          />
+        </svg>
+      </div>
+    )}
+    {(variant === "platform" || variant === "learning") && (
+      <div class="m-app">
+        <div class="m-side">
+          {[1, 2, 3, 4, 5].map((n) => (
+            <span class:list={["m-line", n === 2 && "m-active"]} />
+          ))}
+        </div>
+        <div class="m-main">
+          <div class="m-hero">
+            <span class="m-line w-1/2" />
+            <span class="m-line w-1/3 m-soft" />
+          </div>
+          <div class="m-grid2">
+            <div class="m-card m-chart">
+              <svg viewBox="0 0 120 50" fill="none">
+                <path
+                  d="M0 40C20 38 30 18 50 22S80 34 95 14 115 8 120 6"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                />
+              </svg>
+            </div>
+            <div class="m-card">
+              {[1, 2, 3].map(() => (
+                <div class="m-row">
+                  <span class="m-dot" />
+                  <span class="m-line w-3/4 m-soft" />
+                </div>
+              ))}
+            </div>
+          </div>
+          {variant === "learning" && (
+            <div class="m-progress">
+              <span />
+            </div>
+          )}
+        </div>
+      </div>
+    )}
+    {variant === "improve" && (
+      <div class="m-improve">
+        <div class="m-card m-before">
+          {[1, 2, 3].map(() => (
+            <span class="m-line w-4/5 m-soft" />
+          ))}
+        </div>
+        <div class="m-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 12h15M13 6l6 6-6 6" />
+          </svg>
+        </div>
+        <div class="m-card m-after">
+          <span class="m-check" />
+          {[1, 2].map(() => (
+            <span class="m-line w-3/4" />
+          ))}
+        </div>
+      </div>
+    )}
+    {variant === "directory" && (
+      <>
+        <div class="m-search">
+          <span class="m-line w-2/5 m-soft" />
+          <span class="m-pill" />
+        </div>
+        {[1, 2, 3].map(() => (
+          <div class="m-listing">
+            <span class="m-avatar" />
+            <div class="grid flex-1 gap-2">
+              <span class="m-line w-1/2" />
+              <span class="m-line w-1/3 m-soft" />
+            </div>
+            <span class="m-pill m-pill-sm" />
+          </div>
+        ))}
+      </>
+    )}
+  </div>
+</div>
+
+<style>
+  .mockup {
+    --m-ink: #0a1d3d;
+    border-radius: 1.1rem;
+    background: #fff;
+    box-shadow:
+      0 0 0 1px var(--color-line),
+      0 40px 80px -40px rgb(10 29 61 / 0.45);
+    overflow: hidden;
+    color: var(--color-teal);
+    font-size: 0;
+  }
+  .mockup-chrome {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    border-block-end: 1px solid var(--color-line);
+    background: #f7f9fa;
+  }
+  .mockup-chrome i {
+    inline-size: 8px;
+    block-size: 8px;
+    border-radius: 99px;
+    background: #d7dee6;
+  }
+  .mockup-chrome b {
+    margin-inline-start: 12px;
+    flex: 1;
+    max-inline-size: 45%;
+    block-size: 10px;
+    border-radius: 99px;
+    background: #e9eef3;
+  }
+  .mockup-body {
+    display: grid;
+    gap: 14px;
+    padding: 16px;
+  }
+  .m-line {
+    display: block;
+    block-size: 8px;
+    border-radius: 99px;
+    background: var(--m-ink);
+    opacity: 0.85;
+  }
+  .m-soft {
+    opacity: 0.18;
+  }
+  .m-active {
+    background: var(--color-teal);
+    opacity: 1;
+  }
+  .m-pill {
+    display: block;
+    inline-size: 84px;
+    block-size: 22px;
+    border-radius: 99px;
+    background: var(--color-royal);
+  }
+  .m-pill-sm {
+    inline-size: 52px;
+    block-size: 18px;
+    background: var(--color-mint);
+  }
+  .m-dot {
+    display: block;
+    inline-size: 18px;
+    block-size: 18px;
+    border-radius: 6px;
+    background: var(--color-mint);
+    box-shadow: inset 0 0 0 4px #c9ece4;
+  }
+  .m-hero {
+    display: grid;
+    gap: 8px;
+    padding: 14px;
+    border-radius: 12px;
+    background: linear-gradient(120deg, var(--color-mint), #eef2fd);
+  }
+  .m-card {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: inset 0 0 0 1px var(--color-line);
+  }
+  .m-grid3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .m-grid2 {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 10px;
+  }
+  .m-flow {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .m-col {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+    padding: 10px;
+    border-radius: 12px;
+    background: #f6f8fa;
+  }
+  .m-task,
+  .m-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 0 0 1px var(--color-line);
+  }
+  .m-row {
+    box-shadow: none;
+    padding: 4px 0;
+  }
+  .m-connector {
+    position: absolute;
+    inset-inline: 10%;
+    inset-block-end: -10px;
+    inline-size: 80%;
+    block-size: 60px;
+    color: var(--color-royal);
+    opacity: 0.4;
+  }
+  .m-app {
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    gap: 12px;
+  }
+  .m-side {
+    display: grid;
+    gap: 12px;
+    align-content: start;
+    padding: 10px;
+    border-radius: 12px;
+    background: #f6f8fa;
+  }
+  .m-main {
+    display: grid;
+    gap: 10px;
+  }
+  .m-chart svg {
+    inline-size: 100%;
+    block-size: 70px;
+    color: var(--color-royal);
+  }
+  .m-progress {
+    block-size: 10px;
+    border-radius: 99px;
+    background: #eef2f6;
+    overflow: hidden;
+  }
+  .m-progress span {
+    display: block;
+    inline-size: 62%;
+    block-size: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--color-teal), var(--color-royal));
+  }
+  .m-improve {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 12px;
+  }
+  .m-before {
+    opacity: 0.6;
+    background: repeating-linear-gradient(-45deg, #fff, #fff 6px, #f6f8fa 6px, #f6f8fa 12px);
+  }
+  .m-after {
+    box-shadow:
+      inset 0 0 0 1.5px var(--color-teal),
+      0 12px 24px -16px rgb(0 178 169 / 0.6);
+  }
+  .m-check {
+    inline-size: 22px;
+    block-size: 22px;
+    border-radius: 99px;
+    background: var(--color-teal);
+  }
+  .m-arrow svg {
+    inline-size: 28px;
+    color: var(--color-royal);
+  }
+  [dir="rtl"] .m-arrow svg {
+    transform: scaleX(-1);
+  }
+  .m-search {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 99px;
+    box-shadow: inset 0 0 0 1px var(--color-line-strong);
+  }
+  .m-listing {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: inset 0 0 0 1px var(--color-line);
+  }
+  .m-avatar {
+    inline-size: 34px;
+    block-size: 34px;
+    border-radius: 99px;
+    background: linear-gradient(135deg, var(--color-teal-100), #dfe7fb);
+  }
+</style>

@@ -1,0 +1,50 @@
+---
+import LogoMark from "./LogoMark.astro";
+import { localPath } from "../lib/content.ts";
+import type { Locale } from "../lib/content.ts";
+interface Props {
+  locale: Locale;
+  tone?: "dark" | "light";
+  animate?: boolean;
+}
+const { locale, tone = "dark", animate = false } = Astro.props;
+---
+
+<a
+  href={localPath("/", locale)}
+  class:list={["brand group inline-flex items-center gap-3", tone === "light" && "brand-light"]}
+  aria-label={locale === "ar" ? "ProHealth Digital — الصفحة الرئيسية" : "ProHealth Digital — home"}
+  style="view-transition-name: site-logo"
+>
+  <LogoMark
+    class="h-10 w-auto shrink-0 transition-transform duration-500 group-hover:scale-105"
+    animate={animate}
+  />
+  <span class="brand-word" dir="ltr">
+    <span class="brand-pro">ProHealth</span>
+    <span class="brand-digital">Digital</span>
+  </span>
+</a>
+<style>
+  .brand-word {
+    display: inline-flex;
+    gap: 0.3em;
+    font-family: var(--font-plex), "IBM Plex Sans", "IBM Plex Sans Arabic", system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 1.18rem;
+    letter-spacing: -0.015em;
+    line-height: 1;
+  }
+  .brand-pro {
+    color: var(--color-ink);
+  }
+  .brand-digital {
+    color: var(--color-royal);
+  }
+  .brand-light .brand-pro {
+    color: #fff;
+  }
+  .brand-light .brand-digital {
+    color: #8fb0ff;
+  }
+</style>

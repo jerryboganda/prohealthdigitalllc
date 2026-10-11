@@ -1,0 +1,27 @@
+---
+import PageIntro from "../components/PageIntro.astro";
+import FaqList from "../components/FaqList.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { faqs } from "../lib/content.ts";
+import type { Locale } from "../lib/content.ts";
+import { nav, pages } from "../lib/copy.ts";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+---
+
+<PageIntro
+  locale={locale}
+  eyebrow={nav.faq[locale]}
+  title={pages.faqTitle[locale]}
+  description={pages.faqBody[locale]}
+  trail={[{ name: nav.faq[locale], path: "/faq" }]}
+/>
+<section class="section">
+  <div class="container-narrow">
+    <FaqList locale={locale} items={faqs} />
+  </div>
+</section>
+<CtaBand locale={locale} source="/faq" />

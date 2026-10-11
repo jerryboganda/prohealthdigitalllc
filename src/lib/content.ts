@@ -3,6 +3,12 @@ export type Localized = Record<Locale, string>;
 export const text = (en: string, ar: string): Localized => ({ en, ar });
 export const ORIGIN = "https://prohealthdigitalllc.com";
 export const EMAIL = "sales@prohealthdigitalllc.com";
+/** WhatsApp click-to-chat number in international format without "+" (e.g. "9665xxxxxxxx"). Empty hides the CTA. */
+export const WHATSAPP = "";
+/** Search engine verification tokens; empty values are not rendered. */
+export const VERIFICATION = { google: "", bing: "" };
+/** Fallback sitemap lastmod for pages without their own date. */
+export const CONTENT_UPDATED = "2026-10-11";
 export const localPath = (path: string, locale: Locale) =>
   locale === "ar" ? `/ar${path === "/" ? "" : path}` : path;
 export const localeFor = (path: string): Locale => (/^\/ar(?:\/|$)/.test(path) ? "ar" : "en");
@@ -67,6 +73,10 @@ export interface Engagement {
   exclusions: Localized;
   measures: Localized;
   after: Localized;
+  /** Optional deeper content (typical delivery phases and engagement-specific questions). */
+  phasesTitle?: Localized;
+  phases?: { title: Localized; body: Localized }[];
+  faqs?: { q: Localized; a: Localized }[];
 }
 export const engagements: Engagement[] = [
   {

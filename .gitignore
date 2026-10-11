@@ -11,17 +11,11 @@ node_modules
 dist
 dist-ssr
 .output
-.vinxi
-.tanstack/**
-.nitro
+.astro
 *.local
 .env
 .env.*
 
-
-# Wrangler / Cloudflare
-.wrangler/
-.dev.vars
 
 # Editor directories and files
 .vscode/*

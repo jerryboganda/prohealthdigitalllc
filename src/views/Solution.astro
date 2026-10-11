@@ -1,0 +1,272 @@
+---
+import PageIntro from "../components/PageIntro.astro";
+import CtaBand from "../components/CtaBand.astro";
+import FaqList from "../components/FaqList.astro";
+import Icon from "../components/Icon.astro";
+import ArticleCard from "../components/ArticleCard.astro";
+import { engagements, localPath, ui, stages } from "../lib/content.ts";
+import type { Engagement, Locale } from "../lib/content.ts";
+import { nav, pages, common } from "../lib/copy.ts";
+import { entriesFor } from "../site/collections.ts";
+
+interface Props {
+  locale: Locale;
+  engagement: Engagement;
+}
+const { locale, engagement: e } = Astro.props;
+const t = (k: keyof typeof ui) => ui[k][locale];
+const sections = [
+  { id: "fit", title: t("fit"), body: [e.fit[locale]] },
+  { id: "outputs", title: t("outputs"), list: e.outputs.map((o) => o[locale]) },
+  { id: "dependencies", title: t("dependencies"), body: [e.dependencies[locale]] },
+  { id: "scope", title: t("exclusions"), body: [e.exclusions[locale], t("scope")] },
+  { id: "measures", title: t("measures"), body: [e.measures[locale]] },
+  { id: "after", title: t("after"), body: [e.after[locale], t("supportBody")] },
+];
+const phases = e.phases ?? [];
+const related = engagements.filter((x) => x.id !== e.id && x.audience === e.audience);
+const reading = (await entriesFor("insights", locale))
+  .filter((a) => a.data.engagements.includes(e.id))
+  .slice(0, 3);
+const contact = `${localPath("/contact", locale)}?engagement=${e.id}&source=/solutions/${e.id}`;
+const audienceName = e.audience === "provider" ? ui.providers[locale] : ui.companies[locale];
+---
+
+<PageIntro
+  locale={locale}
+  eyebrow={audienceName}
+  title={e.title[locale]}
+  description={e.problem[locale]}
+  trail={[
+    { name: nav.solutions[locale], path: "/solutions" },
+    { name: e.title[locale], path: `/solutions/${e.id}` },
+  ]}
+>
+  <div class="mt-2 flex flex-wrap gap-4">
+    <a class="btn" href={contact} data-magnetic>
+      {ui.cta[locale]}
+      <Icon name="arrow" size={18} directional />
+    </a>
+  </div>
+</PageIntro>
+
+<section class="section">
+  <div class="container-x grid gap-14 lg:grid-cols-[15rem_1fr_19rem]">
+    <nav class="toc hidden lg:block" aria-label={common.onThisPage[locale]}>
+      <p class="eyebrow mb-4">{common.onThisPage[locale]}</p>
+      <ol class="grid gap-2">
+        {sections.map((s) => (
+          <li>
+            <a href={`#${s.id}`}>{s.title}</a>
+          </li>
+        ))}
+        {phases.length > 0 && (
+          <li>
+            <a href="#phases">{e.phasesTitle?.[locale]}</a>
+          </li>
+        )}
+        {(e.faqs?.length ?? 0) > 0 && (
+          <li>
+            <a href="#questions">{nav.faq[locale]}</a>
+          </li>
+        )}
+      </ol>
+    </nav>
+    <div class="grid gap-16">
+      {sections.map((s) => (
+        <section id={s.id} class="detail-section" data-reveal>
+          <h2>{s.title}</h2>
+          {s.body?.map((p) => (
+            <p class="muted">{p}</p>
+          ))}
+          {s.list && (
+            <ul class="grid gap-3 sm:grid-cols-2">
+              {s.list.map((item) => (
+                <li class="deliverable">
+                  <span class="deliverable-icon">
+                    <Icon name="check" size={16} />
+                  </span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      ))}
+      {phases.length > 0 && (
+        <section id="phases" class="detail-section" data-reveal>
+          <h2>{e.phasesTitle?.[locale]}</h2>
+          <ol class="phase-list">
+            {phases.map((p, i) => (
+              <li>
+                <span class="phase-dot" aria-hidden="true">
+                  {i + 1}
+                </span>
+                <div class="grid gap-1">
+                  <h3>{p.title[locale]}</h3>
+                  <p class="muted">{p.body[locale]}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+      {(e.faqs?.length ?? 0) > 0 && (
+        <section id="questions" class="detail-section">
+          <h2>{nav.faq[locale]}</h2>
+          <FaqList locale={locale} items={e.faqs!} />
+        </section>
+      )}
+    </div>
+    <aside class="lg:sticky lg:top-28 lg:self-start">
+      <div class="card grid gap-5 p-7">
+        <span class="engagement-badge">
+          <Icon name="pulse" size={22} />
+        </span>
+        <h2 class="text-[1.5rem]">{pages.nextStep[locale]}</h2>
+        <p class="muted text-[0.97rem]">{ui.discoveryBody[locale]}</p>
+        <a class="btn w-full" href={contact}>
+          {ui.cta[locale]}
+          <Icon name="arrow" size={18} directional />
+        </a>
+        <ol class="grid gap-2 border-t border-[var(--color-line)] pt-5 text-[0.9rem]">
+          {stages.map((s, i) => (
+            <li class="flex gap-3">
+              <span class="font-semibold text-teal-700">{i + 1}</span>
+              {s.label[locale]}
+            </li>
+          ))}
+        </ol>
+      </div>
+    </aside>
+  </div>
+</section>
+
+{reading.length > 0 && (
+  <section class="section-tight">
+    <div class="container-x grid gap-10">
+      <h2 class="text-[clamp(1.6rem,1.3rem+1.2vw,2.3rem)]">{common.relatedReading[locale]}</h2>
+      <div class="grid gap-5 md:grid-cols-3" data-reveal-stagger>
+        {reading.map((a, i) => (
+          <ArticleCard
+            locale={locale}
+            href={`/insights/${a.slug}`}
+            title={a.data.title}
+            description={a.data.description}
+            label={nav.insights[locale]}
+            date={a.data.published}
+            index={i}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<section class="section-tight">
+  <div class="container-x grid gap-8">
+    <h2 class="text-[clamp(1.6rem,1.3rem+1.2vw,2.3rem)]">{common.related[locale]}</h2>
+    <div class="grid gap-4 md:grid-cols-2">
+      {related.map((r) => (
+        <a class="related card card-hover" href={localPath(`/solutions/${r.id}`, locale)}>
+          <span class="grid gap-2">
+            <span class="text-[1.3rem] font-[var(--font-display)]">{r.title[locale]}</span>
+            <span class="muted text-[0.95rem]">{r.problem[locale]}</span>
+          </span>
+          <Icon name="arrow" size={20} directional />
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<CtaBand locale={locale} source={`/solutions/${e.id}`} engagement={e.id} />
+
+<style>
+  .toc {
+    position: sticky;
+    inset-block-start: 7rem;
+    align-self: start;
+  }
+  .toc a {
+    display: block;
+    padding-block: 0.3rem;
+    padding-inline-start: 0.9rem;
+    border-inline-start: 2px solid var(--color-line);
+    color: var(--color-muted);
+    font-size: 0.93rem;
+    transition:
+      color var(--dur-fast),
+      border-color var(--dur-fast);
+  }
+  .toc a:hover {
+    color: var(--color-ink);
+    border-color: var(--color-teal);
+  }
+  .detail-section {
+    display: grid;
+    gap: 1.1rem;
+    scroll-margin-top: 7rem;
+  }
+  .detail-section h2 {
+    font-size: clamp(1.6rem, 1.3rem + 1.2vw, 2.3rem);
+  }
+  .deliverable {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    padding: 1.1rem 1.2rem;
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 0 0 1px var(--color-line);
+  }
+  .deliverable-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    inline-size: 1.75rem;
+    block-size: 1.75rem;
+    border-radius: 99px;
+    background: var(--color-mint);
+    color: var(--color-teal-700);
+  }
+  .engagement-badge {
+    display: grid;
+    place-items: center;
+    inline-size: 3rem;
+    block-size: 3rem;
+    border-radius: 0.9rem;
+    background: var(--color-ink);
+    color: #fff;
+  }
+  .phase-list {
+    display: grid;
+    gap: 1.25rem;
+    position: relative;
+  }
+  .phase-list li {
+    display: flex;
+    gap: 1.25rem;
+  }
+  .phase-dot {
+    flex: none;
+    display: grid;
+    place-items: center;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    border-radius: 99px;
+    background: var(--color-mint);
+    color: var(--color-teal-700);
+    font-weight: 600;
+  }
+  .phase-list h3 {
+    font-size: 1.25rem;
+  }
+  .related {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.5rem 1.75rem;
+  }
+</style>

@@ -1,0 +1,96 @@
+---
+import PageIntro from "../components/PageIntro.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { glossary } from "../lib/glossary.ts";
+import type { Locale } from "../lib/content.ts";
+import { nav } from "../lib/copy.ts";
+import { meta } from "../lib/meta.ts";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const collator = new Intl.Collator(locale);
+const terms = [...glossary].sort((a, b) => collator.compare(a.term[locale], b.term[locale]));
+---
+
+<PageIntro
+  locale={locale}
+  eyebrow={nav.glossary[locale]}
+  title={meta.glossary.title[locale]}
+  description={meta.glossary.description[locale]}
+  trail={[{ name: nav.glossary[locale], path: "/glossary" }]}
+/>
+<section class="section pt-8">
+  <div class="container-x grid gap-12 lg:grid-cols-[15rem_1fr]">
+    <nav class="glossary-index hidden lg:block" aria-label={nav.glossary[locale]}>
+      <ol class="grid gap-1">
+        {terms.map((t) => (
+          <li>
+            <a href={`#${t.id}`}>{t.term[locale]}</a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+    <dl class="grid gap-4" data-reveal-stagger>
+      {terms.map((t) => (
+        <div class="term card" id={t.id}>
+          <dt>
+            <a href={`#${t.id}`}>{t.term[locale]}</a>
+            {locale === "ar" && (
+              <span class="term-alt" dir="ltr" lang="en">
+                {t.term.en}
+              </span>
+            )}
+          </dt>
+          <dd class="muted">{t.definition[locale]}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+<CtaBand locale={locale} source="/glossary" />
+
+<style>
+  .glossary-index {
+    position: sticky;
+    inset-block-start: 7rem;
+    align-self: start;
+    max-block-size: calc(100vh - 9rem);
+    overflow-y: auto;
+  }
+  .glossary-index a {
+    display: block;
+    padding-block: 0.25rem;
+    color: var(--color-muted);
+    font-size: 0.92rem;
+  }
+  .glossary-index a:hover {
+    color: var(--color-ink);
+  }
+  .term {
+    display: grid;
+    gap: 0.6rem;
+    padding: 1.5rem 1.75rem;
+    scroll-margin-top: 7rem;
+  }
+  .term:target {
+    box-shadow:
+      0 0 0 2px var(--color-teal),
+      0 20px 40px -24px rgb(0 178 169 / 0.5);
+  }
+  .term dt {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.75rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 1.15rem + 0.6vw, 1.65rem);
+    color: var(--color-ink);
+  }
+  .term-alt {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--color-muted);
+  }
+</style>

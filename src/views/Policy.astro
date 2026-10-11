@@ -1,0 +1,61 @@
+---
+import PageIntro from "../components/PageIntro.astro";
+import { EMAIL, policies, localPath, CONTENT_UPDATED } from "../lib/content.ts";
+import type { Locale } from "../lib/content.ts";
+import { footer, common } from "../lib/copy.ts";
+import { pages } from "../lib/copy.ts";
+
+interface Props {
+  locale: Locale;
+  slug: string;
+}
+const { locale, slug } = Astro.props;
+const p = policies[slug];
+const others = Object.entries(policies).filter(([k]) => k !== slug);
+const parts = (body: string) => body.split(EMAIL);
+const date = new Intl.DateTimeFormat(locale === "ar" ? "ar-u-nu-latn" : "en-GB", {
+  dateStyle: "long",
+}).format(new Date(CONTENT_UPDATED));
+---
+
+<PageIntro
+  locale={locale}
+  eyebrow={footer.policies[locale]}
+  title={p.title[locale]}
+  description={pages.policyBody[locale]}
+  trail={[{ name: p.title[locale], path: `/${slug}` }]}
+/>
+<section class="section">
+  <div class="container-x grid gap-14 lg:grid-cols-[1fr_17rem]">
+    <article class="prose max-w-3xl">
+      <p class="muted text-[0.9rem]">
+        {common.updated[locale]}: {date}
+      </p>
+      {p.sections.map((s) => (
+        <section>
+          <h2>{s.title[locale]}</h2>
+          <p>
+            {parts(s.body[locale]).map((part, i) => (
+              <>
+                {i > 0 && (
+                  <a dir="ltr" href={`mailto:${EMAIL}`}>
+                    {EMAIL}
+                  </a>
+                )}
+                {part}
+              </>
+            ))}
+          </p>
+        </section>
+      ))}
+    </article>
+    <nav aria-label={footer.policies[locale]} class="grid content-start gap-3 lg:sticky lg:top-28">
+      <p class="eyebrow">{footer.policies[locale]}</p>
+      {others.map(([k, o]) => (
+        <a class="text-link w-fit" href={localPath(`/${k}`, locale)}>
+          {o.title[locale]}
+        </a>
+      ))}
+    </nav>
+  </div>
+</section>

@@ -1,0 +1,136 @@
+---
+import Icon from "./Icon.astro";
+import type { Locale } from "../lib/content.ts";
+import { home } from "../lib/copy.ts";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const steps = [
+  { icon: "globe", title: home.access, body: home.accessBody },
+  { icon: "flow", title: home.operations, body: home.operationsBody },
+  { icon: "layers", title: home.platform, body: home.platformBody },
+] as const;
+---
+
+<figure class="journey" aria-label={home.journeyLabel[locale]}>
+  <div class="journey-card glass" data-parallax="0.06">
+    <div class="flex items-center justify-between gap-4">
+      <p class="eyebrow">{home.journeyTitle[locale]}</p>
+      <span class="journey-live" aria-hidden="true">
+        <span class="pulse-dot"></span>
+      </span>
+    </div>
+    <svg
+      class="journey-line rtl:-scale-x-100"
+      viewBox="0 0 400 80"
+      fill="none"
+      aria-hidden="true"
+      data-draw
+    >
+      <path
+        data-draw-path
+        d="M0 50H120L140 50L156 18L178 70L194 34L206 50H400"
+        stroke="url(#journey-grad)"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      ></path>
+      <defs>
+        <linearGradient id="journey-grad" x1="0" x2="1">
+          <stop offset="0" stop-color="#00B2A9" />
+          <stop offset="1" stop-color="#1B4ED8" />
+        </linearGradient>
+      </defs>
+    </svg>
+    <ol class="grid gap-3">
+      {steps.map((s, i) => (
+        <li class="journey-step" style={`--d:${i * 120 + 500}ms`}>
+          <span class="journey-icon">
+            <Icon name={s.icon} size={20} />
+          </span>
+          <span class="grid">
+            <strong>{s.title[locale]}</strong>
+            <span class="muted text-[0.95rem]">{s.body[locale]}</span>
+          </span>
+        </li>
+      ))}
+    </ol>
+    <figcaption class="muted mt-5 text-[0.8rem]">{home.journeyCaption[locale]}</figcaption>
+  </div>
+</figure>
+
+<style>
+  .journey {
+    position: relative;
+  }
+  .journey-card {
+    display: grid;
+    gap: 1.25rem;
+    padding: clamp(1.25rem, 0.9rem + 1.5vw, 2rem);
+    border-radius: 1.75rem;
+  }
+  .journey-live {
+    display: grid;
+    place-items: center;
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+  }
+  .journey-live .pulse-dot {
+    inline-size: 0.6rem;
+    block-size: 0.6rem;
+    border-radius: 99px;
+    background: var(--color-teal);
+  }
+  .journey-line {
+    inline-size: 100%;
+    block-size: 3.5rem;
+  }
+  .journey-step {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: 1rem;
+    background: rgb(255 255 255 / 0.8);
+    box-shadow: 0 0 0 1px var(--color-line);
+    transition:
+      transform var(--dur-base) var(--ease-out-expo),
+      box-shadow var(--dur-base);
+  }
+  .journey-step:hover {
+    transform: translateX(calc(0.35rem * var(--dirx, 1)));
+    box-shadow:
+      0 0 0 1px var(--color-teal),
+      0 12px 24px -16px rgb(0 178 169 / 0.6);
+  }
+  [dir="rtl"] .journey-step {
+    --dirx: -1;
+  }
+  .journey-icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    border-radius: 0.8rem;
+    background: var(--color-ink);
+    color: #fff;
+  }
+  .journey-step strong {
+    font-weight: 600;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .journey-step {
+      animation: step-in 900ms var(--ease-out-expo) both;
+      animation-delay: var(--d);
+    }
+    @keyframes step-in {
+      from {
+        opacity: 0;
+        translate: 0 0.75rem;
+      }
+    }
+  }
+</style>

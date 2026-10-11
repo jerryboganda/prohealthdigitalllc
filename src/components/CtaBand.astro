@@ -1,0 +1,101 @@
+---
+import Icon from "./Icon.astro";
+import { EMAIL, WHATSAPP, localPath, ui } from "../lib/content.ts";
+import type { Locale } from "../lib/content.ts";
+import { common } from "../lib/copy.ts";
+
+interface Props {
+  locale: Locale;
+  source: string;
+  engagement?: string;
+}
+const { locale, source, engagement } = Astro.props;
+const params = new URLSearchParams({ ...(engagement ? { engagement } : {}), source });
+---
+
+<section class="section-tight">
+  <div class="container-x">
+    <div
+      class="cta-band relative isolate overflow-hidden rounded-[2rem] px-6 py-16 md:px-16 md:py-20"
+      data-reveal
+    >
+      <div class="cta-orbs" aria-hidden="true">
+        <span></span>
+        <span></span>
+      </div>
+      <div class="relative grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-end">
+        <div class="grid gap-5">
+          <p class="eyebrow">{locale === "ar" ? "الخطوة التالية" : "Next step"}</p>
+          <h2 class="max-w-2xl" data-split>
+            {ui.discovery[locale]}
+          </h2>
+          <p class="lede">{ui.discoveryBody[locale]}</p>
+        </div>
+        <div class="grid gap-4 lg:justify-items-end">
+          <a class="btn" href={`${localPath("/contact", locale)}?${params}`} data-magnetic>
+            {ui.cta[locale]}
+            <Icon name="arrow" size={18} directional />
+          </a>
+          <a class="text-link text-[0.95rem]" href={`mailto:${EMAIL}`}>
+            <Icon name="mail" size={17} />
+            <span>{ui.email[locale]}</span>
+            <span dir="ltr">{EMAIL}</span>
+          </a>
+          {WHATSAPP && (
+            <a
+              class="text-link text-[0.95rem]"
+              href={`https://wa.me/${WHATSAPP}`}
+              target="_blank"
+              rel="noopener"
+            >
+              <Icon name="whatsapp" size={17} />
+              {common.whatsapp[locale]}
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-band {
+    background: linear-gradient(135deg, #f3faf7 0%, #e9f3f6 55%, #eef1fb 100%);
+    box-shadow: 0 0 0 1px var(--color-line);
+  }
+  .cta-orbs span {
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(40px);
+    opacity: 0.55;
+    z-index: -1;
+  }
+  .cta-orbs span:first-child {
+    inset-block-start: -8rem;
+    inset-inline-end: -4rem;
+    inline-size: 22rem;
+    block-size: 22rem;
+    background: rgb(0 178 169 / 0.35);
+  }
+  .cta-orbs span:last-child {
+    inset-block-end: -10rem;
+    inset-inline-start: 20%;
+    inline-size: 26rem;
+    block-size: 18rem;
+    background: rgb(27 78 216 / 0.18);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .cta-orbs span:first-child {
+      animation: orb 14s ease-in-out infinite alternate;
+    }
+    .cta-orbs span:last-child {
+      animation: orb 18s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes orb {
+      to {
+        translate: -3rem 2rem;
+        scale: 1.15;
+      }
+    }
+  }
+</style>

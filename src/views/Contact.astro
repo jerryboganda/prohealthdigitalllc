@@ -1,0 +1,90 @@
+---
+import PageIntro from "../components/PageIntro.astro";
+import InquiryForm from "../components/InquiryForm.astro";
+import Icon from "../components/Icon.astro";
+import { EMAIL, WHATSAPP, stages, ui } from "../lib/content.ts";
+import type { Locale } from "../lib/content.ts";
+import { nav, pages, common } from "../lib/copy.ts";
+
+interface Props {
+  locale: Locale;
+  engagement?: string;
+  source: string;
+}
+const { locale, engagement, source } = Astro.props;
+---
+
+<PageIntro
+  locale={locale}
+  eyebrow={nav.contact[locale]}
+  title={ui.cta[locale]}
+  description={ui.discoveryBody[locale]}
+  trail={[{ name: nav.contact[locale], path: "/contact" }]}
+/>
+
+<section class="section pt-12">
+  <div class="container-x grid gap-14 lg:grid-cols-[1.35fr_0.85fr]">
+    <div class="card p-6 md:p-10">
+      <InquiryForm locale={locale} engagement={engagement} source={source} />
+    </div>
+    <aside class="grid content-start gap-8 lg:sticky lg:top-28">
+      <div class="grid gap-4">
+        <h2 class="text-[1.75rem]">{pages.contactAsideTitle[locale]}</h2>
+        <p class="muted">{pages.contactAsideA[locale]}</p>
+      </div>
+      <ol class="grid gap-3">
+        {stages.map((s, i) => (
+          <li class="contact-step">
+            <span class="contact-step-num">{i + 1}</span>
+            <span class="grid">
+              <strong>{s.label[locale]}</strong>
+              <span class="muted text-[0.92rem]">{s.body[locale]}</span>
+            </span>
+          </li>
+        ))}
+      </ol>
+      <div class="grid gap-3 border-t border-[var(--color-line)] pt-6">
+        <a class="text-link w-fit" href={`mailto:${EMAIL}`} dir="ltr">
+          <Icon name="mail" size={18} />
+          {EMAIL}
+        </a>
+        {WHATSAPP && (
+          <a
+            class="text-link w-fit"
+            href={`https://wa.me/${WHATSAPP}`}
+            target="_blank"
+            rel="noopener"
+          >
+            <Icon name="whatsapp" size={18} />
+            {common.whatsapp[locale]}
+          </a>
+        )}
+        <p class="muted text-[0.92rem]">{pages.contactAsideB[locale]}</p>
+        <p class="muted text-[0.92rem]">{pages.contactAsideC[locale]}</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .contact-step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .contact-step-num {
+    flex: none;
+    display: grid;
+    place-items: center;
+    inline-size: 2rem;
+    block-size: 2rem;
+    border-radius: 99px;
+    background: var(--color-mint);
+    color: var(--color-teal-700);
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  .contact-step strong {
+    font-weight: 600;
+  }
+</style>

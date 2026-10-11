@@ -1,0 +1,234 @@
+---
+import Base from "../layouts/Base.astro";
+import Home from "../views/Home.astro";
+import Solutions from "../views/Solutions.astro";
+import Solution from "../views/Solution.astro";
+import Work from "../views/Work.astro";
+import Project from "../views/Project.astro";
+import HowWeWork from "../views/HowWeWork.astro";
+import About from "../views/About.astro";
+import Contact from "../views/Contact.astro";
+import Faq from "../views/Faq.astro";
+import Policy from "../views/Policy.astro";
+import Audience from "../views/Audience.astro";
+import Listing from "../views/Listing.astro";
+import Article from "../views/Article.astro";
+import Glossary from "../views/Glossary.astro";
+import NotFound from "../views/NotFound.astro";
+import { resolve } from "../lib/routes.ts";
+import { engagements, projects, faqs, policies } from "../lib/content.ts";
+import { audiences } from "../lib/audiences.ts";
+import { glossary } from "../lib/glossary.ts";
+import { meta, clip } from "../lib/meta.ts";
+import { nav } from "../lib/copy.ts";
+import * as ld from "../lib/schema.ts";
+import type { PageMeta } from "../lib/seo.ts";
+import { collectionSlugs, entryFor, entriesFor } from "../site/collections.ts";
+
+const route = resolve(Astro.url.pathname, await collectionSlugs());
+if (route.kind === "redirect") return Astro.redirect(route.to, 301);
+
+const locale = route.locale;
+let page: PageMeta;
+let trail: { name: string; path: string }[] = [];
+let schema: object[] = [ld.organization(locale), ld.website()];
+let pageType = "WebPage";
+
+if (route.kind === "missing") {
+  Astro.response.status = 404;
+  page = {
+    locale,
+    path: "/",
+    title: locale === "ar" ? "الصفحة غير موجودة" : "Page not found",
+    description: meta.home.description[locale],
+    noindex: true,
+  };
+  schema = [];
+} else {
+  const fromMeta = (key: string) => ({
+    title: meta[key].title[locale],
+    description: meta[key].description[locale],
+  });
+  const base = { locale, path: route.path };
+  switch (route.view) {
+    case "home":
+      page = { ...base, ...fromMeta("home") };
+      break;
+    case "solutions":
+      page = { ...base, ...fromMeta("solutions") };
+      trail = [{ name: nav.solutions[locale], path: "/solutions" }];
+      schema.push(
+        ld.itemList(
+          locale,
+          engagements.map((e) => ({ name: e.title[locale], path: `/solutions/${e.id}` })),
+        ),
+      );
+      break;
+    case "solution": {
+      const e = engagements.find((x) => x.id === route.slug)!;
+      page = {
+        ...base,
+        title: e.title[locale],
+        description: clip(`${e.problem[locale]} ${e.fit[locale]}`),
+      };
+      trail = [
+        { name: nav.solutions[locale], path: "/solutions" },
+        { name: e.title[locale], path: route.path },
+      ];
+      schema.push(ld.service(e, locale));
+      if (e.faqs?.length) schema.push(ld.faqPage(e.faqs, locale, route.path));
+      break;
+    }
+    case "work":
+      page = { ...base, ...fromMeta("work") };
+      trail = [{ name: nav.work[locale], path: "/work" }];
+      break;
+    case "project": {
+      const p = projects.find((x) => x.id === route.slug)!;
+      const role =
+        locale === "ar"
+          ? "تنفيذ المنصة بالكامل بواسطة ProHealth Digital"
+          : "Full-platform delivery by ProHealth Digital";
+      page = {
+        ...base,
+        title: `${p.name[locale]} — ${p.category[locale]}`,
+        description: clip(`${p.context[locale]} ${role}.`),
+      };
+      trail = [
+        { name: nav.work[locale], path: "/work" },
+        { name: p.name[locale], path: route.path },
+      ];
+      break;
+    }
+    case "how-we-work":
+      page = { ...base, ...fromMeta("how-we-work") };
+      trail = [{ name: nav.process[locale], path: "/how-we-work" }];
+      break;
+    case "about":
+      page = { ...base, ...fromMeta("about") };
+      trail = [{ name: nav.about[locale], path: "/about" }];
+      pageType = "AboutPage";
+      break;
+    case "contact":
+      page = { ...base, ...fromMeta("contact") };
+      trail = [{ name: nav.contact[locale], path: "/contact" }];
+      pageType = "ContactPage";
+      break;
+    case "faq":
+      page = { ...base, ...fromMeta("faq") };
+      trail = [{ name: nav.faq[locale], path: "/faq" }];
+      schema.push(ld.faqPage(faqs, locale, route.path));
+      break;
+    case "policy":
+      page = { ...base, ...fromMeta(route.slug) };
+      trail = [{ name: policies[route.slug].title[locale], path: route.path }];
+      break;
+    case "audience": {
+      const a = audiences.find((x) => x.id === route.slug)!;
+      page = { ...base, ...fromMeta(route.slug) };
+      trail = [{ name: a.eyebrow[locale], path: route.path }];
+      break;
+    }
+    case "insights":
+    case "resources": {
+      page = { ...base, ...fromMeta(route.view) };
+      const label = route.view === "insights" ? nav.insights : nav.resources;
+      trail = [{ name: label[locale], path: route.path }];
+      pageType = "CollectionPage";
+      const items = await entriesFor(route.view, locale);
+      schema.push(
+        ld.itemList(
+          locale,
+          items.map((e) => ({ name: e.data.title, path: `/${route.view}/${e.slug}` })),
+        ),
+      );
+      break;
+    }
+    case "insight":
+    case "resource": {
+      const collection = route.view === "insight" ? "insights" : "resources";
+      const entry = (await entryFor(collection, locale, route.slug))!;
+      const label = collection === "insights" ? nav.insights : nav.resources;
+      page = {
+        ...base,
+        title: entry.data.title,
+        description: entry.data.description,
+        type: "article",
+        published: entry.data.published,
+        updated: entry.data.updated,
+      };
+      trail = [
+        { name: label[locale], path: `/${collection}` },
+        { name: entry.data.title, path: route.path },
+      ];
+      schema.push(
+        ld.article({
+          locale,
+          path: route.path,
+          title: entry.data.title,
+          description: entry.data.description,
+          published: entry.data.published,
+          updated: entry.data.updated,
+          section: label[locale],
+          words: (entry.body ?? "").split(/\s+/).filter(Boolean).length,
+        }),
+      );
+      break;
+    }
+    case "glossary":
+      page = { ...base, ...fromMeta("glossary") };
+      trail = [{ name: nav.glossary[locale], path: "/glossary" }];
+      schema.push(ld.definedTermSet(glossary, locale, route.path, meta.glossary.title[locale]));
+      break;
+  }
+  schema.push(
+    ...ld.webPage({
+      locale,
+      path: route.path,
+      title: page!.title,
+      description: page!.description,
+      trail,
+      homeName: nav.home[locale],
+      type: pageType,
+    }),
+  );
+}
+
+const query = Astro.url.searchParams;
+const selected = query.get("engagement");
+const source = query.get("source");
+const validSource = source && /^\/(?!\/)[a-zA-Z0-9/_-]{0,199}$/.test(source) ? source : "/contact";
+const engagement = engagements.some((e) => e.id === selected) ? selected! : undefined;
+---
+
+<Base meta={page!} schema={schema}>
+  {route.kind === "missing" && <NotFound locale={locale} />}
+  {route.kind === "page" && (
+    <>
+      {route.view === "home" && <Home locale={locale} />}
+      {route.view === "solutions" && <Solutions locale={locale} />}
+      {route.view === "solution" && (
+        <Solution locale={locale} engagement={engagements.find((e) => e.id === route.slug)!} />
+      )}
+      {route.view === "work" && <Work locale={locale} />}
+      {route.view === "project" && <Project locale={locale} slug={route.slug} />}
+      {route.view === "how-we-work" && <HowWeWork locale={locale} />}
+      {route.view === "about" && <About locale={locale} />}
+      {route.view === "contact" && (
+        <Contact locale={locale} engagement={engagement} source={validSource} />
+      )}
+      {route.view === "faq" && <Faq locale={locale} />}
+      {route.view === "policy" && <Policy locale={locale} slug={route.slug} />}
+      {route.view === "audience" && <Audience locale={locale} slug={route.slug} />}
+      {route.view === "insights" && <Listing locale={locale} collection="insights" />}
+      {route.view === "resources" && <Listing locale={locale} collection="resources" />}
+      {route.view === "insight" && (
+        <Article locale={locale} collection="insights" slug={route.slug} />
+      )}
+      {route.view === "resource" && (
+        <Article locale={locale} collection="resources" slug={route.slug} />
+      )}
+      {route.view === "glossary" && <Glossary locale={locale} />}
+    </>
+  )}
+</Base>

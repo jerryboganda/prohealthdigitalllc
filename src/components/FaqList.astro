@@ -1,0 +1,32 @@
+---
+import Icon from "./Icon.astro";
+import type { Locale, Localized } from "../lib/content.ts";
+
+interface Props {
+  locale: Locale;
+  items: { q: Localized; a: Localized }[];
+}
+const { locale, items } = Astro.props;
+---
+
+<div class="faq-list" data-reveal-stagger>
+  {items.map((item) => (
+    <details class="faq">
+      <summary>
+        <span>{item.q[locale]}</span>
+        <span class="faq-icon" aria-hidden="true">
+          <Icon name="plus" size={18} />
+        </span>
+      </summary>
+      <div class="faq-answer">
+        <p>{item.a[locale]}</p>
+      </div>
+    </details>
+  ))}
+</div>
+
+<style>
+  .faq-list {
+    border-block-start: 1px solid var(--color-line);
+  }
+</style>

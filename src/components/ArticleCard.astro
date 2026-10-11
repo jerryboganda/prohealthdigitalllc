@@ -1,0 +1,104 @@
+---
+import Icon from "./Icon.astro";
+import { localPath } from "../lib/content.ts";
+import type { Locale } from "../lib/content.ts";
+import { common } from "../lib/copy.ts";
+
+interface Props {
+  locale: Locale;
+  href: string;
+  title: string;
+  description: string;
+  label: string;
+  date?: Date;
+  minutes?: number;
+  index?: number;
+}
+const { locale, href, title, description, label, date, minutes, index = 0 } = Astro.props;
+const hues = [
+  ["#d6f1ec", "#e3ebfd"],
+  ["#e3ebfd", "#edf5f2"],
+  ["#edf5f2", "#dff3f1"],
+];
+const [a, b] = hues[index % hues.length];
+const fmt = new Intl.DateTimeFormat(locale === "ar" ? "ar-u-nu-latn" : "en-GB", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+---
+
+<article class="article-card card card-hover group" data-tilt>
+  <div class="article-art" style={`--a:${a};--b:${b}`} aria-hidden="true">
+    <svg viewBox="0 0 320 140" fill="none" class="rtl:-scale-x-100">
+      <path
+        d={
+          index % 2
+            ? "M0 100C60 100 80 40 140 40S220 110 320 70"
+            : "M0 90H110L126 90L140 52L160 120L176 74L188 90H320"
+        }
+        stroke="#0A1D3D"
+        stroke-opacity=".55"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      ></path>
+      <circle cx={index % 2 ? 140 : 160} cy={index % 2 ? 40 : 120} r="5" fill="#00B2A9"></circle>
+    </svg>
+  </div>
+  <div class="grid gap-3 p-6 md:p-7">
+    <p class="eyebrow">{label}</p>
+    <h3 class="text-[1.4rem] leading-snug">
+      <a class="article-link" href={localPath(href, locale)}>
+        {title}
+      </a>
+    </h3>
+    <p class="muted line-clamp-3 text-[0.97rem]">{description}</p>
+    <p class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.85rem] text-muted">
+      {date && <time datetime={date.toISOString()}>{fmt.format(date)}</time>}
+      {minutes && (
+        <span>
+          · {minutes} {common.minutes[locale]}
+        </span>
+      )}
+    </p>
+    <span class="text-link mt-2 w-fit" aria-hidden="true">
+      {common.readMore[locale]}
+      <Icon name="arrow" size={17} directional />
+    </span>
+  </div>
+</article>
+
+<style>
+  .article-card {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    overflow: hidden;
+  }
+  .article-art {
+    position: relative;
+    aspect-ratio: 16 / 7;
+    background: linear-gradient(135deg, var(--a), var(--b));
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+  .article-art svg {
+    inline-size: 90%;
+    transition: transform var(--dur-slow) var(--ease-out-expo);
+  }
+  .article-card:hover .article-art svg {
+    transform: scale(1.06);
+  }
+  .article-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  .article-card:focus-within {
+    box-shadow: 0 0 0 2px var(--color-royal);
+  }
+  .article-link:focus-visible {
+    outline: none;
+  }
+</style>

@@ -1,0 +1,20 @@
+---
+import Base from "../layouts/Base.astro";
+import NotFound from "../views/NotFound.astro";
+import { localeFor } from "../lib/content.ts";
+import { meta } from "../lib/meta.ts";
+
+const locale = localeFor(Astro.url.pathname);
+---
+
+<Base
+  meta={{
+    locale,
+    path: "/",
+    title: locale === "ar" ? "تعذر تحميل الصفحة" : "This page did not load",
+    description: meta.home.description[locale],
+    noindex: true,
+  }}
+>
+  <NotFound locale={locale} error />
+</Base>

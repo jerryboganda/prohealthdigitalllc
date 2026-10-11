@@ -1,0 +1,119 @@
+---
+import PageIntro from "../components/PageIntro.astro";
+import CtaBand from "../components/CtaBand.astro";
+import UiMockup from "../components/UiMockup.astro";
+import Icon from "../components/Icon.astro";
+import { projects, localPath, ui } from "../lib/content.ts";
+import type { Locale } from "../lib/content.ts";
+import { nav, pages, common } from "../lib/copy.ts";
+
+interface Props {
+  locale: Locale;
+  slug: string;
+}
+const { locale, slug } = Astro.props;
+const p = projects.find((x) => x.id === slug)!;
+const variants = {
+  "oet-with-dr-hesham": "learning",
+  mediq: "platform",
+  marham: "directory",
+} as const;
+const others = projects.filter((x) => x.id !== slug);
+const steps = [pages.serviceContext, ui.projectRole, pages.userJourney];
+---
+
+<PageIntro
+  locale={locale}
+  eyebrow={p.category[locale]}
+  title={p.name[locale]}
+  description={p.context[locale]}
+  trail={[
+    { name: nav.work[locale], path: "/work" },
+    { name: p.name[locale], path: `/work/${p.id}` },
+  ]}
+/>
+
+<section class="section">
+  <div class="container-x grid gap-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+    <figure class="grid gap-5" aria-label={pages.diagramLabel[locale]}>
+      <div class="relative" data-reveal>
+        <div class="project-glow" aria-hidden="true"></div>
+        <UiMockup variant={variants[slug as keyof typeof variants]} class="relative" />
+      </div>
+      <ol class="flow" data-reveal-stagger>
+        {steps.map((s, i) => (
+          <li class="flow-step">
+            <span>{s[locale]}</span>
+            {i < steps.length - 1 && (
+              <Icon name="arrow" size={18} directional class="text-teal-700" />
+            )}
+          </li>
+        ))}
+      </ol>
+      <figcaption class="muted text-[0.85rem]">{pages.diagramNote[locale]}</figcaption>
+    </figure>
+    <div class="grid gap-6" data-reveal>
+      <p class="eyebrow">{pages.contribution[locale]}</p>
+      <h2>{ui.projectRole[locale]}</h2>
+      <p class="muted">{p.problem[locale]}</p>
+      <a class="btn btn-ghost w-fit" href={p.url} target="_blank" rel="noopener noreferrer">
+        {pages.visitSite[locale]}
+        <span class="sr-only">{common.external[locale]}</span>
+        <Icon name="arrow-up-right" size={18} />
+      </a>
+      <p class="muted border-t border-[var(--color-line)] pt-5 text-[0.9rem]">
+        {ui.proofNote[locale]}
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container-x grid gap-6 md:grid-cols-2">
+    {others.map((o) => (
+      <a class="other card card-hover" href={localPath(`/work/${o.id}`, locale)}>
+        <span class="grid gap-1">
+          <span class="eyebrow">{o.category[locale]}</span>
+          <span class="text-[1.6rem] font-[var(--font-display)]">{o.name[locale]}</span>
+        </span>
+        <Icon name="arrow" size={22} directional />
+      </a>
+    ))}
+  </div>
+</section>
+
+<CtaBand locale={locale} source={`/work/${p.id}`} engagement="platform-launch" />
+
+<style>
+  .project-glow {
+    position: absolute;
+    inset: -10%;
+    background: radial-gradient(closest-side, rgb(0 178 169 / 0.2), transparent 70%);
+    filter: blur(20px);
+  }
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .flow-step {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+  }
+  .flow-step span {
+    padding: 0.55rem 1rem;
+    border-radius: 99px;
+    background: #fff;
+    box-shadow: 0 0 0 1px var(--color-line);
+    font-size: 0.95rem;
+  }
+  .other {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.75rem 2rem;
+  }
+</style>

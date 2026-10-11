@@ -1,0 +1,40 @@
+---
+/** Hero background: CSS gradient-mesh poster (always) + lazily mounted WebGL shader (motion only). */
+---
+
+<div class="hero-canvas" data-shader aria-hidden="true">
+  <div class="hero-poster"></div>
+</div>
+
+<style>
+  .hero-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    mask-image: linear-gradient(to bottom, #000 70%, transparent);
+  }
+  .hero-poster {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(40rem 28rem at 78% 30%, rgb(0 178 169 / 0.22), transparent 70%),
+      radial-gradient(34rem 24rem at 92% 70%, rgb(27 78 216 / 0.16), transparent 70%),
+      radial-gradient(30rem 30rem at 55% 85%, rgb(214 241 236 / 0.9), transparent 70%),
+      var(--color-paper);
+  }
+  [dir="rtl"] .hero-poster {
+    scale: -1 1;
+  }
+  .hero-canvas :global(.shader-canvas) {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    opacity: 0;
+    transition: opacity 1.8s var(--ease-out-expo);
+  }
+  .hero-canvas :global(.shader-canvas.is-live) {
+    opacity: 1;
+  }
+</style>

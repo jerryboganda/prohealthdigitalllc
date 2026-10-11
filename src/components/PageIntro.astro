@@ -1,0 +1,45 @@
+---
+import Breadcrumbs from "./Breadcrumbs.astro";
+import type { Crumb } from "./Breadcrumbs.astro";
+import LineMotif from "./LineMotif.astro";
+import type { Locale } from "../lib/content.ts";
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  eyebrow?: string;
+  trail?: Crumb[];
+  tone?: "paper" | "mint";
+}
+const { locale, title, description, eyebrow, trail = [], tone = "paper" } = Astro.props;
+---
+
+<section class:list={["page-intro relative isolate overflow-hidden", tone === "mint" && "bg-mint"]}>
+  <div class="intro-glow" aria-hidden="true"></div>
+  <div class="container-x relative pt-10 pb-20 md:pt-14 md:pb-28">
+    {trail.length > 0 && <Breadcrumbs locale={locale} trail={trail} />}
+    <div class="hero-enter mt-10 grid max-w-4xl gap-6 md:mt-14">
+      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+      <h1>{title}</h1>
+      <p class="lede">{description}</p>
+      <slot />
+    </div>
+  </div>
+  <LineMotif class="absolute inset-x-0 bottom-0 h-24 w-full opacity-70" />
+</section>
+
+<style>
+  .intro-glow {
+    position: absolute;
+    inset-block-start: -30%;
+    inset-inline-end: -10%;
+    z-index: -1;
+    inline-size: min(60rem, 90vw);
+    block-size: 40rem;
+    background:
+      radial-gradient(closest-side, rgb(0 178 169 / 0.14), transparent 70%),
+      radial-gradient(closest-side at 70% 40%, rgb(27 78 216 / 0.1), transparent 70%);
+    filter: blur(10px);
+  }
+</style>

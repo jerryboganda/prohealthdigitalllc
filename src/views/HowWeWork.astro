@@ -1,0 +1,84 @@
+---
+import PageIntro from "../components/PageIntro.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import ProcessTimeline from "../components/ProcessTimeline.astro";
+import CtaBand from "../components/CtaBand.astro";
+import Icon from "../components/Icon.astro";
+import { ui } from "../lib/content.ts";
+import type { Locale } from "../lib/content.ts";
+import { nav, pages } from "../lib/copy.ts";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+---
+
+<PageIntro
+  locale={locale}
+  eyebrow={nav.process[locale]}
+  title={pages.processTitle[locale]}
+  description={ui.discoveryBody[locale]}
+  trail={[{ name: nav.process[locale], path: "/how-we-work" }]}
+/>
+
+<section class="section">
+  <div class="container-x">
+    <ProcessTimeline locale={locale} />
+  </div>
+</section>
+
+<section class="section bg-mint/60">
+  <div class="container-x grid gap-14 lg:grid-cols-[0.9fr_1.1fr]">
+    <SectionHeading title={pages.proposalTitle[locale]} body={ui.scope[locale]} />
+    <ul class="grid gap-3" data-reveal-stagger>
+      {pages.proposalItems.map((item, i) => (
+        <li class="proposal-item">
+          <span class="proposal-num" aria-hidden="true">
+            {String(i + 1).padStart(2, "0")}
+          </span>
+          <span>{item[locale]}</span>
+          <Icon name="check" size={18} class="ms-auto shrink-0 text-teal-700" />
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<section class="section chapter-dark relative overflow-hidden">
+  <div class="support-glow" aria-hidden="true"></div>
+  <div class="container-x relative grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-center">
+    <SectionHeading eyebrow="24/7" title={ui.support[locale]} />
+    <p class="lede" data-reveal>
+      {ui.supportBody[locale]}
+    </p>
+  </div>
+</section>
+
+<CtaBand locale={locale} source="/how-we-work" />
+
+<style>
+  .proposal-item {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.15rem 1.35rem;
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 0 0 1px var(--color-line);
+    font-weight: 500;
+  }
+  .proposal-num {
+    font-family: var(--font-display);
+    color: var(--color-teal-700);
+  }
+  .support-glow {
+    position: absolute;
+    inset-block-end: -18rem;
+    inset-inline-end: -8rem;
+    inline-size: 50rem;
+    block-size: 36rem;
+    background: radial-gradient(closest-side, rgb(0 178 169 / 0.28), transparent 70%);
+    filter: blur(30px);
+  }
+</style>

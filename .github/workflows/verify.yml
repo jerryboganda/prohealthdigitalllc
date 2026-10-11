@@ -16,13 +16,14 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npm run build
-      - run: npx tsc --noEmit
-      - name: Verify production routes
+      - run: npx astro check
+      - name: Verify production routes in a container identical to production
         run: |
-          PORT=3100 HOST=127.0.0.1 node .output/server/index.mjs &
-          server_pid=$!
-          trap 'kill "$server_pid"' EXIT
-          for i in $(seq 1 20); do
+          docker run -d --name web --read-only --tmpfs /tmp --memory 256m --pids-limit 128 -u node -w /app \
+            -v "$PWD/.output:/app/.output:ro" -e NODE_ENV=production -e HOST=0.0.0.0 -e PORT=3000 \
+            -e RELEASE_SHA=ci -p 127.0.0.1:3100:3000 node:22-bookworm-slim node .output/server/index.mjs
+          trap 'docker logs web; docker rm -f web' EXIT
+          for i in $(seq 1 30); do
             if curl --fail --silent http://127.0.0.1:3100/api/health > /dev/null; then break; fi
             sleep 1
           done

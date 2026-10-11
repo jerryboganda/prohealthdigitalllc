@@ -1,0 +1,59 @@
+---
+import { localPath } from "../lib/content.ts";
+import type { Locale } from "../lib/content.ts";
+import { nav } from "../lib/copy.ts";
+
+export interface Crumb {
+  name: string;
+  path: string;
+}
+interface Props {
+  locale: Locale;
+  trail: Crumb[];
+}
+const { locale, trail } = Astro.props;
+const items = [{ name: nav.home[locale], path: "/" }, ...trail];
+---
+
+<nav aria-label={nav.breadcrumbs[locale]} class="breadcrumbs">
+  <ol>
+    {items.map((item, i) => (
+      <li>
+        {i < items.length - 1 ? (
+          <a href={localPath(item.path, locale)}>{item.name}</a>
+        ) : (
+          <span aria-current="page">{item.name}</span>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<style>
+  .breadcrumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.6rem;
+    font-size: 0.875rem;
+    color: var(--color-muted);
+  }
+  .breadcrumbs li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .breadcrumbs li + li::before {
+    content: "/";
+    color: var(--color-line-strong);
+  }
+  .breadcrumbs a {
+    transition: color var(--dur-fast);
+  }
+  .breadcrumbs a:hover {
+    color: var(--color-ink);
+  }
+  .breadcrumbs [aria-current] {
+    color: var(--color-ink);
+    font-weight: 500;
+  }
+</style>

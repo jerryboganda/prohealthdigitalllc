@@ -1,0 +1,126 @@
+---
+import PageIntro from "../components/PageIntro.astro";
+import ArticleCard from "../components/ArticleCard.astro";
+import CtaBand from "../components/CtaBand.astro";
+import Icon from "../components/Icon.astro";
+import type { Locale } from "../lib/content.ts";
+import { localPath } from "../lib/content.ts";
+import { nav, common } from "../lib/copy.ts";
+import { meta } from "../lib/meta.ts";
+import { entriesFor } from "../site/collections.ts";
+
+interface Props {
+  locale: Locale;
+  collection: "insights" | "resources";
+}
+const { locale, collection } = Astro.props;
+const entries = await entriesFor(collection, locale);
+const words = (body?: string) => (body ?? "").split(/\s+/).filter(Boolean).length;
+const label = (e: (typeof entries)[number]) =>
+  "kind" in e.data
+    ? e.data.kind === "checklist"
+      ? common.checklist[locale]
+      : common.guide[locale]
+    : e.data.audience === "providers"
+      ? common.forProviders[locale]
+      : e.data.audience === "digital-health-companies"
+        ? common.forCompanies[locale]
+        : common.forBoth[locale];
+const [featured, ...rest] = entries;
+const title = collection === "insights" ? nav.insights : nav.resources;
+---
+
+<PageIntro
+  locale={locale}
+  eyebrow={title[locale]}
+  title={meta[collection].title[locale]}
+  description={meta[collection].description[locale]}
+  trail={[{ name: title[locale], path: `/${collection}` }]}
+/>
+
+<section class="section pt-10">
+  <div class="container-x grid gap-10">
+    {featured && (
+      <a
+        class="featured card card-hover group"
+        href={localPath(`/${collection}/${featured.slug}`, locale)}
+        data-reveal
+      >
+        <div class="featured-art" aria-hidden="true">
+          <svg viewBox="0 0 600 260" fill="none" class="rtl:-scale-x-100">
+            <path
+              d="M0 170H220L250 170L276 92L312 236L340 140L362 170H600"
+              stroke="#0A1D3D"
+              stroke-opacity=".5"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <circle cx="312" cy="236" r="8" fill="#00B2A9" />
+          </svg>
+        </div>
+        <div class="grid content-center gap-4 p-7 md:p-12">
+          <p class="eyebrow">{label(featured)}</p>
+          <h2 class="text-[clamp(1.8rem,1.4rem+1.6vw,2.8rem)]">{featured.data.title}</h2>
+          <p class="muted">{featured.data.description}</p>
+          <span class="text-[0.9rem] text-muted">
+            {Math.max(3, Math.round(words(featured.body) / 220))} {common.minutes[locale]}
+          </span>
+          <span class="text-link w-fit">
+            {collection === "insights" ? common.readArticle[locale] : common.openResource[locale]}
+            <Icon name="arrow" size={18} directional />
+          </span>
+        </div>
+      </a>
+    )}
+    <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3" data-reveal-stagger>
+      {rest.map((e, i) => (
+        <ArticleCard
+          locale={locale}
+          href={`/${collection}/${e.slug}`}
+          title={e.data.title}
+          description={e.data.description}
+          label={label(e)}
+          date={collection === "insights" ? e.data.published : undefined}
+          minutes={Math.max(3, Math.round(words(e.body) / 220))}
+          index={i}
+        />
+      ))}
+    </div>
+  </div>
+</section>
+
+<CtaBand locale={locale} source={`/${collection}`} />
+
+<style>
+  .featured {
+    display: grid;
+    overflow: hidden;
+  }
+  @media (min-width: 900px) {
+    .featured {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .featured-art {
+    display: grid;
+    place-items: center;
+    min-block-size: 16rem;
+    background:
+      radial-gradient(circle at 70% 30%, rgb(0 178 169 / 0.25), transparent 60%),
+      linear-gradient(135deg, var(--color-mint), #e5ecfc);
+  }
+  .featured-art svg {
+    inline-size: 85%;
+    transition: transform var(--dur-slow) var(--ease-out-expo);
+  }
+  .featured:hover .featured-art svg {
+    transform: scale(1.05);
+  }
+  .featured:hover h2 {
+    color: var(--color-royal);
+  }
+  .featured h2 {
+    transition: color var(--dur-base);
+  }
+</style>

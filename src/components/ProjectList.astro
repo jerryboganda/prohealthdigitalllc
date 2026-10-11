@@ -1,0 +1,103 @@
+---
+import Icon from "./Icon.astro";
+import UiMockup from "./UiMockup.astro";
+import { projects, localPath, ui } from "../lib/content.ts";
+import type { Locale } from "../lib/content.ts";
+import { common } from "../lib/copy.ts";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const variants = {
+  "oet-with-dr-hesham": "learning",
+  mediq: "platform",
+  marham: "directory",
+} as const;
+---
+
+<ol class="project-list grid">
+  {projects.map((p, i) => (
+    <li class="project-row group" data-reveal>
+      <div class="grid gap-3">
+        <span class="project-index" aria-hidden="true">
+          0{i + 1}
+        </span>
+        <p class="eyebrow">{p.category[locale]}</p>
+        <h3 class="text-[clamp(1.75rem,1.3rem+1.8vw,2.75rem)]">
+          <a class="project-link" href={localPath(`/work/${p.id}`, locale)}>
+            {p.name[locale]}
+          </a>
+        </h3>
+      </div>
+      <div class="grid content-start gap-4">
+        <p class="muted">{p.context[locale]}</p>
+        <p class="inline-flex w-fit items-center gap-2 rounded-full bg-mint px-3 py-1 text-[0.85rem] font-semibold text-teal-700">
+          <Icon name="check" size={15} />
+          {ui.projectRole[locale]}
+        </p>
+        <span class="text-link w-fit" aria-hidden="true">
+          {common.viewProject[locale]}
+          <Icon name="arrow-up-right" size={18} directional />
+        </span>
+      </div>
+      <div class="project-visual">
+        <UiMockup variant={variants[p.id as keyof typeof variants]} />
+      </div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .project-list {
+    border-block-start: 1px solid var(--color-line);
+  }
+  .project-row {
+    position: relative;
+    display: grid;
+    gap: 2rem;
+    padding-block: clamp(2rem, 1.5rem + 2vw, 3.25rem);
+    border-block-end: 1px solid var(--color-line);
+  }
+  @media (min-width: 900px) {
+    .project-row {
+      grid-template-columns: 1fr 1fr 0.9fr;
+      align-items: center;
+    }
+  }
+  .project-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  .project-index {
+    font-family: var(--font-display);
+    color: var(--color-muted);
+  }
+  .project-visual {
+    transition:
+      transform var(--dur-slow) var(--ease-out-expo),
+      opacity var(--dur-slow);
+  }
+  @media (min-width: 900px) {
+    .project-visual {
+      opacity: 0.75;
+      transform: scale(0.94) rotate(-1.5deg);
+    }
+    .project-row:hover .project-visual {
+      opacity: 1;
+      transform: scale(1) rotate(0);
+    }
+  }
+  .project-row:hover h3 {
+    color: var(--color-royal);
+  }
+  .project-row h3 {
+    transition: color var(--dur-base);
+  }
+  .project-row:focus-within {
+    outline: 2px solid var(--color-royal);
+    outline-offset: 6px;
+    border-radius: 8px;
+  }
+</style>

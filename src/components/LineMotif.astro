@@ -1,0 +1,47 @@
+---
+/** Decorative brand line: a calm baseline that breaks into the EKG pulse from the logo. */
+interface Props {
+  class?: string;
+  variant?: "pulse" | "flow";
+  scrub?: boolean;
+}
+const { class: className, variant = "pulse", scrub = false } = Astro.props;
+---
+
+<svg
+  class:list={["line-motif pointer-events-none rtl:-scale-x-100", className]}
+  viewBox="0 0 1200 160"
+  fill="none"
+  aria-hidden="true"
+  preserveAspectRatio="none"
+  data-draw={scrub ? "scrub" : ""}
+>
+  <defs>
+    <linearGradient id="motif-grad" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#00B2A9" stop-opacity="0" />
+      <stop offset=".25" stop-color="#00B2A9" />
+      <stop offset=".75" stop-color="#1B4ED8" />
+      <stop offset="1" stop-color="#1B4ED8" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+  {variant === "pulse" ? (
+    <path
+      data-draw-path
+      d="M0 96H420L452 96L478 40L512 140L536 72L556 96H760C820 96 860 60 920 60S1040 96 1200 96"
+      stroke="url(#motif-grad)"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      vector-effect="non-scaling-stroke"
+    />
+  ) : (
+    <path
+      data-draw-path
+      d="M0 120C160 120 220 40 380 40S600 120 760 120 980 30 1200 30"
+      stroke="url(#motif-grad)"
+      stroke-width="2"
+      stroke-linecap="round"
+      vector-effect="non-scaling-stroke"
+    />
+  )}
+</svg>

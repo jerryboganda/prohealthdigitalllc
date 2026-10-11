@@ -1,0 +1,61 @@
+---
+import PageIntro from "../components/PageIntro.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import EngagementCards from "../components/EngagementCards.astro";
+import CtaBand from "../components/CtaBand.astro";
+import Icon from "../components/Icon.astro";
+import { faqs, localPath, ui } from "../lib/content.ts";
+import type { Locale } from "../lib/content.ts";
+import { nav, pages } from "../lib/copy.ts";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+---
+
+<PageIntro
+  locale={locale}
+  eyebrow={nav.solutions[locale]}
+  title={pages.solutionsTitle[locale]}
+  description={pages.solutionsBody[locale]}
+  trail={[{ name: nav.solutions[locale], path: "/solutions" }]}
+/>
+
+<section class="section" id="providers">
+  <div class="container-x grid gap-12">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <SectionHeading title={ui.providers[locale]} body={ui.providerIntro[locale]} />
+      <a class="text-link" href={localPath("/providers", locale)}>
+        {ui.providers[locale]}
+        <Icon name="arrow" size={18} directional />
+      </a>
+    </div>
+    <EngagementCards locale={locale} filter="provider" />
+  </div>
+</section>
+
+<section class="section bg-mint/60" id="companies">
+  <div class="container-x grid gap-12">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <SectionHeading title={ui.companies[locale]} body={ui.companyIntro[locale]} />
+      <a class="text-link" href={localPath("/digital-health-companies", locale)}>
+        {ui.companies[locale]}
+        <Icon name="arrow" size={18} directional />
+      </a>
+    </div>
+    <EngagementCards locale={locale} filter="digital-health" />
+  </div>
+</section>
+
+<section class="section">
+  <div class="container-narrow grid gap-6">
+    <SectionHeading title={pages.specialistTitle[locale]} />
+    <div class="prose" data-reveal>
+      <p>{faqs[5].a[locale]}</p>
+      <p class="callout">{ui.scope[locale]}</p>
+    </div>
+  </div>
+</section>
+
+<CtaBand locale={locale} source="/solutions" />
