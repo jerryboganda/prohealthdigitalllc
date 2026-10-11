@@ -89,7 +89,7 @@
   h3,
   h4 {
     font-family: var(--font-display);
-    font-weight: 420;
+    font-weight: 400;
     letter-spacing: var(--tracking-display);
     line-height: var(--lh-heading);
     text-wrap: balance;
@@ -104,7 +104,6 @@
   }
   h3 {
     font-size: var(--fs-h3);
-    font-weight: 500;
   }
   :lang(ar) :is(h1, h2, h3, h4) {
     font-weight: 600;
@@ -197,7 +196,7 @@
   .display {
     font-size: var(--fs-hero);
     line-height: var(--lh-display);
-    font-weight: 380;
+    font-weight: 400;
   }
   :lang(ar) .display {
     font-weight: 600;
@@ -597,6 +596,15 @@
   .hero-enter > * {
     animation: hero-rise 900ms var(--ease-out-expo) both;
   }
+  /* The heading is the LCP element: it rises but never starts transparent. */
+  .hero-enter > h1 {
+    animation-name: hero-rise-solid;
+  }
+  @keyframes hero-rise-solid {
+    from {
+      translate: 0 0.9rem;
+    }
+  }
   .hero-enter > :nth-child(2) {
     animation-delay: 60ms;
   }
@@ -613,12 +621,10 @@
     from {
       opacity: 0;
       translate: 0 1.25rem;
-      filter: blur(6px);
     }
     to {
       opacity: 1;
       translate: 0 0;
-      filter: blur(0);
     }
   }
 

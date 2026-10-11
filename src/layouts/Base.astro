@@ -59,12 +59,12 @@ const dir = locale === "ar" ? "rtl" : "ltr";
     <link rel="manifest" href="/site.webmanifest" />
     {locale === "ar" ? (
       <>
-        <Font cssVariable="--font-naskh" preload={[{ weight: "400 700" }]} />
+        <Font cssVariable="--font-naskh" preload={[{ weight: 600 }]} />
         <Font cssVariable="--font-plex-arabic" />
       </>
     ) : (
       <>
-        <Font cssVariable="--font-newsreader" preload={[{ style: "normal" }]} />
+        <Font cssVariable="--font-newsreader" preload={[{ weight: 400, style: "normal" }]} />
         <Font cssVariable="--font-plex" />
       </>
     )}

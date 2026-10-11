@@ -55,8 +55,19 @@ function lazy(selector: string, load: () => Promise<{ default: (el: HTMLElement)
 lazy("[data-inquiry-form]", () => import("./inquiry-form.ts"));
 lazy("[data-lottie]", () => import("./lottie.ts"));
 
+const inView = (el: Element) => el.getBoundingClientRect().top < window.innerHeight;
+
 function reveals() {
-  const pending = new Set($$("[data-reveal], [data-reveal-stagger]"));
+  const all = $$("[data-reveal], [data-reveal-stagger]");
+  // Anything already on screen when motion boots stays put (no flash); the rest reveals on entry.
+  for (const el of all)
+    if (inView(el)) {
+      el.classList.add("is-revealed");
+      Array.from(el.children).forEach(
+        (c) => el.hasAttribute("data-reveal-stagger") && c.classList.add("is-revealed"),
+      );
+    }
+  const pending = new Set(all.filter((el) => !el.classList.contains("is-revealed")));
   const show = (el: HTMLElement) => {
     pending.delete(el);
     io.unobserve(el);
@@ -95,25 +106,38 @@ function reveals() {
 
 function splits() {
   const splitters: SplitText[] = [];
-  for (const el of $$("[data-split]")) {
-    // Arabic: no masks (Naskh dots and descenders overflow the line box) and never split
-    // below the line, so letter joining is untouched.
-    const rtl = dir < 0;
-    const split = SplitText.create(el, {
-      type: "lines",
-      mask: rtl ? undefined : "lines",
-      linesClass: "split-line",
-    });
-    splitters.push(split);
-    gsap.from(split.lines, {
-      ...(rtl ? { y: 18, opacity: 0, filter: "blur(4px)" } : { yPercent: 110 }),
-      duration: rtl ? 0.9 : 1.1,
-      ease,
-      stagger: 0.08,
-      scrollTrigger: { trigger: el, start: "top 88%", once: true },
-    });
-  }
-  return () => splitters.forEach((s) => s.revert());
+  // Arabic: no masks (Naskh dots and descenders overflow the line box) and never split
+  // below the line, so letter joining is untouched.
+  const rtl = dir < 0;
+  // Split lazily, just before a heading scrolls in; headings already visible are left alone.
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        const el = entry.target as HTMLElement;
+        io.unobserve(el);
+        const split = SplitText.create(el, {
+          type: "lines",
+          mask: rtl ? undefined : "lines",
+          linesClass: "split-line",
+        });
+        splitters.push(split);
+        gsap.from(split.lines, {
+          ...(rtl ? { y: 18, opacity: 0 } : { yPercent: 110 }),
+          duration: rtl ? 0.9 : 1.1,
+          ease,
+          stagger: 0.08,
+          delay: 0.05,
+        });
+      }
+    },
+    { rootMargin: "0px 0px 10% 0px" },
+  );
+  for (const el of $$("[data-split]")) if (!inView(el)) io.observe(el);
+  return () => {
+    io.disconnect();
+    splitters.forEach((s) => s.revert());
+  };
 }
 
 function draws() {
@@ -285,36 +309,46 @@ function tilt() {
 }
 
 const mm = gsap.matchMedia();
-mm.add(
-  {
-    motion: "(prefers-reduced-motion: no-preference)",
-    fine: "(hover: hover) and (pointer: fine)",
-    desktop: "(min-width: 1024px)",
-  },
-  (context) => {
-    const { motion, fine, desktop } = context.conditions as Record<string, boolean>;
-    if (!motion) {
-      root.classList.remove("motion-ready");
-      return;
-    }
-    root.classList.add("motion-ready");
-    const stopReveals = reveals();
-    const revertSplits = splits();
-    draws();
-    parallax();
-    progressBars();
-    logoIntro();
-    if (desktop) pinTracks();
-    if (fine) {
-      magnetic();
-      tilt();
-    }
-    lazy("[data-shader]", () => import("./shader.ts"));
-    document.fonts?.ready.then(() => ScrollTrigger.refresh());
-    return () => {
-      stopReveals();
-      revertSplits();
-      root.classList.remove("motion-ready");
-    };
-  },
-);
+const boot = () =>
+  mm.add(
+    {
+      motion: "(prefers-reduced-motion: no-preference)",
+      fine: "(hover: hover) and (pointer: fine)",
+      desktop: "(min-width: 1024px)",
+    },
+    (context) => {
+      const { motion, fine, desktop } = context.conditions as Record<string, boolean>;
+      if (!motion) {
+        root.classList.remove("motion-ready");
+        return;
+      }
+      root.classList.add("motion-ready");
+      const stopReveals = reveals();
+      const revertSplits = splits();
+      draws();
+      parallax();
+      progressBars();
+      if (desktop) pinTracks();
+      if (fine) {
+        magnetic();
+        tilt();
+      }
+      // WebGL only where it is cheap and visible enough to matter: desktop with a fine pointer.
+      if (desktop && fine) lazy("[data-shader]", () => import("./shader.ts"));
+      document.fonts?.ready.then(() => ScrollTrigger.refresh());
+      return () => {
+        stopReveals();
+        revertSplits();
+        root.classList.remove("motion-ready");
+      };
+    },
+  );
+// The logo intro is tiny and must start before first paint settles, so it is not deferred.
+if (window.matchMedia("(prefers-reduced-motion: no-preference)").matches) logoIntro();
+// Motion is an enhancement: set it up after the page has loaded and the main thread is idle.
+const idle = (fn: () => void) =>
+  "requestIdleCallback" in window
+    ? window.requestIdleCallback(fn, { timeout: 1500 })
+    : setTimeout(fn, 200);
+if (document.readyState === "complete") idle(boot);
+else window.addEventListener("load", () => idle(boot), { once: true });
