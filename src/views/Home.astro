@@ -87,7 +87,7 @@ const support = faqs[4];
     </div>
   </div>
 
-  <div class="lg-bento">
+  <div class="lg-bento lg-bento-pair">
     <figure
       class="lg-tile lg-tile-royal lg-span2 lg-shine lg-in lg-d4"
       aria-label={home.journeyLabel[locale]}
@@ -337,7 +337,7 @@ const support = faqs[4];
   ></div>
   <div class="lg-wrap" style="position: relative; display: grid; gap: 56px">
     <SectionHeading eyebrow={ui.process[locale]} title={home.processTitle[locale]} dot="mint" />
-    <ProcessTimeline locale={locale} pinned />
+    <ProcessTimeline locale={locale} />
     <a class="lg-link" href={L("/how-we-work")}>
       {home.processLink[locale]}
       <Icon name="arrow" size={18} class="lg-arrow" />
@@ -358,11 +358,7 @@ const support = faqs[4];
     </div>
     <ol style="margin: 0; padding: 0; list-style: none; display: grid; gap: 16px">
       {home.principles.map((p, i) => (
-        <li
-          class="lg-card"
-          data-reveal="side"
-          style="grid-template-columns: auto minmax(0, 1fr); gap: 22px; align-items: start"
-        >
+        <li class="lg-card lg-numcard" data-reveal="side">
           <span
             class="lg-stage-num"
             aria-hidden="true"

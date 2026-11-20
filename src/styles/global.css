@@ -897,6 +897,13 @@
     border-radius: 14px;
   }
 
+  /* Numbered card: badge beside the text, stacked above it on phones (see 600px query). */
+  .lg-numcard {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+  }
+
   /* ───── Bento tiles ───── */
   .lg-bento {
     display: grid;
@@ -1676,10 +1683,15 @@
     overflow-x: auto;
   }
   :is(.lg-prose, .prose) :is(th, td) {
+    /* Wide tables scroll inside their box instead of crushing each column into tall rows. */
+    min-width: 10rem;
     padding: 12px 14px;
     text-align: start;
     vertical-align: top;
     border-bottom: 1px solid var(--line);
+  }
+  :is(.lg-prose, .prose) :is(th, td):first-child {
+    min-width: 3rem;
   }
   :is(.lg-prose, .prose) th {
     color: var(--ink);
@@ -2162,6 +2174,16 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+@media (max-width: 600px) {
+  /* Phones: a number badge beside the text leaves too narrow a column; stack it instead.
+     !important beats the inline grid columns some views set on these cards. */
+  :is(.lg-card, .lg-callout, .policy-sec):has(> :is(.lg-stage-num, .lg-ico):first-child):not(
+      .aud-step
+    ) {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 14px !important;
+  }
+}
 @media (max-width: 900px) {
   .lg-bento {
     grid-template-columns: minmax(0, 1fr);
@@ -2169,6 +2191,17 @@
   .lg-span2 {
     grid-column: auto;
   }
+}
+/* Tablets: bentos whose tiles pair up (one wide tile + an even count) keep two columns. */
+@media (min-width: 601px) and (max-width: 900px) {
+  .lg-bento-pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .lg-bento-pair > .lg-span2 {
+    grid-column: span 2;
+  }
+}
+@media (max-width: 900px) {
   .lg-split {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -2203,7 +2236,7 @@
 }
 @media (max-width: 600px) {
   .lg-footer-cols {
-    grid-template-columns: minmax(0, 1fr);
+    gap: 32px 20px;
   }
   .lg-bar {
     padding-inline-start: 14px;
@@ -2227,6 +2260,11 @@
   }
   .lg-tools {
     gap: 6px;
+  }
+}
+@media (max-width: 340px) {
+  .lg-footer-cols {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 @media (max-width: 420px) {
