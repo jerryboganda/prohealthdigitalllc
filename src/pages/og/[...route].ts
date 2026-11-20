@@ -14,26 +14,22 @@ export const { getStaticPaths, GET } = await OGImageRoute({
       bgImage: { path: `./src/og/background-${ar ? "rtl" : "ltr"}.png`, fit: "cover" },
       logo: { path: "./src/og/mark.png", size: [104] },
       padding: 72,
-      fonts: [
-        "./src/og/Newsreader.ttf",
-        "./src/og/IBMPlexSans.ttf",
-        "./src/og/NotoNaskhArabic.ttf",
-        "./src/og/IBMPlexSansArabic-Regular.ttf",
-        "./src/og/IBMPlexSansArabic-SemiBold.ttf",
-      ],
+      // Readex Pro static cuts (Latin + Arabic in one file), matching the site font.
+      fonts: ["./src/og/ReadexPro-SemiBold.ttf", "./src/og/ReadexPro-Regular.ttf"],
       font: {
         title: {
-          families: ar ? ["Noto Naskh Arabic"] : ["Newsreader"],
+          families: ["Readex Pro"],
           size: ar ? 58 : 64,
-          lineHeight: ar ? 1.45 : 1.08,
-          color: [10, 29, 61],
-          weight: ar ? "Bold" : "Normal",
+          lineHeight: ar ? 1.4 : 1.08,
+          color: [10, 20, 51],
+          weight: "SemiBold",
         },
         description: {
-          families: ar ? ["IBM Plex Sans Arabic"] : ["IBM Plex Sans"],
+          families: ["Readex Pro"],
           size: 28,
-          lineHeight: ar ? 1.7 : 1.45,
-          color: [36, 54, 90],
+          lineHeight: ar ? 1.65 : 1.45,
+          color: [41, 53, 90],
+          weight: "Normal",
         },
       },
     };
