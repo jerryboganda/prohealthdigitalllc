@@ -1,8 +1,10 @@
 ---
 import Icon from "./Icon.astro";
+import Marquee from "./Marquee.astro";
+import ArtGrid from "./ArtGrid.astro";
 import { EMAIL, WHATSAPP, localPath, ui } from "../lib/content.ts";
 import type { Locale } from "../lib/content.ts";
-import { common } from "../lib/copy.ts";
+import { common, home } from "../lib/copy.ts";
 
 interface Props {
   locale: Locale;
@@ -13,94 +15,87 @@ const { locale, source, engagement } = Astro.props;
 const params = new URLSearchParams({ ...(engagement ? { engagement } : {}), source });
 ---
 
-<section class="section-tight">
-  <div class="container-x">
-    <div
-      class="cta-band relative isolate overflow-hidden rounded-[2rem] px-6 py-16 md:px-16 md:py-20"
-      data-reveal
-    >
-      <div class="cta-orbs" aria-hidden="true">
-        <span></span>
-        <span></span>
-      </div>
-      <div class="relative grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-end">
-        <div class="grid gap-5">
-          <p class="eyebrow">{locale === "ar" ? "الخطوة التالية" : "Next step"}</p>
-          <h2 class="max-w-2xl" data-split>
-            {ui.discovery[locale]}
-          </h2>
-          <p class="lede">{ui.discoveryBody[locale]}</p>
-        </div>
-        <div class="grid gap-4 lg:justify-items-end">
-          <a class="btn" href={`${localPath("/contact", locale)}?${params}`} data-magnetic>
-            {ui.cta[locale]}
-            <Icon name="arrow" size={18} directional />
+<section style="padding: 0 var(--gutter) clamp(56px, 7vw, 100px)">
+  <div class="lg-on-royal cta-band" data-reveal="scale">
+    <ArtGrid
+      motion="spin"
+      class="cta-art"
+      cells={["#fff", undefined, "#fff", undefined, "#fff", undefined, "#fff", undefined, "#fff"]}
+    />
+    <div class="cta-copy">
+      <h2 class="lg-h2" style="max-width: 16ch; color: #fff">
+        {ui.discovery[locale]}
+      </h2>
+      <p class="cta-body">{ui.discoveryBody[locale]}</p>
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px">
+        <a
+          class="lg-btn lg-btn-w"
+          href={`${localPath("/contact", locale)}?${params}`}
+          data-magnetic
+        >
+          <span>{ui.cta[locale]}</span>
+          <span class="lg-btn-ico" aria-hidden="true">
+            <Icon name="arrow" size={18} />
+          </span>
+        </a>
+        <a class="lg-ghost lg-ghost-w" href={`mailto:${EMAIL}`} style="min-height: 60px">
+          <Icon name="mail" size={18} />
+          {ui.email[locale]}
+        </a>
+        {WHATSAPP && (
+          <a
+            class="lg-ghost lg-ghost-w"
+            href={`https://wa.me/${WHATSAPP}`}
+            rel="noopener"
+            target="_blank"
+            style="min-height: 60px"
+          >
+            <Icon name="whatsapp" size={18} />
+            {common.whatsapp[locale]}
+            <span class="lg-sr">{common.external[locale]}</span>
           </a>
-          <a class="text-link flex-wrap text-[0.95rem]" href={`mailto:${EMAIL}`}>
-            <Icon name="mail" size={17} class="shrink-0" />
-            <span>{ui.email[locale]}</span>
-            <span dir="ltr" class="[overflow-wrap:anywhere]">
-              {EMAIL}
-            </span>
-          </a>
-          {WHATSAPP && (
-            <a
-              class="text-link text-[0.95rem]"
-              href={`https://wa.me/${WHATSAPP}`}
-              target="_blank"
-              rel="noopener"
-            >
-              <Icon name="whatsapp" size={17} class="shrink-0" />
-              {common.whatsapp[locale]}
-            </a>
-          )}
-        </div>
+        )}
       </div>
     </div>
+    <Marquee locale={locale} items={home.marquee} rows={1} tone="royal" />
   </div>
 </section>
 
 <style>
   .cta-band {
-    background: linear-gradient(135deg, #f3faf7 0%, #e9f3f6 55%, #eef1fb 100%);
-    box-shadow: 0 0 0 1px var(--color-line);
+    position: relative;
+    isolation: isolate;
+    max-width: var(--maxw);
+    margin: 0 auto;
+    border-radius: var(--r-xl);
+    background: var(--royal);
+    color: #fff;
+    overflow: hidden;
+    display: grid;
+    gap: 44px;
+    padding: clamp(56px, 8vw, 110px) 0 clamp(36px, 5vw, 56px);
   }
-  .cta-orbs span {
+  .cta-band :global(.cta-art) {
     position: absolute;
-    border-radius: 999px;
-    filter: blur(40px);
-    opacity: 0.55;
+    inset-inline-end: -80px;
+    top: -80px;
+    width: 320px;
+    opacity: 0.18;
     z-index: -1;
+    animation-duration: 60s;
   }
-  .cta-orbs span:first-child {
-    inset-block-start: -8rem;
-    inset-inline-end: -4rem;
-    inline-size: 22rem;
-    block-size: 22rem;
-    background: rgb(0 178 169 / 0.35);
+  .cta-copy {
+    display: grid;
+    justify-items: center;
+    gap: 24px;
+    text-align: center;
+    padding: 0 clamp(20px, 4vw, 56px);
   }
-  .cta-orbs span:last-child {
-    inset-block-end: -10rem;
-    inset-inline-start: 20%;
-    inline-size: 26rem;
-    block-size: 18rem;
-    background: rgb(27 78 216 / 0.18);
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .cta-orbs span:first-child {
-      animation: orb 14s ease-in-out infinite alternate;
-    }
-    .cta-orbs span:last-child {
-      animation: orb 18s ease-in-out infinite alternate-reverse;
-    }
-    @keyframes orb {
-      to {
-        translate: calc(-3rem * var(--dirx, 1)) 2rem;
-        scale: 1.15;
-      }
-    }
-  }
-  :global([dir="rtl"]) .cta-orbs span {
-    --dirx: -1;
+  .cta-body {
+    margin: 0;
+    max-width: 60ch;
+    font-size: 18px;
+    line-height: 1.6;
+    color: #e6ecff;
   }
 </style>

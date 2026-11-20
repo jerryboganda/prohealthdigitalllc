@@ -3,15 +3,32 @@ import PageIntro from "../components/PageIntro.astro";
 import SectionHeading from "../components/SectionHeading.astro";
 import ProjectList from "../components/ProjectList.astro";
 import CtaBand from "../components/CtaBand.astro";
+import Marquee from "../components/Marquee.astro";
+import ArtGrid from "../components/ArtGrid.astro";
 import LogoMark from "../components/LogoMark.astro";
-import { ui } from "../lib/content.ts";
+import Icon from "../components/Icon.astro";
+import { faqs, localPath, ui } from "../lib/content.ts";
 import type { Locale } from "../lib/content.ts";
-import { nav, pages, home } from "../lib/copy.ts";
+import { footer, home, nav, pages } from "../lib/copy.ts";
+import { sentences } from "../lib/copy-company.ts";
 
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
+const L = (p: string) => localPath(p, locale);
+const ar = locale === "ar";
+const glyphs = ar ? ["أب", "Aa"] : ["Aa", "أب"];
+const startItems = home.note[locale].split(" · ");
+const [lead, ...rest] = sentences(pages.expectB[locale]);
+const numLook = [
+  undefined,
+  "background: var(--teal); color: var(--ink)",
+  "background: var(--ink)",
+  "background: var(--mint); color: var(--ink)",
+];
+const ring =
+  "position: absolute; inset: 0; margin: auto; height: auto; aspect-ratio: 1; z-index: -1;";
 ---
 
 <PageIntro
@@ -20,103 +37,217 @@ const { locale } = Astro.props;
   title={pages.aboutTitle[locale]}
   description={ui.intro[locale]}
   trail={[{ name: nav.about[locale], path: "/about" }]}
-/>
+>
+  <div style="display: flex; flex-wrap: wrap; gap: 12px">
+    <a class="lg-btn" href={`${L("/contact")}?source=/about`} data-magnetic>
+      <span>{ui.cta[locale]}</span>
+      <span class="lg-btn-ico" aria-hidden="true">
+        <Icon name="arrow" size={18} />
+      </span>
+    </a>
+    <a class="lg-ghost" href={L("/work")}>
+      {nav.work[locale]}
+    </a>
+  </div>
+</PageIntro>
 
-<section class="section">
-  <div class="container-x grid gap-16 lg:grid-cols-[1fr_1fr]">
-    <div class="grid content-start gap-6" data-reveal>
-      <h2>ProHealth Digital LLC</h2>
-      <p class="muted">{pages.aboutBodyA[locale]}</p>
-      <p class="muted">{pages.aboutBodyB[locale]}</p>
-    </div>
-    <div class="about-mark card relative grid place-items-center overflow-hidden p-12" data-reveal>
-      <div class="about-rings" aria-hidden="true">
-        <span></span>
-        <span></span>
-        <span></span>
+<div style="padding-block-end: clamp(40px, 5vw, 64px)">
+  <Marquee locale={locale} items={home.marquee} rows={1} />
+</div>
+
+<section class="lg-section lg-white">
+  <div class="lg-wrap" style="display: grid; gap: clamp(40px, 5vw, 64px)">
+    <div class="lg-grid-2" style="gap: clamp(32px, 5vw, 72px); align-items: center">
+      <SectionHeading
+        eyebrow={nav.about[locale]}
+        title="ProHealth Digital LLC"
+        body={pages.aboutBodyA[locale]}
+      >
+        <p class="lg-lede">{pages.aboutBodyB[locale]}</p>
+      </SectionHeading>
+      <div
+        class="lg-card"
+        data-reveal="scale"
+        style="min-height: 440px; place-items: center; align-content: center; overflow: hidden; isolation: isolate; background: radial-gradient(circle at 50% 50%, #fff 22%, var(--teal-50))"
+      >
+        <span
+          class="lg-dot"
+          aria-hidden="true"
+          style={`${ring} width: min(92%, 360px); background: rgb(31 79 224 / 0.06)`}
+        ></span>
+        <span
+          class="lg-dot"
+          aria-hidden="true"
+          style={`${ring} width: min(66%, 250px); background: rgb(20 184 166 / 0.12)`}
+        ></span>
+        <span
+          class="lg-dot"
+          aria-hidden="true"
+          style={`${ring} width: min(44%, 160px); background: rgb(20 184 166 / 0.16)`}
+        ></span>
+        <LogoMark class="relative w-48" title="ProHealth Digital" />
       </div>
-      <LogoMark class="relative w-48" title="ProHealth Digital" />
+    </div>
+    <div class="lg-bento" data-reveal="scale">
+      <div class="lg-tile lg-tile-royal lg-shine">
+        <ul style="margin: 0; padding: 0; list-style: none; display: grid; gap: 8px">
+          {startItems.map((item, i) => (
+            <li class={`lg-step lg-s${i + 1}`} style="font-weight: 600; font-size: 18px">
+              {item}
+            </li>
+          ))}
+        </ul>
+        <div class="lg-progress-track" aria-hidden="true">
+          <span class="lg-progress"></span>
+        </div>
+      </div>
+      <div class="lg-tile lg-tile-teal">
+        <p class="lg-tile-title">{home.marquee[4][locale]}</p>
+        <div class="lg-flip" aria-hidden="true">
+          <span
+            class="lg-flipA"
+            lang={ar ? "ar" : "en"}
+            style={ar ? undefined : "letter-spacing: -0.04em"}
+          >
+            {glyphs[0]}
+          </span>
+          <span class="lg-flipB" lang={ar ? "en" : "ar"}>
+            {glyphs[1]}
+          </span>
+        </div>
+        <p style="margin: 0; display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink-2)">
+          <Icon name="arrow" size={22} class="lg-dir" />
+          {footer.markets[locale]}
+        </p>
+      </div>
+      <div class="lg-tile lg-tile-ink lg-shine">
+        <p class="lg-tile-title">{home.marquee[6][locale]}</p>
+        <svg width="120" height="120" viewBox="0 0 120 120" aria-hidden="true">
+          <circle
+            cx="60"
+            cy="60"
+            r="52"
+            fill="none"
+            stroke="rgb(255 255 255 / 0.18)"
+            stroke-width="2"
+          ></circle>
+          <circle
+            cx="60"
+            cy="60"
+            r="52"
+            fill="none"
+            stroke="#5eead4"
+            stroke-width="2"
+            stroke-dasharray="3 10.6"
+          ></circle>
+          <line
+            class="lg-hand-h"
+            x1="60"
+            y1="60"
+            x2="60"
+            y2="32"
+            stroke="#fff"
+            stroke-width="4"
+            stroke-linecap="round"
+          ></line>
+          <line
+            class="lg-hand-m"
+            x1="60"
+            y1="60"
+            x2="60"
+            y2="18"
+            stroke="#5eead4"
+            stroke-width="3"
+            stroke-linecap="round"
+          ></line>
+          <circle cx="60" cy="60" r="5" fill="#fff"></circle>
+        </svg>
+        <a class="lg-link" href={L("/faq")}>
+          {faqs[4].q[locale]}
+          <Icon name="arrow" size={18} class="lg-arrow" />
+        </a>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="section bg-mint/60">
-  <div class="container-x grid gap-14 lg:grid-cols-[0.9fr_1.1fr]">
-    <SectionHeading eyebrow={pages.expectTitle[locale]} title={home.principlesTitle[locale]}>
-      <p class="muted" data-reveal>
-        {pages.expectA[locale]}
-      </p>
-      <p class="muted" data-reveal>
-        {pages.expectB[locale]}
-      </p>
-    </SectionHeading>
-    <ol class="grid gap-4" data-reveal-stagger>
-      {home.principles.map((p) => (
-        <li class="card grid gap-2 p-7">
-          <h3>{p.title[locale]}</h3>
-          <p class="muted">{p.body[locale]}</p>
+<section class="lg-section lg-tint">
+  <div class="lg-wrap lg-split">
+    <div class="lg-stack lg-sticky" style="gap: 20px">
+      <SectionHeading
+        eyebrow={pages.expectTitle[locale]}
+        title={home.principlesTitle[locale]}
+        body={pages.expectA[locale]}
+        dot="teal"
+      >
+        <a class="lg-link" href={L("/how-we-work")}>
+          {home.processLink[locale]}
+          <Icon name="arrow" size={18} class="lg-arrow" />
+        </a>
+      </SectionHeading>
+      <ArtGrid size="sm" motion="float" style="margin-top: 8px" />
+    </div>
+    <ol style="margin: 0; padding: 0; list-style: none; display: grid; gap: 16px">
+      {home.principles.map((p, i) => (
+        <li
+          class="lg-card lg-stage"
+          data-reveal="side"
+          style="grid-template-columns: auto minmax(0, 1fr); gap: 22px; align-items: start; padding: clamp(24px, 3vw, 34px)"
+        >
+          <span class="lg-stage-num" aria-hidden="true" style={numLook[i % 4]}>
+            0{i + 1}
+          </span>
+          <div class="lg-stack" style="gap: 8px">
+            <h3 class="lg-h3">{p.title[locale]}</h3>
+            <p class="lg-body">{p.body[locale]}</p>
+          </div>
         </li>
       ))}
     </ol>
   </div>
 </section>
 
-<section class="section">
-  <div class="container-x grid gap-12">
-    <SectionHeading title={pages.relevantWork[locale]} />
+<section class="lg-section lg-ink" style="position: relative; overflow: hidden">
+  <div
+    aria-hidden="true"
+    data-parallax="0.06"
+    style="position: absolute; inset: -60px 0; background-image: radial-gradient(rgb(255 255 255 / 0.14) 1.2px, transparent 1.6px); background-size: 26px 26px"
+  ></div>
+  <ArtGrid
+    motion="spin"
+    cells={[undefined, undefined, undefined, undefined, "var(--mint)"]}
+    style="position: absolute; inset-inline-end: -120px; bottom: -140px; width: 420px; opacity: 0.12; animation-duration: 80s"
+  />
+  <div class="lg-wrap" style="position: relative; display: grid; gap: 32px" data-reveal>
+    <span
+      class="lg-ico"
+      aria-hidden="true"
+      style="background: rgb(255 255 255 / 0.1); color: var(--mint)"
+    >
+      <Icon name="shield" size={28} />
+    </span>
+    <p class="lg-h2" style="max-width: 22ch">
+      {lead}
+      {rest.length > 0 && <span style="color: var(--mint)">{rest.join(" ")}</span>}
+    </p>
+  </div>
+</section>
+
+<section class="lg-section">
+  <div class="lg-wrap" style="display: grid; gap: 44px">
+    <div class="lg-row">
+      <SectionHeading
+        eyebrow={nav.work[locale]}
+        title={pages.relevantWork[locale]}
+        body={ui.proofNote[locale]}
+      />
+      <a class="lg-link" href={L("/work")}>
+        {nav.work[locale]}
+        <Icon name="arrow" size={18} class="lg-arrow" />
+      </a>
+    </div>
     <ProjectList locale={locale} />
   </div>
 </section>
 
 <CtaBand locale={locale} source="/about" />
-
-<style>
-  .about-mark {
-    min-block-size: 22rem;
-    background: radial-gradient(circle at 50% 50%, #fff 20%, var(--color-mint));
-  }
-  .about-rings span {
-    position: absolute;
-    inset: 50% auto auto 50%;
-    translate: -50% -50%;
-    border-radius: 999px;
-    border: 1px solid rgb(0 178 169 / 0.25);
-  }
-  .about-rings span:nth-child(1) {
-    inline-size: 16rem;
-    block-size: 16rem;
-  }
-  .about-rings span:nth-child(2) {
-    inline-size: 24rem;
-    block-size: 24rem;
-    border-color: rgb(27 78 216 / 0.15);
-  }
-  .about-rings span:nth-child(3) {
-    inline-size: 32rem;
-    block-size: 32rem;
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .about-rings span {
-      animation: ring 6s var(--ease-out-expo) infinite;
-    }
-    .about-rings span:nth-child(2) {
-      animation-delay: 0.8s;
-    }
-    .about-rings span:nth-child(3) {
-      animation-delay: 1.6s;
-    }
-    @keyframes ring {
-      0% {
-        scale: 0.85;
-        opacity: 0;
-      }
-      40% {
-        opacity: 1;
-      }
-      100% {
-        scale: 1.1;
-        opacity: 0;
-      }
-    }
-  }
-</style>

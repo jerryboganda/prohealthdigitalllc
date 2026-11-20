@@ -1,0 +1,109 @@
+---
+/** Large engagement card for the solutions, audience and engagement pages (whole card links via the heading). */
+import Icon from "./Icon.astro";
+import { engagements, localPath, ui } from "../lib/content.ts";
+import type { Engagement, Locale } from "../lib/content.ts";
+
+interface Props {
+  locale: Locale;
+  engagement: Engagement;
+  /** "tall" for solution grids, "row" for the compact related-engagements strip. */
+  layout?: "tall" | "row";
+}
+const { locale, engagement: e, layout = "tall" } = Astro.props;
+const icons = {
+  "digital-presence": "globe",
+  "care-workflows": "flow",
+  "platform-launch": "spark",
+  "platform-improvement": "layers",
+} as const;
+const num = `0${engagements.findIndex((x) => x.id === e.id) + 1}`;
+const audience = e.audience === "provider" ? ui.providers[locale] : ui.companies[locale];
+const href = localPath(`/solutions/${e.id}`, locale);
+---
+
+<div data-reveal="scale" style="display: grid">
+  {layout === "row" ? (
+    <article class="lg-eng sol-row">
+      <span class="lg-ico" aria-hidden="true">
+        <Icon name={icons[e.id]} size={26} />
+      </span>
+      <div class="sol-body" style="flex: 1 1 320px; min-width: 0">
+        <span class="lg-tag">{audience}</span>
+        <h3 class="sol-title" style="font-size: clamp(24px, 2.2vw, 30px)">
+          <a class="lg-stretch" href={href}>
+            {e.title[locale]}
+          </a>
+        </h3>
+        <p class="lg-body">{e.problem[locale]}</p>
+      </div>
+      <span class="lg-go" aria-hidden="true">
+        <Icon name="arrow" size={18} class="lg-arrow" />
+      </span>
+    </article>
+  ) : (
+    <article class="lg-eng sol-tall">
+      <div class="sol-split" style="align-items: start">
+        <span class="lg-ico" aria-hidden="true">
+          <Icon name={icons[e.id]} size={26} />
+        </span>
+        <span class="lg-num" aria-hidden="true">
+          {num}
+        </span>
+      </div>
+      <div class="sol-body">
+        <span class="lg-tag">{audience}</span>
+        <h3 class="sol-title">
+          <a class="lg-stretch" href={href}>
+            {e.title[locale]}
+          </a>
+        </h3>
+        <p class="lg-body" style="max-width: 44ch">
+          {e.problem[locale]}
+        </p>
+      </div>
+      <div class="sol-split" aria-hidden="true">
+        <span style="font-weight: 600">{ui.explore[locale]}</span>
+        <span class="lg-go">
+          <Icon name="arrow" size={18} class="lg-arrow" />
+        </span>
+      </div>
+    </article>
+  )}
+</div>
+
+<style>
+  .sol-tall {
+    min-height: 380px;
+    padding: clamp(28px, 3vw, 44px);
+  }
+  .sol-row {
+    min-height: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 24px;
+    padding: clamp(24px, 3vw, 40px);
+  }
+  .sol-split {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .sol-body {
+    display: grid;
+    gap: 12px;
+    justify-items: start;
+  }
+  .sol-title {
+    margin: 0;
+    font-size: clamp(26px, 2.4vw, 34px);
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: -0.025em;
+  }
+  .sol-title:lang(ar) {
+    line-height: 1.45;
+  }
+</style>

@@ -2,9 +2,10 @@
 import PageIntro from "../components/PageIntro.astro";
 import InquiryForm from "../components/InquiryForm.astro";
 import Icon from "../components/Icon.astro";
-import { EMAIL, WHATSAPP, stages, ui } from "../lib/content.ts";
+import { EMAIL, WHATSAPP, faqs, stages, ui } from "../lib/content.ts";
 import type { Locale } from "../lib/content.ts";
-import { nav, pages, common } from "../lib/copy.ts";
+import { common, footer, nav, pages } from "../lib/copy.ts";
+import { sentences } from "../lib/copy-company.ts";
 
 interface Props {
   locale: Locale;
@@ -12,6 +13,8 @@ interface Props {
   source: string;
 }
 const { locale, engagement, source } = Astro.props;
+// "What should I share" answer, one sentence per row; the last one is the patient-data warning.
+const share = sentences(faqs[6].a[locale]);
 ---
 
 <PageIntro
@@ -20,71 +23,191 @@ const { locale, engagement, source } = Astro.props;
   title={ui.cta[locale]}
   description={ui.discoveryBody[locale]}
   trail={[{ name: nav.contact[locale], path: "/contact" }]}
-/>
+>
+  <div style="display: flex; flex-wrap: wrap; gap: 12px">
+    <a class="lg-ghost" href={`mailto:${EMAIL}`}>
+      <Icon name="mail" size={18} />
+      {ui.email[locale]}
+    </a>
+  </div>
+</PageIntro>
 
-<section class="section pt-12">
-  <div class="container-x grid gap-14 lg:grid-cols-[1.35fr_0.85fr]">
-    <div class="card p-6 md:p-10">
+<section style="padding-block-end: clamp(64px, 8vw, 128px)">
+  <div
+    class="lg-wrap"
+    style="display: flex; flex-wrap: wrap; gap: clamp(32px, 4vw, 56px); align-items: flex-start"
+  >
+    <div
+      id="inquiry"
+      class="lg-card lg-in lg-d4"
+      style="flex: 999 1 560px; min-width: 0; padding: clamp(20px, 3.4vw, 44px); gap: 0"
+    >
       <InquiryForm locale={locale} engagement={engagement} source={source} />
     </div>
-    <aside class="grid content-start gap-8 lg:sticky lg:top-28">
-      <div class="grid gap-4">
-        <h2 class="text-[1.75rem]">{pages.contactAsideTitle[locale]}</h2>
-        <p class="muted">{pages.contactAsideA[locale]}</p>
+    <aside class="lg-stack lg-sticky lg-in lg-d5" style="flex: 1 1 320px; min-width: 0; gap: 28px">
+      <div class="lg-stack" style="gap: 14px">
+        <h2 class="lg-h3" style="font-size: clamp(26px, 2.2vw, 32px)">
+          {pages.contactAsideTitle[locale]}
+        </h2>
+        <p class="lg-body">{pages.contactAsideA[locale]}</p>
       </div>
-      <ol class="grid gap-3">
+      <ol style="margin: 0; padding: 0; list-style: none; display: grid; gap: 10px">
         {stages.map((s, i) => (
-          <li class="contact-step">
-            <span class="contact-step-num">{i + 1}</span>
-            <span class="grid">
-              <strong>{s.label[locale]}</strong>
-              <span class="muted text-[0.92rem]">{s.body[locale]}</span>
+          <li class="lg-stage contact-step">
+            <span class="lg-stage-num" aria-hidden="true">
+              {i + 1}
+            </span>
+            <span style="display: grid; gap: 4px">
+              <strong style="font-weight: 600">{s.label[locale]}</strong>
+              <span class="lg-body" style="font-size: 15px">
+                {s.body[locale]}
+              </span>
             </span>
           </li>
         ))}
       </ol>
-      <div class="grid gap-3 border-t border-[var(--color-line)] pt-6">
-        <a class="text-link w-fit" href={`mailto:${EMAIL}`} dir="ltr">
+      <div class="lg-stack" style="gap: 12px; padding-top: 22px; border-top: 1px solid var(--line)">
+        <a class="lg-link" href={`mailto:${EMAIL}`} dir="ltr">
           <Icon name="mail" size={18} />
           {EMAIL}
         </a>
         {WHATSAPP && (
-          <a
-            class="text-link w-fit"
-            href={`https://wa.me/${WHATSAPP}`}
-            target="_blank"
-            rel="noopener"
-          >
+          <a class="lg-link" href={`https://wa.me/${WHATSAPP}`} target="_blank" rel="noopener">
             <Icon name="whatsapp" size={18} />
             {common.whatsapp[locale]}
+            <span class="lg-sr">{common.external[locale]}</span>
           </a>
         )}
-        <p class="muted text-[0.92rem]">{pages.contactAsideB[locale]}</p>
-        <p class="muted text-[0.92rem]">{pages.contactAsideC[locale]}</p>
+        <p class="lg-body" style="font-size: 15px">
+          {pages.contactAsideB[locale]}
+        </p>
+        <p class="lg-body" style="font-size: 15px">
+          {pages.contactAsideC[locale]}
+        </p>
       </div>
     </aside>
   </div>
 </section>
 
+<section class="lg-section lg-white">
+  <div class="lg-wrap">
+    <div class="lg-bento" data-reveal="scale">
+      <div class="lg-tile lg-tile-white lg-span2" style="padding: clamp(26px, 3.4vw, 44px)">
+        <h2 class="lg-h3" style="font-size: clamp(26px, 2.4vw, 34px); max-width: 22ch">
+          {faqs[6].q[locale]}
+        </h2>
+        <ul style="margin: 0; padding: 0; list-style: none; display: grid; gap: 14px">
+          {share.map((line, i) => {
+            const kind = i === 0 ? "yes" : i === share.length - 1 ? "no" : "maybe";
+            return (
+              <li class:list={["share", kind === "no" && "share-no"]}>
+                {kind === "yes" ? (
+                  <span class="lg-box" aria-hidden="true">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#fff"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path class="lg-check" d="M5 12.5l4.5 4.5L19 7.5" />
+                    </svg>
+                  </span>
+                ) : (
+                  <span class="lg-ico share-ico" aria-hidden="true">
+                    {kind === "no" ? (
+                      <Icon name="close" size={16} />
+                    ) : (
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.6"
+                        stroke-linecap="round"
+                      >
+                        <path d="M6 12h12" />
+                      </svg>
+                    )}
+                  </span>
+                )}
+                <span>{line}</span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+      <div class="lg-tile lg-tile-ink lg-shine">
+        <h2 class="lg-tile-title">{ui.email[locale]}</h2>
+        <svg width="120" height="96" viewBox="0 0 120 96" fill="none" aria-hidden="true">
+          <rect
+            x="6"
+            y="10"
+            width="108"
+            height="76"
+            rx="16"
+            stroke="rgb(255 255 255 / 0.3)"
+            stroke-width="2"
+          ></rect>
+          <path
+            class="lg-check"
+            pathLength="24"
+            d="M12 20l48 34 48-34"
+            stroke="#5eead4"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+        </svg>
+        <div class="lg-stack" style="gap: 8px">
+          <a class="lg-link" href={`mailto:${EMAIL}`} dir="ltr" style="overflow-wrap: anywhere">
+            {EMAIL}
+          </a>
+          <p style="margin: 0; font-size: 14px; color: var(--mist)">{footer.markets[locale]}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <style>
   .contact-step {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+    padding-block: 14px;
+  }
+  .contact-step:not(:last-child) {
+    border-block-end: 1px solid var(--line);
+  }
+  .contact-step .lg-stage-num {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: var(--teal-50);
+    color: var(--teal-ink);
+  }
+  .share {
     display: flex;
-    gap: 1rem;
+    gap: 14px;
     align-items: flex-start;
+    font-size: 17px;
   }
-  .contact-step-num {
-    flex: none;
-    display: grid;
-    place-items: center;
-    inline-size: 2rem;
-    block-size: 2rem;
-    border-radius: 99px;
-    background: var(--color-mint);
-    color: var(--color-teal-700);
-    font-weight: 600;
-    font-size: 0.9rem;
+  .share-no {
+    color: var(--error);
+    font-weight: 500;
   }
-  .contact-step strong {
-    font-weight: 600;
+  .share-ico {
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+  }
+  .share-no .share-ico {
+    background: var(--error-50);
+    color: var(--error);
   }
 </style>

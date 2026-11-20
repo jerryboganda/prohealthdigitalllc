@@ -5,21 +5,21 @@ Bilingual (English/Arabic) website for ProHealth Digital LLC — healthcare tech
 ## Stack
 
 - **Astro 7** with `@astrojs/node` (standalone server, per-request rendering) and MDX content collections.
-- **Tailwind CSS 4** design tokens (`src/styles/global.css`), self-hosted fonts via the Astro Fonts API (Newsreader, IBM Plex Sans, Noto Naskh Arabic, IBM Plex Sans Arabic).
-- **GSAP** motion runtime (`src/scripts/motion.ts`): ScrollTrigger, SplitText, DrawSVG, a lazy raw-WebGL hero shader, Lottie micro-icons and native cross-document view transitions. Everything honours `prefers-reduced-motion` and mirrors in RTL.
+- **Tailwind CSS 4** with the "Living Grid" design system in `src/styles/global.css` (`lg-*` classes: tokens, type, bento tiles, cards, forms, motion); one self-hosted typeface for both scripts via the Astro Fonts API (Readex Pro, Latin + Arabic).
+- **GSAP** motion runtime (`src/scripts/motion.ts`): ScrollTrigger, SplitText, DrawSVG, a lazy raw-WebGL hero shader, Lottie micro-icons and native cross-document view transitions, plus CSS-looping bento tiles and living-grid art. Everything honours `prefers-reduced-motion`, mirrors in RTL, and looping motion pauses with the site-wide "Pause animations" control (WCAG 2.2.2).
 - No React on the client, no analytics, no cookies, no third-party requests; strict CSP and security headers from `src/middleware.ts`.
 
 ## Structure
 
-| Path | Purpose |
-| --- | --- |
-| `src/pages/[...path].astro` | Single catch-all page; `src/lib/routes.ts` resolves every URL to a page, a 301 redirect or a localized 404. English at `/`, Arabic at `/ar`. |
-| `src/views/*` | Page templates (home, solutions, audiences, work, insights, resources, glossary, policies, contact…). |
-| `src/components/*` | Design-system components (header, footer, section heading, engagement cards, process timeline, inquiry form, mockups…). |
-| `src/lib/content.ts`, `copy.ts`, `meta.ts`, `audiences.ts`, `glossary.ts`, `engagement-details.ts` | All structured copy as `text(en, ar)` pairs; tests require both languages. |
-| `src/content/{insights,resources}/{en,ar}/*.mdx` | Long-form articles; a slug is published only when both languages exist. |
-| `src/lib/schema.ts`, `seo.ts` | JSON-LD graph and head metadata; per-page OG images are generated at build (`src/pages/og/[...route].ts`). |
-| `src/lib/inquiry.ts`, `inquiry.server.ts`, `src/pages/api/inquiries.ts` | Inquiry validation and authenticated SMTP delivery (unchanged security model). |
+| Path                                                                                               | Purpose                                                                                                                                      |
+| -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/pages/[...path].astro`                                                                        | Single catch-all page; `src/lib/routes.ts` resolves every URL to a page, a 301 redirect or a localized 404. English at `/`, Arabic at `/ar`. |
+| `src/views/*`                                                                                      | Page templates (home, solutions, audiences, work, insights, resources, glossary, policies, contact…).                                        |
+| `src/components/*`                                                                                 | Design-system components (header, footer, section heading, engagement cards, process timeline, inquiry form, mockups…).                      |
+| `src/lib/content.ts`, `copy.ts`, `meta.ts`, `audiences.ts`, `glossary.ts`, `engagement-details.ts` | All structured copy as `text(en, ar)` pairs; tests require both languages.                                                                   |
+| `src/content/{insights,resources}/{en,ar}/*.mdx`                                                   | Long-form articles; a slug is published only when both languages exist.                                                                      |
+| `src/lib/schema.ts`, `seo.ts`                                                                      | JSON-LD graph and head metadata; per-page OG images are generated at build (`src/pages/og/[...route].ts`).                                   |
+| `src/lib/inquiry.ts`, `inquiry.server.ts`, `src/pages/api/inquiries.ts`                            | Inquiry validation and authenticated SMTP delivery (unchanged security model).                                                               |
 
 ## Development
 

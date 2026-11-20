@@ -29,7 +29,7 @@ const dir = locale === "ar" ? "rtl" : "ltr";
     {!meta.noindex && <link rel="canonical" href={head.canonical} />}
     {!meta.noindex &&
       head.alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
-    <meta name="theme-color" content="#FBFBF8" />
+    <meta name="theme-color" content="#F5F6FA" />
     <meta name="color-scheme" content="light" />
     <meta name="author" content="ProHealth Digital LLC" />
     <meta property="og:site_name" content={SITE_NAME} />
@@ -57,17 +57,7 @@ const dir = locale === "ar" ? "rtl" : "ltr";
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    {locale === "ar" ? (
-      <>
-        <Font cssVariable="--font-naskh" preload={[{ weight: 600 }]} />
-        <Font cssVariable="--font-plex-arabic" />
-      </>
-    ) : (
-      <>
-        <Font cssVariable="--font-newsreader" preload={[{ weight: 400, style: "normal" }]} />
-        <Font cssVariable="--font-plex" />
-      </>
-    )}
+    <Font cssVariable="--font-readex" preload={[{ weight: 600 }]} />
     {schema.length > 0 && (
       <script
         type="application/ld+json"

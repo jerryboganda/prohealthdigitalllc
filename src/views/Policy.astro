@@ -1,9 +1,9 @@
 ---
 import PageIntro from "../components/PageIntro.astro";
+import Icon from "../components/Icon.astro";
 import { EMAIL, policies, localPath, CONTENT_UPDATED } from "../lib/content.ts";
 import type { Locale } from "../lib/content.ts";
-import { footer, common } from "../lib/copy.ts";
-import { pages } from "../lib/copy.ts";
+import { footer, common, pages } from "../lib/copy.ts";
 
 interface Props {
   locale: Locale;
@@ -13,10 +13,19 @@ const { locale, slug } = Astro.props;
 const p = policies[slug];
 const others = Object.entries(policies).filter(([k]) => k !== slug);
 const parts = (body: string) => body.split(EMAIL);
+// Anchor ids come from the English title so both locales share stable ASCII fragments.
+const anchor = (title: string) =>
+  title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+const numLook = ["", "background: var(--teal); color: var(--ink)", "background: var(--ink)"];
 const date = new Intl.DateTimeFormat(locale === "ar" ? "ar-u-nu-latn" : "en-GB", {
   dateStyle: "long",
 }).format(new Date(CONTENT_UPDATED));
 ---
+
+<div class="lg-progressbar" data-progress aria-hidden="true"></div>
 
 <PageIntro
   locale={locale}
@@ -24,41 +33,93 @@ const date = new Intl.DateTimeFormat(locale === "ar" ? "ar-u-nu-latn" : "en-GB",
   title={p.title[locale]}
   description={pages.policyBody[locale]}
   trail={[{ name: p.title[locale], path: `/${slug}` }]}
+  art="small"
 />
-<section class="section">
-  <div class="container-x grid gap-14 lg:grid-cols-[1fr_17rem]">
-    <article class="prose max-w-3xl">
-      <p class="muted text-[0.9rem]">
-        {common.updated[locale]}: {date}
+
+<section class="lg-section lg-white">
+  <div
+    class="lg-wrap"
+    style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: clamp(36px, 5vw, 88px)"
+  >
+    <aside
+      class="lg-sticky lg-in lg-d5"
+      style="flex: 1 1 240px; min-width: 0; display: grid; gap: 36px"
+    >
+      <nav aria-labelledby="policy-toc" style="display: grid; gap: 12px">
+        <p id="policy-toc" class="lg-eyebrow">
+          <span class="lg-dot" aria-hidden="true" style="background: var(--royal)"></span>
+          {common.onThisPage[locale]}
+        </p>
+        <ol class="lg-toc">
+          {p.sections.map((s) => (
+            <li>
+              <a href={`#${anchor(s.title.en)}`}>{s.title[locale]}</a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+      <nav
+        aria-labelledby="policy-other"
+        style="display: grid; gap: 6px; padding-top: 28px; border-top: 1px solid var(--line)"
+      >
+        <p id="policy-other" class="lg-eyebrow" style="margin-bottom: 6px">
+          {footer.otherPolicies[locale]}
+        </p>
+        {others.map(([k, o]) => (
+          <a class="lg-link" href={localPath(`/${k}`, locale)}>
+            {o.title[locale]}
+            <Icon name="arrow" size={18} class="lg-arrow" />
+          </a>
+        ))}
+      </nav>
+    </aside>
+
+    <article class="lg-prose" style="flex: 999 1 560px; min-width: 0; display: grid; gap: 8px">
+      <p
+        class="lg-in lg-d6"
+        style="margin: 0 0 12px; display: inline-flex; align-items: center; gap: 10px; font-size: 15px; color: var(--muted)"
+      >
+        <span class="lg-dot" aria-hidden="true"></span>
+        <span>
+          {common.updated[locale]}: <time datetime={CONTENT_UPDATED}>{date}</time>
+        </span>
       </p>
-      {p.sections.map((s) => (
-        <section>
-          <h2>{s.title[locale]}</h2>
-          <p>
-            {parts(s.body[locale]).map((part, i) => (
-              <>
-                {i > 0 && (
-                  <a dir="ltr" href={`mailto:${EMAIL}`}>
-                    {EMAIL}
-                  </a>
-                )}
-                {part}
-              </>
-            ))}
-          </p>
+      {p.sections.map((s, i) => (
+        <section id={anchor(s.title.en)} class="lg-stage policy-sec" data-reveal>
+          <span class="lg-stage-num" aria-hidden="true" style={numLook[i % numLook.length]}>
+            0{i + 1}
+          </span>
+          <div>
+            <h2 style="margin: 8px 0 14px">{s.title[locale]}</h2>
+            <p style="margin: 0">
+              {parts(s.body[locale]).map((part, j) => (
+                <>
+                  {j > 0 && (
+                    <a dir="ltr" href={`mailto:${EMAIL}`}>
+                      {EMAIL}
+                    </a>
+                  )}
+                  {part}
+                </>
+              ))}
+            </p>
+          </div>
         </section>
       ))}
     </article>
-    <nav
-      aria-label={footer.otherPolicies[locale]}
-      class="grid content-start gap-3 lg:sticky lg:top-28"
-    >
-      <p class="eyebrow">{footer.otherPolicies[locale]}</p>
-      {others.map(([k, o]) => (
-        <a class="text-link w-fit" href={localPath(`/${k}`, locale)}>
-          {o.title[locale]}
-        </a>
-      ))}
-    </nav>
   </div>
 </section>
+
+<style>
+  .policy-sec {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+    padding-block: 28px;
+    border-top: 1px solid var(--line);
+    scroll-margin-top: 120px;
+  }
+  .policy-sec:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+</style>

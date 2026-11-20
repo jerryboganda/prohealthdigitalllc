@@ -1,6 +1,7 @@
 /**
  * Site motion runtime. One entry, driven by data attributes:
- *   data-reveal / data-reveal-stagger   fade-and-rise when scrolled into view (CSS transition)
+ *   data-reveal / data-reveal-stagger   fade-and-rise when scrolled into view (CSS animation);
+ *                                       data-reveal="scale" | "side" for scale-in / side-in (mirrored in RTL)
  *   data-split                          line-by-line masked heading reveal (GSAP SplitText)
  *   data-draw                           SVG strokes draw on scroll (DrawSVG)
  *   data-parallax="0.12"                scrubbed vertical drift
@@ -9,7 +10,11 @@
  *   data-intro                          logo intro, once per session
  *   data-progress                       reading progress bar
  *   data-shader / data-inquiry-form / data-lottie   lazily loaded modules
+ *   data-insight-filter / data-glossary-search      listing filter and glossary search (lazy)
+ *   .motion-pause input                 "Pause animations" (WCAG 2.2.2), synced and remembered
  * Content is visible without JS. With prefers-reduced-motion: reduce, nothing is hidden or animated.
+ * Looping CSS decoration (bento tiles, living-grid art, marquees) lives in global.css and pauses
+ * with .motion-pause.
  */
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -82,6 +87,31 @@ function lazy(selector: string, load: () => Promise<{ default: (el: HTMLElement)
 }
 lazy("[data-inquiry-form]", () => import("./inquiry-form.ts"));
 lazy("[data-lottie]", () => import("./lottie.ts"));
+lazy("[data-insight-filter]", () => import("./insight-filter.ts"));
+lazy("[data-glossary-search]", () => import("./glossary-search.ts"));
+
+/* "Pause animations" (WCAG 2.2.2): every instance on the page stays in sync and the choice persists.
+   CSS does the pausing (html:has(.motion-pause input:checked)), so this only syncs state. */
+const pauses = $$<HTMLInputElement>(".motion-pause input");
+if (pauses.length) {
+  let paused = false;
+  try {
+    paused = localStorage.getItem("ph-motion-paused") === "1";
+  } catch {
+    /* storage unavailable: default to playing */
+  }
+  pauses.forEach((box) => {
+    box.checked = paused;
+    box.addEventListener("change", () => {
+      pauses.forEach((other) => (other.checked = box.checked));
+      try {
+        localStorage.setItem("ph-motion-paused", box.checked ? "1" : "0");
+      } catch {
+        /* ignore */
+      }
+    });
+  });
+}
 
 const inView = (el: Element) => el.getBoundingClientRect().top < window.innerHeight;
 

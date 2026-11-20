@@ -1,7 +1,6 @@
 ---
 import Icon from "../components/Icon.astro";
 import HeroCanvas from "../components/HeroCanvas.astro";
-import JourneyCard from "../components/JourneyCard.astro";
 import Marquee from "../components/Marquee.astro";
 import SectionHeading from "../components/SectionHeading.astro";
 import EngagementCards from "../components/EngagementCards.astro";
@@ -10,10 +9,11 @@ import ProcessTimeline from "../components/ProcessTimeline.astro";
 import FaqList from "../components/FaqList.astro";
 import CtaBand from "../components/CtaBand.astro";
 import ArticleCard from "../components/ArticleCard.astro";
-import LineMotif from "../components/LineMotif.astro";
+import ArtGrid from "../components/ArtGrid.astro";
+import MotionPause from "../components/MotionPause.astro";
 import { faqs, localPath, ui } from "../lib/content.ts";
 import type { Locale } from "../lib/content.ts";
-import { home, nav, common } from "../lib/copy.ts";
+import { home, nav, common, pages, ui2 } from "../lib/copy.ts";
 import { entriesFor } from "../site/collections.ts";
 
 interface Props {
@@ -21,6 +21,7 @@ interface Props {
 }
 const { locale } = Astro.props;
 const L = (p: string) => localPath(p, locale);
+const ar = locale === "ar";
 const insights = (await entriesFor("insights", locale)).slice(0, 3);
 const audienceLabel = (a: string) =>
   a === "providers"
@@ -28,85 +29,297 @@ const audienceLabel = (a: string) =>
     : a === "digital-health-companies"
       ? common.forCompanies[locale]
       : common.forBoth[locale];
+const slot = [...ui2.heroSlot, ui2.heroSlot[0]].map((t) => t.en);
+const startItems = home.note[locale].split(" · ");
+const glyphs = ar ? ["أب", "Aa"] : ["Aa", "أب"];
+const support = faqs[4];
 ---
 
-<section class="home-hero relative isolate overflow-hidden">
+<section
+  class="lg-wrap"
+  style="position: relative; isolation: isolate; padding-top: clamp(28px, 5vw, 80px); padding-bottom: clamp(48px, 6vw, 88px); display: grid; gap: clamp(36px, 5vw, 64px)"
+>
   <HeroCanvas />
-  <div class="container-x grid min-h-[calc(100svh-var(--header-h))] items-center gap-14 py-16 lg:grid-cols-[1.25fr_0.9fr] lg:py-24">
-    <div class="hero-enter grid gap-7">
-      <p class="eyebrow">{home.eyebrow[locale]}</p>
-      <h1 class="display max-w-[14ch] rtl:max-w-[16ch]">
-        {home.titleA[locale]} <em>{home.titleEm[locale]}</em>
-        {home.titleB[locale]}
-      </h1>
-      <p class="lede">{ui.intro[locale]}</p>
-      <div class="flex flex-wrap items-center gap-4">
-        <a class="btn" href={`${L("/contact")}?source=/`} data-magnetic>
-          {ui.cta[locale]}
-          <Icon name="arrow" size={18} directional />
+  <div class="lg-row" style="gap: 32px">
+    <div style="display: grid; gap: 22px; min-width: 0; flex: 999 1 640px">
+      <p class="lg-eyebrow lg-in">
+        <span class="lg-dot" aria-hidden="true"></span>
+        {home.eyebrow[locale]}
+      </p>
+      {ar ? (
+        <h1 class="lg-h1 lg-in-solid lg-d1">
+          {home.titleA[locale]} <span class="lg-hl">{home.titleEm[locale]}</span>{" "}
+          <span style="color: var(--royal)">{home.titleB[locale]}</span>
+        </h1>
+      ) : (
+        <h1 class="lg-h1">
+          <span class="lg-sr">
+            {home.titleA.en} {home.titleEm.en} {home.titleB.en}
+          </span>
+          <span class="lg-words" aria-hidden="true" style="display: block">
+            <span>{home.titleA.en}</span> <span>{home.titleEm.en}</span>
+          </span>
+          <span class="lg-slot lg-in-solid lg-d3" aria-hidden="true">
+            <span class="lg-slot-track">
+              {slot.map((w) => (
+                <span>{w}</span>
+              ))}
+            </span>
+          </span>
+        </h1>
+      )}
+    </div>
+    <div class="lg-in lg-d4" style="display: grid; gap: 24px; flex: 1 1 340px; max-width: 460px">
+      <p class="lg-lede" style="font-size: 18px">
+        {ui.intro[locale]}
+      </p>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px">
+        <a class="lg-btn" href={`${L("/contact")}?source=/`} data-magnetic>
+          <span>{ui.cta[locale]}</span>
+          <span class="lg-btn-ico" aria-hidden="true">
+            <Icon name="arrow" size={18} />
+          </span>
         </a>
-        <a class="btn btn-ghost" href={L("/solutions")}>
+        <a class="lg-ghost" href={L("/solutions")}>
           {home.secondaryCta[locale]}
         </a>
       </div>
-      <p class="hero-note">
-        <span class="pulse-dot" aria-hidden="true"></span>
-        {home.note[locale]}
+    </div>
+  </div>
+
+  <div class="lg-bento">
+    <figure
+      class="lg-tile lg-tile-royal lg-span2 lg-shine lg-in lg-d4"
+      aria-label={home.journeyLabel[locale]}
+    >
+      <div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap">
+        <p style="margin: 0; font-size: clamp(24px, 2.4vw, 34px); font-weight: 600; letter-spacing: -0.02em; max-width: 16ch; line-height: 1.15">
+          {home.journeyTitle[locale]}
+        </p>
+        <span class="lg-tag" style="background: rgb(255 255 255 / 0.14); color: #fff">
+          {ui2.illustration[locale]}
+        </span>
+      </div>
+      <div style="display: grid; gap: 14px">
+        <div class="lg-progress-track" aria-hidden="true">
+          <span class="lg-progress"></span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 12px">
+          <div class="lg-step lg-s1">
+            <span style="font-weight: 600; font-size: 18px">{home.access[locale]}</span>
+            <span style="font-size: 14px; opacity: 0.85">{home.accessBody[locale]}</span>
+          </div>
+          <div class="lg-step lg-s2">
+            <span style="font-weight: 600; font-size: 18px">{home.operations[locale]}</span>
+            <span style="font-size: 14px; opacity: 0.85">{home.operationsBody[locale]}</span>
+          </div>
+          <div class="lg-step lg-s3">
+            <span style="font-weight: 600; font-size: 18px">{home.platform[locale]}</span>
+            <span style="font-size: 14px; opacity: 0.85">{home.platformBody[locale]}</span>
+          </div>
+        </div>
+      </div>
+      <figcaption style="font-size: 13px; color: #dce4ff">{home.journeyCaption[locale]}</figcaption>
+    </figure>
+
+    <div class="lg-tile lg-tile-teal lg-in lg-d5" data-tilt>
+      <p class="lg-tile-title">{home.marquee[4][locale]}</p>
+      <div class="lg-flip" aria-hidden="true">
+        <span
+          class="lg-flipA"
+          lang={ar ? "ar" : "en"}
+          style={ar ? undefined : "letter-spacing: -0.04em"}
+        >
+          {glyphs[0]}
+        </span>
+        <span class="lg-flipB" lang={ar ? "en" : "ar"}>
+          {glyphs[1]}
+        </span>
+      </div>
+      <p style="margin: 0; display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink-2)">
+        <Icon name="arrow" size={20} class="lg-dir" />
+        {home.principles[2].body[locale]}
       </p>
     </div>
-    <div class="relative">
-      <JourneyCard locale={locale} />
+
+    <div class="lg-tile lg-tile-white lg-in lg-d6" data-tilt>
+      <p class="lg-tile-title">{home.marquee[5][locale]}</p>
+      <ul class="lg-checklist">
+        {ui2.handover.map((item, i) => (
+          <li>
+            <span class="lg-box" aria-hidden="true" style={`animation-delay: ${i * 0.6}s`}>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#fff"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  class="lg-check"
+                  style={`animation-delay: ${i * 0.6}s`}
+                  d="M5 12.5l4.5 4.5L19 7.5"
+                />
+              </svg>
+            </span>
+            {item[locale]}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="lg-tile lg-tile-ink lg-shine lg-in lg-d7">
+      <p class="lg-tile-title">{home.marquee[6][locale]}</p>
+      <svg width="120" height="120" viewBox="0 0 120 120" aria-hidden="true">
+        <circle
+          cx="60"
+          cy="60"
+          r="52"
+          fill="none"
+          stroke="rgb(255 255 255 / 0.18)"
+          stroke-width="2"
+        ></circle>
+        <circle
+          cx="60"
+          cy="60"
+          r="52"
+          fill="none"
+          stroke="#5eead4"
+          stroke-width="2"
+          stroke-dasharray="3 10.6"
+        ></circle>
+        <line
+          class="lg-hand-h"
+          x1="60"
+          y1="60"
+          x2="60"
+          y2="32"
+          stroke="#fff"
+          stroke-width="4"
+          stroke-linecap="round"
+        ></line>
+        <line
+          class="lg-hand-m"
+          x1="60"
+          y1="60"
+          x2="60"
+          y2="18"
+          stroke="#5eead4"
+          stroke-width="3"
+          stroke-linecap="round"
+        ></line>
+        <circle cx="60" cy="60" r="5" fill="#fff"></circle>
+      </svg>
+      <a class="lg-link" href={L("/faq")}>
+        {support.q[locale]}
+        <Icon name="arrow" size={18} class="lg-arrow" />
+      </a>
+    </div>
+
+    <div class="lg-tile lg-tile-white lg-in lg-d8" data-tilt>
+      <p class="lg-tile-title">{pages.contactAsideTitle[locale]}</p>
+      <ul style="margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; font-size: 18px">
+        {startItems.map((item, i) => (
+          <li style="display: flex; align-items: center; gap: 14px">
+            <span
+              class="lg-dot"
+              aria-hidden="true"
+              style={["", "background: var(--royal)", "background: var(--ink)"][i]}
+            />
+            {item}
+          </li>
+        ))}
+      </ul>
     </div>
   </div>
+  <MotionPause locale={locale} class="lg-in lg-d8" />
 </section>
 
-<Marquee locale={locale} items={home.marquee} pauseLabel={home.marqueePause[locale]} />
+<Marquee locale={locale} items={home.marquee} />
 
-<section class="section relative overflow-hidden">
-  <div class="container-x grid gap-16">
+<section class="lg-section">
+  <div class="lg-wrap" style="display: grid; gap: 48px">
     <SectionHeading eyebrow={nav.solutions[locale]} title={home.audienceTitle[locale]} />
-    <div class="grid gap-5 md:grid-cols-2" data-reveal-stagger>
-      <a class="audience card card-hover group" href={L("/providers")}>
-        <span class="audience-glyph" aria-hidden="true">
-          <Icon name="pulse" size={30} />
-        </span>
-        <p class="eyebrow">{ui.providers[locale]}</p>
-        <h3 class="audience-title">{ui.providerIntro[locale]}</h3>
-        <span class="text-link w-fit">
-          {home.exploreProviders[locale]}
-          <Icon name="arrow" size={18} directional />
-        </span>
-      </a>
-      <a class="audience audience-dark card card-hover group" href={L("/digital-health-companies")}>
-        <span class="audience-glyph" aria-hidden="true">
-          <Icon name="layers" size={30} />
-        </span>
-        <p class="eyebrow">{ui.companies[locale]}</p>
-        <h3 class="audience-title">{ui.companyIntro[locale]}</h3>
-        <span class="text-link w-fit">
-          {home.exploreCompanies[locale]}
-          <Icon name="arrow" size={18} directional />
-        </span>
-      </a>
+    <div class="lg-grid-2">
+      <article
+        class="lg-card lg-card-link"
+        data-reveal="scale"
+        style="min-height: 440px; padding: clamp(28px, 3vw, 48px); align-content: space-between; overflow: hidden"
+      >
+        <div style="display: flex; justify-content: space-between; align-items: start; gap: 20px">
+          <span class="lg-ico" aria-hidden="true">
+            <Icon name="pulse" size={28} />
+          </span>
+          <ArtGrid size="sm" />
+        </div>
+        <div class="lg-stack" style="gap: 14px">
+          <p class="lg-eyebrow">{ui.providers[locale]}</p>
+          <h3 style="margin: 0; font-size: clamp(26px, 2.6vw, 38px); font-weight: 600; line-height: 1.15; letter-spacing: -0.025em; max-width: 20ch">
+            <a class="lg-stretch" href={L("/providers")}>
+              {ui.providerIntro[locale]}
+            </a>
+          </h3>
+          <span class="lg-link" aria-hidden="true">
+            {home.exploreProviders[locale]}
+            <Icon name="arrow" size={18} class="lg-arrow" />
+          </span>
+        </div>
+      </article>
+      <article
+        class="lg-card lg-card-link lg-card-ink"
+        data-reveal="scale"
+        style="min-height: 440px; padding: clamp(28px, 3vw, 48px); align-content: space-between; overflow: hidden"
+      >
+        <div style="display: flex; justify-content: space-between; align-items: start; gap: 20px">
+          <span
+            class="lg-ico"
+            aria-hidden="true"
+            style="background: rgb(255 255 255 / 0.1); color: var(--mint)"
+          >
+            <Icon name="layers" size={28} />
+          </span>
+          <ArtGrid
+            size="sm"
+            motion="spin"
+            cells={[undefined, undefined, undefined, undefined, "var(--mint)"]}
+            style="animation-duration: 40s"
+          />
+        </div>
+        <div class="lg-stack" style="gap: 14px">
+          <p class="lg-eyebrow">{ui.companies[locale]}</p>
+          <h3 style="margin: 0; font-size: clamp(26px, 2.6vw, 38px); font-weight: 600; line-height: 1.15; letter-spacing: -0.025em; max-width: 20ch">
+            <a class="lg-stretch" href={L("/digital-health-companies")}>
+              {ui.companyIntro[locale]}
+            </a>
+          </h3>
+          <span class="lg-link" aria-hidden="true">
+            {home.exploreCompanies[locale]}
+            <Icon name="arrow" size={18} class="lg-arrow" />
+          </span>
+        </div>
+      </article>
     </div>
   </div>
 </section>
 
-<section class="section bg-mint/60 relative">
-  <div class="container-x grid gap-14">
-    <div class="flex flex-wrap items-end justify-between gap-8">
+<section class="lg-section lg-white">
+  <div class="lg-wrap" style="display: grid; gap: 44px">
+    <div class="lg-row">
       <SectionHeading title={home.problemTitle[locale]} body={home.problemBody[locale]} />
-      <a class="text-link" href={L("/solutions")}>
+      <a class="lg-link" href={L("/solutions")}>
         {nav.solutions[locale]}
-        <Icon name="arrow" size={18} directional />
+        <Icon name="arrow" size={18} class="lg-arrow" />
       </a>
     </div>
     <EngagementCards locale={locale} />
   </div>
 </section>
 
-<section class="section">
-  <div class="container-x grid gap-14">
+<section class="lg-section">
+  <div class="lg-wrap" style="display: grid; gap: 44px">
     <SectionHeading
       eyebrow={ui.work[locale]}
       title={home.workTitle[locale]}
@@ -116,37 +329,57 @@ const audienceLabel = (a: string) =>
   </div>
 </section>
 
-<section class="section chapter-dark relative overflow-hidden">
-  <div class="dark-glow" aria-hidden="true"></div>
-  <div class="container-x relative grid gap-14">
-    <SectionHeading eyebrow={ui.process[locale]} title={home.processTitle[locale]} />
+<section class="lg-section lg-ink" style="position: relative; overflow: hidden">
+  <div
+    aria-hidden="true"
+    data-parallax="0.06"
+    style="position: absolute; inset: -80px 0; background-image: radial-gradient(rgb(255 255 255 / 0.14) 1.2px, transparent 1.6px); background-size: 26px 26px"
+  ></div>
+  <div class="lg-wrap" style="position: relative; display: grid; gap: 56px">
+    <SectionHeading eyebrow={ui.process[locale]} title={home.processTitle[locale]} dot="mint" />
     <ProcessTimeline locale={locale} pinned />
-    <a class="text-link w-fit" href={L("/how-we-work")}>
+    <a class="lg-link" href={L("/how-we-work")}>
       {home.processLink[locale]}
-      <Icon name="arrow" size={18} directional />
+      <Icon name="arrow" size={18} class="lg-arrow" />
     </a>
   </div>
 </section>
 
-<section class="section">
-  <div class="container-x grid gap-16 lg:grid-cols-[0.9fr_1.1fr]">
-    <div class="grid content-start gap-8 lg:sticky lg:top-28">
+<section class="lg-section">
+  <div class="lg-wrap lg-split">
+    <div class="lg-stack lg-sticky" style="gap: 20px">
       <SectionHeading
         eyebrow={ui.support[locale]}
         title={home.principlesTitle[locale]}
         body={ui.supportBody[locale]}
+        dot="teal"
       />
-      <LineMotif variant="flow" class="h-20 w-full opacity-80" />
+      <ArtGrid size="sm" motion="float" style="margin-top: 12px" />
     </div>
-    <ol class="grid gap-4" data-reveal-stagger>
+    <ol style="margin: 0; padding: 0; list-style: none; display: grid; gap: 16px">
       {home.principles.map((p, i) => (
-        <li class="principle card">
-          <span class="principle-num" aria-hidden="true">
-            {String(i + 1).padStart(2, "0")}
+        <li
+          class="lg-card"
+          data-reveal="side"
+          style="grid-template-columns: auto minmax(0, 1fr); gap: 22px; align-items: start"
+        >
+          <span
+            class="lg-stage-num"
+            aria-hidden="true"
+            style={
+              [
+                "",
+                "background: var(--teal); color: var(--ink)",
+                "background: var(--ink)",
+                "background: var(--mint); color: var(--ink)",
+              ][i % 4]
+            }
+          >
+            0{i + 1}
           </span>
-          <div class="grid gap-2">
-            <h3>{p.title[locale]}</h3>
-            <p class="muted">{p.body[locale]}</p>
+          <div class="lg-stack" style="gap: 8px">
+            <h3 class="lg-h3">{p.title[locale]}</h3>
+            <p class="lg-body">{p.body[locale]}</p>
           </div>
         </li>
       ))}
@@ -155,20 +388,20 @@ const audienceLabel = (a: string) =>
 </section>
 
 {insights.length > 0 && (
-  <section class="section bg-mint/50">
-    <div class="container-x grid gap-14">
-      <div class="flex flex-wrap items-end justify-between gap-8">
+  <section class="lg-section lg-tint">
+    <div class="lg-wrap" style="display: grid; gap: 44px">
+      <div class="lg-row">
         <SectionHeading
           eyebrow={nav.insights[locale]}
           title={home.insightsTitle[locale]}
           body={home.insightsBody[locale]}
         />
-        <a class="text-link" href={L("/insights")}>
+        <a class="lg-link" href={L("/insights")}>
           {common.allInsights[locale]}
-          <Icon name="arrow" size={18} directional />
+          <Icon name="arrow" size={18} class="lg-arrow" />
         </a>
       </div>
-      <div class="grid gap-5 md:grid-cols-3" data-reveal-stagger>
+      <div class="lg-grid-3" data-reveal-stagger>
         {insights.map((entry, i) => (
           <ArticleCard
             locale={locale}
@@ -185,117 +418,18 @@ const audienceLabel = (a: string) =>
   </section>
 )}
 
-<section class="section">
-  <div class="container-x grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
-    <SectionHeading eyebrow={nav.faq[locale]} title={home.faqTitle[locale]}>
-      <a class="text-link mt-2 w-fit" href={L("/faq")}>
-        {nav.faq[locale]}
-        <Icon name="arrow" size={18} directional />
-      </a>
-    </SectionHeading>
+<section class="lg-section">
+  <div class="lg-wrap lg-split">
+    <div class="lg-stack lg-sticky" style="gap: 18px">
+      <SectionHeading eyebrow={nav.faq[locale]} title={home.faqTitle[locale]} dot="teal">
+        <a class="lg-link" href={L("/faq")}>
+          {nav.faq[locale]}
+          <Icon name="arrow" size={18} class="lg-arrow" />
+        </a>
+      </SectionHeading>
+    </div>
     <FaqList locale={locale} items={faqs.slice(0, 5)} />
   </div>
 </section>
 
 <CtaBand locale={locale} source="/" />
-
-<style>
-  .hero-note {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: 0.92rem;
-    color: var(--color-muted);
-  }
-  .hero-note .pulse-dot {
-    inline-size: 0.55rem;
-    block-size: 0.55rem;
-    border-radius: 99px;
-    background: var(--color-teal);
-  }
-  .audience {
-    display: grid;
-    align-content: end;
-    gap: 1.25rem;
-    min-block-size: clamp(20rem, 16rem + 12vw, 28rem);
-    padding: clamp(1.75rem, 1rem + 3vw, 3rem);
-    overflow: hidden;
-    background: linear-gradient(160deg, #fff 30%, var(--color-mint));
-  }
-  .audience-dark {
-    background: linear-gradient(160deg, var(--color-navy-900), #12306b);
-    color: #e7eefb;
-  }
-  .audience-dark .audience-title,
-  .audience-dark .text-link {
-    color: #fff;
-  }
-  .audience-dark .eyebrow {
-    color: #7fe3d6;
-  }
-  .audience-title {
-    font-size: clamp(1.6rem, 1.25rem + 1.5vw, 2.4rem);
-    max-width: 22ch;
-  }
-  .audience-glyph {
-    position: absolute;
-    inset-block-start: 1.75rem;
-    inset-inline-end: 1.75rem;
-    display: grid;
-    place-items: center;
-    inline-size: 4rem;
-    block-size: 4rem;
-    border-radius: 1.25rem;
-    background: rgb(255 255 255 / 0.7);
-    color: var(--color-teal-700);
-    box-shadow: 0 0 0 1px var(--color-line);
-    transition:
-      rotate var(--dur-slow) var(--ease-out-expo),
-      scale var(--dur-slow) var(--ease-out-expo);
-  }
-  .audience-dark .audience-glyph {
-    background: rgb(255 255 255 / 0.08);
-    color: #7fe3d6;
-    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.12);
-  }
-  .audience:hover .audience-glyph {
-    rotate: -8deg;
-    scale: 1.08;
-  }
-  .principle {
-    display: flex;
-    gap: 1.5rem;
-    padding: clamp(1.25rem, 1rem + 1.5vw, 2rem);
-  }
-  .principle-num {
-    font-family: var(--font-display);
-    font-size: 1.1rem;
-    color: var(--color-teal-700);
-  }
-  .principle h3 {
-    font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.6rem);
-  }
-  .dark-glow {
-    position: absolute;
-    inset-block-start: -20rem;
-    inset-inline-start: -10rem;
-    inline-size: 60rem;
-    block-size: 40rem;
-    background: radial-gradient(closest-side, rgb(27 78 216 / 0.35), transparent 70%);
-    filter: blur(30px);
-  }
-  .chapter-dark :global(.process-step) {
-    background: rgb(255 255 255 / 0.04);
-    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.1);
-    backdrop-filter: blur(6px);
-  }
-  .chapter-dark :global(.process-step .process-title) {
-    color: #fff;
-  }
-  .chapter-dark :global(.process-bar) {
-    background: rgb(255 255 255 / 0.12);
-  }
-  .chapter-dark :global(.process-node) {
-    box-shadow: 0 0 0 6px rgb(0 178 169 / 0.18);
-  }
-</style>

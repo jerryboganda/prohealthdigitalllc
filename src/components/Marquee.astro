@@ -1,62 +1,53 @@
 ---
+/** Two counter-running rows of pills. Pauses on hover/focus and with the site-wide motion-pause control. */
 import type { Locale, Localized } from "../lib/content.ts";
 
 interface Props {
   locale: Locale;
   items: Localized[];
-  /** Label for the pause control (shown only while the marquee moves). */
-  pauseLabel: string;
+  /** Kept for callers; the site-wide "Pause animations" control replaces the per-marquee toggle. */
+  pauseLabel?: string;
+  /** One row (CTA band) or two counter-running rows. */
+  rows?: 1 | 2;
+  tone?: "light" | "royal";
 }
-const { locale, items, pauseLabel } = Astro.props;
+const { locale, items, rows = 2, tone = "light" } = Astro.props;
 const words = items.map((i) => i[locale]);
+const looks = ["is-ink", "is-teal", "is-royal", "", "is-ink", "is-teal", ""];
 ---
 
-<div class="marquee" role="region" aria-label={words.join(" · ")}>
-  <div class="marquee-track" aria-hidden="true">
-    {[0, 1].map(() => (
-      <ul class="marquee-group">
+<div
+  class:list={["marquee-rows", tone === "royal" && "lg-on-royal"]}
+  style="display: grid; gap: 12px"
+>
+  <div class="lg-marquee">
+    <div class="lg-track">
+      <div>
         {words.map((w) => (
-          <li>
-            <span class="marquee-star">✦</span>
-            {w}
-          </li>
+          <span class="lg-pill">{w}</span>
         ))}
-      </ul>
-    ))}
+      </div>
+      <div aria-hidden="true">
+        {words.map((w) => (
+          <span class="lg-pill">{w}</span>
+        ))}
+      </div>
+    </div>
   </div>
-  <label class="marquee-toggle">
-    <input type="checkbox" />
-    <span>{pauseLabel}</span>
-  </label>
+  {rows === 2 && (
+    <div class="lg-marquee" aria-hidden="true">
+      <div class="lg-track lg-track-rev" style="animation-duration: 46s">
+        <div>
+          {[...words].reverse().map((w, i) => (
+            <span class:list={["lg-pill", looks[i % looks.length]]}>{w}</span>
+          ))}
+        </div>
+        <div>
+          {[...words].reverse().map((w, i) => (
+            <span class:list={["lg-pill", looks[i % looks.length]]}>{w}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+  )}
 </div>
-
-<style>
-  .marquee {
-    overflow: hidden;
-    border-block: 1px solid var(--color-line);
-    padding-block: 1.35rem;
-    mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
-  }
-  .marquee-track {
-    display: flex;
-    inline-size: max-content;
-  }
-  .marquee-group {
-    display: flex;
-    gap: 3rem;
-    padding-inline-end: 3rem;
-  }
-  .marquee-group li {
-    display: inline-flex;
-    align-items: center;
-    gap: 3rem;
-    font-family: var(--font-display);
-    font-size: clamp(1.35rem, 1.1rem + 1.1vw, 2.1rem);
-    white-space: nowrap;
-    color: var(--color-ink);
-  }
-  .marquee-star {
-    color: var(--color-teal);
-    font-size: 0.7em;
-  }
-</style>

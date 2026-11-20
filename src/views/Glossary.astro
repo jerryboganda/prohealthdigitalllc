@@ -1,17 +1,36 @@
 ---
 import PageIntro from "../components/PageIntro.astro";
+import ArtGrid from "../components/ArtGrid.astro";
 import CtaBand from "../components/CtaBand.astro";
 import { glossary } from "../lib/glossary.ts";
+import type { Term } from "../lib/glossary.ts";
+import { localPath } from "../lib/content.ts";
 import type { Locale } from "../lib/content.ts";
-import { nav } from "../lib/copy.ts";
+import { nav, ui2 } from "../lib/copy.ts";
 import { meta } from "../lib/meta.ts";
 
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
+const ar = locale === "ar";
 const collator = new Intl.Collator(locale);
-const terms = [...glossary].sort((a, b) => collator.compare(a.term[locale], b.term[locale]));
+// Arabic indexes ignore the definite article and fold hamza/madda alef forms, as Arabic dictionaries do.
+const key = (term: string) => (ar ? term.replace(/^ال/, "").replace(/^[أإآ]/, "ا") : term);
+const terms = [...glossary].sort((a, b) =>
+  collator.compare(key(a.term[locale]), key(b.term[locale])),
+);
+const groups: { letter: string; terms: Term[] }[] = [];
+for (const t of terms) {
+  const letter = key(t.term[locale]).charAt(0).toLocaleUpperCase(locale);
+  if (groups.at(-1)?.letter !== letter) groups.push({ letter, terms: [] });
+  groups.at(-1)!.terms.push(t);
+}
+const used = new Set(groups.map((g) => g.letter));
+const alphabet = [...(ar ? "ابتثجحخدذرزسشصضطظعغفقكلمنهوي" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ")];
+const letters = [...alphabet, ...[...used].filter((l) => !alphabet.includes(l))];
+const search = (t: Term) =>
+  [t.term[locale], ar ? t.term.en : "", t.definition[locale]].join(" ").toLocaleLowerCase(locale);
 ---
 
 <PageIntro
@@ -20,77 +39,186 @@ const terms = [...glossary].sort((a, b) => collator.compare(a.term[locale], b.te
   title={meta.glossary.title[locale]}
   description={meta.glossary.description[locale]}
   trail={[{ name: nav.glossary[locale], path: "/glossary" }]}
-/>
-<section class="section pt-8">
-  <div class="container-x grid gap-12 lg:grid-cols-[15rem_1fr]">
-    <nav class="glossary-index hidden lg:block" aria-label={nav.glossary[locale]}>
-      <ol class="grid gap-1">
-        {terms.map((t) => (
-          <li>
-            <a href={`#${t.id}`}>{t.term[locale]}</a>
-          </li>
-        ))}
-      </ol>
-    </nav>
-    <dl class="grid gap-4" data-reveal-stagger>
-      {terms.map((t) => (
-        <div class="term card" id={t.id}>
-          <dt>
-            <a href={`#${t.id}`}>{t.term[locale]}</a>
-            {locale === "ar" && (
-              <span class="term-alt" dir="ltr" lang="en">
-                {t.term.en}
-              </span>
-            )}
-          </dt>
-          <dd class="muted">{t.definition[locale]}</dd>
+>
+  <div style="display: flex; flex-wrap: wrap; gap: 12px">
+    <a class="lg-ghost" href={localPath("/insights", locale)}>
+      {nav.insights[locale]}
+    </a>
+    <a class="lg-ghost" href={localPath("/faq", locale)}>
+      {nav.faq[locale]}
+    </a>
+  </div>
+</PageIntro>
+
+<section class="lg-section lg-white" id="terms" style="padding-top: clamp(40px, 5vw, 72px)">
+  <div class="lg-wrap" style="display: grid; gap: clamp(32px, 4vw, 56px)" data-glossary-search>
+    <div
+      class="lg-card"
+      data-glossary-controls
+      hidden
+      style="padding: clamp(20px, 3vw, 32px); gap: 22px; border-radius: 30px; background: var(--bg)"
+    >
+      <div class="lg-row" style="align-items: end; gap: 16px 24px">
+        <div class="lg-field" style="flex: 999 1 320px; min-width: 0">
+          <label class="lg-label" for="glossary-search">
+            {ui2.searchGlossary[locale]}
+          </label>
+          <div style="position: relative">
+            <svg
+              aria-hidden="true"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="position: absolute; inset-inline-start: 18px; top: 50%; margin-top: -10px; color: var(--muted); pointer-events: none"
+            >
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m20 20-3.6-3.6"></path>
+            </svg>
+            <input
+              id="glossary-search"
+              class="lg-input"
+              type="search"
+              autocomplete="off"
+              spellcheck="false"
+              aria-describedby="glossary-status"
+              data-glossary-input
+              style="padding-inline-start: 50px"
+            />
+          </div>
         </div>
+        <p
+          id="glossary-status"
+          class="lg-small"
+          aria-live="polite"
+          data-glossary-status
+          data-all={ui2.shownAll[locale]}
+          data-some={ui2.shownSome[locale]}
+          style="margin: 0; min-height: 44px; display: flex; align-items: center; color: var(--muted)"
+        >
+          {ui2.shownAll[locale].replace("{total}", String(terms.length))}
+        </p>
+      </div>
+      <div
+        role="group"
+        aria-label={ui2.filterLetter[locale]}
+        style="display: flex; flex-wrap: wrap; gap: 6px"
+      >
+        <button
+          type="button"
+          class="lg-chip"
+          data-letter="all"
+          aria-pressed="true"
+          style="padding: 0 16px"
+        >
+          {ui2.allAudiences[locale]}
+        </button>
+        {letters.map((l) => (
+          <button
+            type="button"
+            class="lg-chip"
+            data-letter={l}
+            aria-pressed="false"
+            disabled={!used.has(l)}
+            style="min-width: 44px; padding: 0 12px; justify-content: center"
+          >
+            {l}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <div style="display: grid; gap: clamp(40px, 5vw, 64px)">
+      {groups.map((g, i) => (
+        <section
+          data-letter-group={g.letter}
+          aria-labelledby={`glossary-letter-${i}`}
+          data-reveal
+          style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px clamp(24px, 4vw, 56px)"
+        >
+          <div class="lg-sticky" style="flex: 0 0 auto; width: clamp(64px, 8vw, 112px)">
+            <h2
+              id={`glossary-letter-${i}`}
+              class="lg-h2"
+              style="color: var(--royal); line-height: 1"
+            >
+              {g.letter}
+            </h2>
+          </div>
+          <dl style="flex: 999 1 480px; min-width: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 16px">
+            {g.terms.map((t) => (
+              <div
+                class="lg-card term"
+                id={t.id}
+                data-term
+                data-search={search(t)}
+                style="gap: 12px; padding: clamp(22px, 2.4vw, 30px)"
+              >
+                <dt style="margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 12px">
+                  <a
+                    class="lg-link"
+                    href={`#${t.id}`}
+                    style="font-size: clamp(20px, 1.6vw, 24px); line-height: 1.25; letter-spacing: -0.015em"
+                  >
+                    <span>{t.term[locale]}</span>
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      aria-hidden="true"
+                      style="flex: none; opacity: 0.55"
+                    >
+                      <path d="M9 4 7 20M17 4l-2 16M4 9h16M3.5 15h16" />
+                    </svg>
+                  </a>
+                  {ar && (
+                    <span class="lg-small" dir="ltr" lang="en" style="color: var(--muted)">
+                      {t.term.en}
+                    </span>
+                  )}
+                </dt>
+                <dd class="lg-body" style="margin: 0">
+                  {t.definition[locale]}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
       ))}
-    </dl>
+    </div>
+
+    <div
+      class="lg-success"
+      data-glossary-empty
+      hidden
+      style="justify-items: center; text-align: center; padding: clamp(40px, 6vw, 72px) clamp(24px, 4vw, 56px); background: var(--royal-50)"
+    >
+      <ArtGrid size="sm" motion="float" style="width: 120px" />
+      <h2 class="lg-h3">{ui2.noTerms[locale]}</h2>
+      <p class="lg-body" style="max-width: 46ch">
+        {ui2.noTermsBody[locale]}
+      </p>
+      <button type="button" class="lg-ghost" data-glossary-clear style="background: #fff">
+        {ui2.clearSearch[locale]}
+      </button>
+    </div>
   </div>
 </section>
+
 <CtaBand locale={locale} source="/glossary" />
 
 <style>
-  .glossary-index {
-    position: sticky;
-    inset-block-start: 7rem;
-    align-self: start;
-    max-block-size: calc(100vh - 9rem);
-    overflow-y: auto;
-  }
-  .glossary-index a {
-    display: block;
-    padding-block: 0.25rem;
-    color: var(--color-muted);
-    font-size: 0.92rem;
-  }
-  .glossary-index a:hover {
-    color: var(--color-ink);
-  }
-  .term {
-    display: grid;
-    gap: 0.6rem;
-    padding: 1.5rem 1.75rem;
-    scroll-margin-top: 7rem;
-  }
   .term:target {
     box-shadow:
-      0 0 0 2px var(--color-teal),
+      0 0 0 2px var(--teal),
       0 20px 40px -24px rgb(0 178 169 / 0.5);
-  }
-  .term dt {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.75rem;
-    font-family: var(--font-display);
-    font-size: clamp(1.3rem, 1.15rem + 0.6vw, 1.65rem);
-    color: var(--color-ink);
-  }
-  .term-alt {
-    font-family: var(--font-sans);
-    font-size: 0.85rem;
-    color: var(--color-muted);
   }
 </style>

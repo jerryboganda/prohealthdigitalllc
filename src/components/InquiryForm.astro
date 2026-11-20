@@ -2,6 +2,8 @@
 import Icon from "./Icon.astro";
 import { engagements, EMAIL, localPath, text } from "../lib/content.ts";
 import type { Locale } from "../lib/content.ts";
+import { ui2 } from "../lib/copy.ts";
+import { companyUi } from "../lib/copy-company.ts";
 
 interface Props {
   locale: Locale;
@@ -64,10 +66,7 @@ const copy = {
     "20–3,000 characters. Describe who is affected and what needs to improve.",
     "من 20 إلى 3000 حرف. وضح من يتأثر بالمشكلة وما الذي يحتاج إلى تحسين.",
   ),
-  followup: text(
-    "Free discovery comes first. We assess fit and clarify requirements before preparing a scoped proposal. No technical specification or confirmed budget is required.",
-    "تبدأ الرحلة بجلسة مجانية لفهم الاحتياجات. نقيّم ملاءمة المشروع ونوضح المتطلبات قبل إعداد عرض محدد النطاق. لا يلزم تقديم مواصفات تقنية أو ميزانية مؤكدة.",
-  ),
+  followup: companyUi.followup,
   noscript: text(
     "This form requires JavaScript. Please email your business inquiry directly to",
     "يتطلب هذا النموذج JavaScript. يرجى إرسال استفسار الأعمال مباشرة إلى",
@@ -90,6 +89,7 @@ const messages: Record<string, string> = {
 };
 const t = (k: keyof typeof copy) => copy[k][locale];
 const selected = engagement || "not-sure";
+const [reqBefore, reqAfter = ""] = ui2.requiredNote[locale].split("*");
 ---
 
 <div
@@ -103,27 +103,34 @@ const selected = engagement || "not-sure";
   data-msg-rate={t("rate")}
   data-msg-sending={t("sending")}
 >
-  <form method="post" action="/api/inquiries" novalidate class="grid gap-7">
+  <form method="post" action="/api/inquiries" novalidate class="lg-form" style="gap: 26px">
     <noscript>
-      <p class="form-banner">
-        {t("noscript")}{" "}
-        <a href={`mailto:${EMAIL}`} dir="ltr">
-          {EMAIL}
-        </a>
+      <p class="lg-callout form-banner">
+        <span>
+          {t("noscript")}{" "}
+          <a class="lg-link" href={`mailto:${EMAIL}`} dir="ltr">
+            {EMAIL}
+          </a>
+        </span>
       </p>
     </noscript>
-    <p class="form-banner" id="inquiry-warning">
-      <Icon name="shield" size={20} class="shrink-0 text-teal-700" />
+    <p class="lg-callout form-banner" id="inquiry-warning">
+      <Icon name="shield" size={22} class="form-banner-ico" />
       <span>{t("warning")}</span>
     </p>
     {/* Disabled until inquiry-form.ts enables it: the form never posts natively to the JSON API. */}
-    <fieldset class="grid gap-7" disabled>
-      <legend class="sr-only">{t("legend")}</legend>
-      <div class="grid gap-6 md:grid-cols-2">
-        <div class="field">
-          <label for="inquiry-name">{t("name")}</label>
+    <fieldset class="form-set" disabled>
+      <legend class="lg-sr">{t("legend")}</legend>
+      <div class="form-grid">
+        <div class="lg-field">
+          <label class="lg-label" for="inquiry-name">
+            {t("name")}{" "}
+            <span class="lg-req" aria-hidden="true">
+              *
+            </span>
+          </label>
           <input
-            class="input"
+            class="lg-input"
             id="inquiry-name"
             name="name"
             autocomplete="name"
@@ -133,10 +140,15 @@ const selected = engagement || "not-sure";
             data-msg={messages.name}
           />
         </div>
-        <div class="field">
-          <label for="inquiry-email">{t("email")}</label>
+        <div class="lg-field">
+          <label class="lg-label" for="inquiry-email">
+            {t("email")}{" "}
+            <span class="lg-req" aria-hidden="true">
+              *
+            </span>
+          </label>
           <input
-            class="input"
+            class="lg-input"
             id="inquiry-email"
             name="email"
             type="email"
@@ -147,10 +159,15 @@ const selected = engagement || "not-sure";
             data-msg={messages.email}
           />
         </div>
-        <div class="field">
-          <label for="inquiry-organization">{t("organization")}</label>
+        <div class="lg-field">
+          <label class="lg-label" for="inquiry-organization">
+            {t("organization")}{" "}
+            <span class="lg-req" aria-hidden="true">
+              *
+            </span>
+          </label>
           <input
-            class="input"
+            class="lg-input"
             id="inquiry-organization"
             name="organization"
             autocomplete="organization"
@@ -160,10 +177,15 @@ const selected = engagement || "not-sure";
             data-msg={messages.organization}
           />
         </div>
-        <div class="field">
-          <label for="inquiry-organizationType">{t("organizationType")}</label>
+        <div class="lg-field">
+          <label class="lg-label" for="inquiry-organizationType">
+            {t("organizationType")}{" "}
+            <span class="lg-req" aria-hidden="true">
+              *
+            </span>
+          </label>
           <select
-            class="input"
+            class="lg-select"
             id="inquiry-organizationType"
             name="organizationType"
             required
@@ -175,9 +197,14 @@ const selected = engagement || "not-sure";
             <option value="other">{t("other")}</option>
           </select>
         </div>
-        <div class="field">
-          <label for="inquiry-engagement">{t("engagement")}</label>
-          <select class="input" id="inquiry-engagement" name="engagement" required>
+        <div class="lg-field">
+          <label class="lg-label" for="inquiry-engagement">
+            {t("engagement")}{" "}
+            <span class="lg-req" aria-hidden="true">
+              *
+            </span>
+          </label>
+          <select class="lg-select" id="inquiry-engagement" name="engagement" required>
             <option value="not-sure" selected={selected === "not-sure"}>
               {t("notSure")}
             </option>
@@ -188,19 +215,35 @@ const selected = engagement || "not-sure";
             ))}
           </select>
         </div>
-        <div class="field">
-          <label for="inquiry-stage">{t("stage")}</label>
-          <select class="input" id="inquiry-stage" name="stage" required data-msg={messages.stage}>
+        <div class="lg-field">
+          <label class="lg-label" for="inquiry-stage">
+            {t("stage")}{" "}
+            <span class="lg-req" aria-hidden="true">
+              *
+            </span>
+          </label>
+          <select
+            class="lg-select"
+            id="inquiry-stage"
+            name="stage"
+            required
+            data-msg={messages.stage}
+          >
             <option value="">{t("choose")}</option>
             {(["exploring", "planning", "building", "live"] as const).map((s) => (
               <option value={s}>{t(s)}</option>
             ))}
           </select>
         </div>
-        <div class="field">
-          <label for="inquiry-country">{t("country")}</label>
+        <div class="lg-field">
+          <label class="lg-label" for="inquiry-country">
+            {t("country")}{" "}
+            <span class="lg-req" aria-hidden="true">
+              *
+            </span>
+          </label>
           <input
-            class="input"
+            class="lg-input"
             id="inquiry-country"
             name="country"
             autocomplete="country-name"
@@ -210,10 +253,15 @@ const selected = engagement || "not-sure";
             data-msg={messages.country}
           />
         </div>
-        <div class="field">
-          <label for="inquiry-timezone">{t("timezone")}</label>
+        <div class="lg-field">
+          <label class="lg-label" for="inquiry-timezone">
+            {t("timezone")}{" "}
+            <span class="lg-req" aria-hidden="true">
+              *
+            </span>
+          </label>
           <input
-            class="input"
+            class="lg-input"
             id="inquiry-timezone"
             name="timezone"
             placeholder={locale === "ar" ? "مثال: آسيا / الرياض، UTC+3" : "e.g. Asia/Riyadh, UTC+3"}
@@ -223,9 +271,11 @@ const selected = engagement || "not-sure";
             data-msg={messages.timezone}
           />
         </div>
-        <div class="field">
-          <label for="inquiry-language">{t("language")}</label>
-          <select class="input" id="inquiry-language" name="language">
+        <div class="lg-field">
+          <label class="lg-label" for="inquiry-language">
+            {t("language")}
+          </label>
+          <select class="lg-select" id="inquiry-language" name="language">
             <option value="en" selected={locale === "en"}>
               {locale === "ar" ? "الإنجليزية" : "English"}
             </option>
@@ -234,18 +284,25 @@ const selected = engagement || "not-sure";
             </option>
           </select>
         </div>
-        <div class="field">
-          <label for="inquiry-budget">{t("budget")}</label>
-          <select class="input" id="inquiry-budget" name="budget">
+        <div class="lg-field">
+          <label class="lg-label" for="inquiry-budget">
+            {t("budget")}
+          </label>
+          <select class="lg-select" id="inquiry-budget" name="budget">
             <option value="not-sure">{t("notSure")}</option>
             <option value="discuss">{t("discuss")}</option>
           </select>
         </div>
       </div>
-      <div class="field">
-        <label for="inquiry-brief">{t("brief")}</label>
+      <div class="lg-field">
+        <label class="lg-label" for="inquiry-brief">
+          {t("brief")}{" "}
+          <span class="lg-req" aria-hidden="true">
+            *
+          </span>
+        </label>
         <textarea
-          class="input"
+          class="lg-textarea"
           id="inquiry-brief"
           name="brief"
           rows="6"
@@ -255,7 +312,7 @@ const selected = engagement || "not-sure";
           aria-describedby="brief-hint"
           data-msg={messages.brief}
         ></textarea>
-        <small id="brief-hint" class="muted text-[0.9rem]">
+        <small id="brief-hint" class="lg-hint">
           {t("briefHint")}
         </small>
       </div>
@@ -263,48 +320,69 @@ const selected = engagement || "not-sure";
         <label for="website">Website</label>
         <input id="website" name="website" tabindex="-1" autocomplete="off" />
       </div>
-      <label class="consent">
-        <input
-          name="consent"
-          id="inquiry-consent"
-          type="checkbox"
-          required
-          data-msg={messages.consent}
-        />
-        <span>
-          {t("consent")}{" "}
-          <a class="text-link" href={localPath("/privacy", locale)}>
-            {t("policy")}
-          </a>
-        </span>
-      </label>
+      <div class="lg-field">
+        <label class="lg-checkrow consent">
+          <input
+            name="consent"
+            id="inquiry-consent"
+            type="checkbox"
+            required
+            data-msg={messages.consent}
+          />
+          <span>
+            {t("consent")}{" "}
+            <span class="lg-req" aria-hidden="true">
+              *
+            </span>
+          </span>
+        </label>
+        <a class="lg-link consent-link" href={localPath("/privacy", locale)}>
+          {t("policy")}
+          <Icon name="arrow" size={18} class="lg-arrow" />
+        </a>
+      </div>
     </fieldset>
-    <div role="alert" class="form-error" data-form-alert hidden>
+    <p class="lg-hint" style="margin: 0">
+      {reqBefore}
+      <span class="lg-req" aria-hidden="true">
+        *
+      </span>
+      {reqAfter}
+    </p>
+    <div role="alert" class="lg-summary-err" data-form-alert hidden>
       {t("error")}{" "}
       <a href={`mailto:${EMAIL}`} dir="ltr">
         {EMAIL}
       </a>
     </div>
-    <div class="flex flex-wrap items-center gap-5">
-      <button class="btn" type="submit" disabled data-magnetic>
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 20px">
+      <button class="lg-btn" type="submit" disabled data-magnetic>
         <span data-submit-label>{t("send")}</span>
-        <Icon name="arrow" size={18} directional />
+        <span class="lg-btn-ico" aria-hidden="true">
+          <Icon name="arrow" size={18} />
+        </span>
       </button>
     </div>
-    <p class="muted text-[0.95rem]">{t("followup")}</p>
+    <p class="lg-body" style="font-size: 15px">
+      {t("followup")}
+    </p>
   </form>
-  <div class="inquiry-success" role="status" tabindex="-1" hidden>
+  <div class="inquiry-success lg-success" role="status" tabindex="-1" hidden>
     <span
       class="success-icon"
       aria-hidden="true"
       data-lottie="/lottie/check.json"
       data-loop="false"
     >
-      <Icon name="check" size={28} />
+      <Icon name="check" size={32} />
     </span>
-    <h2>{t("thanks")}</h2>
-    <p>{t("accepted")}</p>
-    <a class="text-link" href={`mailto:${EMAIL}`} dir="ltr">
+    <h2 class="lg-h3" style="font-size: clamp(26px, 2.6vw, 36px)">
+      {t("thanks")}
+    </h2>
+    <p class="lg-body" style="color: var(--ink-2); max-width: 60ch">
+      {t("accepted")}
+    </p>
+    <a class="lg-link" href={`mailto:${EMAIL}`} dir="ltr">
       {EMAIL}
     </a>
   </div>
@@ -313,13 +391,33 @@ const selected = engagement || "not-sure";
 <style>
   .form-banner {
     display: flex;
-    gap: 0.75rem;
+    gap: 14px;
     align-items: flex-start;
-    padding: 1rem 1.15rem;
-    border-radius: 1rem;
-    background: var(--color-mint);
-    color: var(--color-ink);
-    font-size: 0.95rem;
+    margin: 0;
+    padding: 18px 20px;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .form-banner :global(.form-banner-ico) {
+    flex: none;
+    margin-block-start: 1px;
+    color: var(--teal-ink);
+  }
+  .form-set {
+    display: grid;
+    gap: 24px;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .form-set[disabled] {
+    opacity: 0.65;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: 22px 20px;
   }
   .honeypot {
     position: absolute;
@@ -329,35 +427,33 @@ const selected = engagement || "not-sure";
     clip-path: inset(50%);
   }
   .consent {
+    min-block-size: 44px;
+    align-items: center;
+  }
+  .consent-link {
+    margin-inline-start: 34px;
+  }
+  /* Field errors are created by inquiry-form.ts, so they sit outside this component's scope. */
+  .inquiry :global(.field-error) {
     display: flex;
-    gap: 0.85rem;
-    align-items: flex-start;
-    font-size: 0.97rem;
+    gap: 8px;
+    align-items: center;
+    font-size: 14px;
+    color: var(--error);
   }
-  .consent input {
-    flex: none;
-    inline-size: 1.25rem;
-    block-size: 1.25rem;
-    margin-block-start: 0.2rem;
-    accent-color: var(--color-royal);
+  .inquiry :global(.lg-checkrow + .field-error) {
+    margin-inline-start: 34px;
   }
-  .form-error {
-    padding: 1rem 1.15rem;
-    border-radius: 1rem;
-    background: #fbeeee;
-    color: var(--color-error);
+  .lg-summary-err {
     font-weight: 500;
   }
-  .form-error a {
+  .lg-summary-err :global(a) {
+    color: var(--ink);
     text-decoration: underline;
+    text-underline-offset: 3px;
   }
   .inquiry-success {
-    display: grid;
-    gap: 1rem;
-    justify-items: start;
-    padding: clamp(1.75rem, 1rem + 3vw, 3rem);
-    border-radius: var(--radius-card);
-    background: var(--color-mint);
+    padding: clamp(28px, 4vw, 48px);
   }
   .inquiry-success:focus {
     outline: none;
@@ -365,18 +461,15 @@ const selected = engagement || "not-sure";
   .success-icon {
     display: grid;
     place-items: center;
-    inline-size: 3.5rem;
-    block-size: 3.5rem;
-    border-radius: 999px;
+    inline-size: 72px;
+    block-size: 72px;
+    border-radius: 50%;
     background: #fff;
-    color: var(--color-teal-700);
-    box-shadow: 0 0 0 1px var(--color-line);
+    color: var(--teal-ink);
+    box-shadow: 0 0 0 1px var(--line);
   }
   .success-icon :global(svg) {
     inline-size: 100%;
     block-size: 100%;
-  }
-  fieldset[disabled] {
-    opacity: 0.65;
   }
 </style>

@@ -7,7 +7,7 @@ Astro 7 + `@astrojs/node` (standalone), Tailwind 4, GSAP, MDX. Bilingual EN (roo
 - Routing: every URL goes through `src/lib/routes.ts` (framework-free, unit-tested) and `src/pages/[...path].astro`. New public pages must be added to `resolve()` and `allPaths()`; `check:routes` and the sitemap derive from them.
 - Copy: every visible string is a `text(en, ar)` pair in `src/lib/*.ts`, or an MDX file in BOTH `src/content/<collection>/en` and `/ar` (unpaired slugs are not routed). `src/lib/*` must never import `astro:*` (tests run them with plain Node).
 - Truthfulness: no invented clients, numbers, testimonials, team members, guarantees or regulatory claims; facts need a primary-source link. We deliver technology; customers own clinical decisions.
-- Motion: GSAP only, through the data-attribute runtime in `src/scripts/motion.ts` (`data-reveal`, `data-reveal-stagger`, `data-split`, `data-draw`, `data-parallax`, `data-pin-track`, `data-magnetic`, `data-tilt`, `data-lottie`, `data-shader`). Content must be visible without JS and under `prefers-reduced-motion: reduce`. Multiply horizontal motion by `dir`; never split, letter-space or italicise Arabic (see `.claude/skills/prohealth-rtl`).
+- Motion: GSAP only, through the data-attribute runtime in `src/scripts/motion.ts` (`data-reveal` incl. `="scale"`/`="side"`, `data-reveal-stagger`, `data-split`, `data-draw`, `data-parallax`, `data-pin-track`, `data-progress`, `data-magnetic`, `data-tilt`, `data-lottie`, `data-shader`, `data-insight-filter`, `data-glossary-search`); decorative loops are CSS in `global.css` and must be listed in its `.motion-pause` rule. Content must be visible without JS and under `prefers-reduced-motion: reduce`. Multiply horizontal motion by `dir`; never split, letter-space or italicise Arabic.
 - CSP is `script-src 'self'`: no inline scripts or inline event handlers; keep `vite.build.assetsInlineLimit: 0`. First-load JS budget is 180 KB (asserted).
 - Deploy parity: build must keep `.output/server/index.mjs` with bundled deps; do not change `deploy/compose.yaml` or `release.sh` without an explicit decision.
 - Verify with `npm run lint && npm test && npm run build && npx astro check`, then `check:routes` and `node scripts/visual-qa.mjs` against the built server.
@@ -15,16 +15,16 @@ Astro 7 + `@astrojs/node` (standalone), Tailwind 4, GSAP, MDX. Bilingual EN (roo
 
 ## Motion & video toolkit
 
-~80 skills live in `.claude/skills/` (auto-triggered). Support files cited by some skills are in `.claude/vendor/`.
+Project skills in `.claude/skills/` (committed, auto-triggered, MIT, copied unmodified from upstream on 2026-11-19):
 
-| Task | Use |
-| --- | --- |
-| On-site motion | `gsap-core` / `gsap-scrolltrigger` / `gsap-timeline` / `gsap-plugins` / `gsap-performance`, `lottiefiles-motion-design`, `motion-background`, `animation-principles`, `threejs-shaders` |
-| Motion direction / audit | `motion-director`, `site-motion-excellence-director`, `web-motion-auditor`, `motion-art-direction` |
-| Web quality | `web-quality-audit`, `performance`, `core-web-vitals`, `accessibility`, `seo`, `best-practices`, `web-design-guidelines`, `webapp-testing` |
-| Remotion video (`video/` workspace) | `remotion-best-practices`, `remotion-motion-graphics`, `klik-remotion-method` → `klik-anim` + `klik-cam`, `claude-motion-design`, `review-loop`, `sound-design` |
-| HyperFrames video | `motion-doctrine` first, then `hyperframes`, `hyperframes-cli`, `make-a-video`, `website-to-hyperframes` |
-| Launch / promo / reel | `product-launch-motion`, `launch-video`, `apple-launch-film`, `motion-showreel`, `reel-export` |
-| Logo / brand / color | `logo-animation`, `color-motion`, `brand-intake` |
+| Task                                 | Skill                                                                                                                                                    | Source                                                                                           |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| GSAP motion                          | `gsap-core`, `gsap-scrolltrigger`, `gsap-timeline`, `gsap-plugins`, `gsap-utils`, `gsap-performance`, `gsap-frameworks`                                  | [greensock/gsap-skills](https://github.com/greensock/gsap-skills) (official)                     |
+| Timing, easing, choreography, Lottie | `motion-design`                                                                                                                                          | [lottiefiles/motion-design-skill](https://github.com/lottiefiles/motion-design-skill) (official) |
+| WebGL / 3D                           | `threejs-fundamentals`, `-geometry`, `-materials`, `-shaders`, `-postprocessing`, `-interaction`, `-animation`, `-lighting`, `-textures`, `-performance` | [cloudai-x/threejs-skills](https://github.com/cloudai-x/threejs-skills) (community)              |
 
-Video projects live in `video/` (own `package.json`; `cd video && npx remotion studio src/index.ts`); rendering needs FFmpeg on PATH (`npx hyperframes doctor`).
+To update one, re-copy its folder from upstream. Not committed here, but useful if installed for your user: `ui-ux-pro-max`, `impeccable`, `emil-design-eng`, `animate`, `review-animations`, `animation-performance`, `find-animation-opportunities`, `break-ui`.
+
+MCP servers (`.mcp.json`): `astro-docs`, `context7` (library docs), `chrome-devtools` (screenshots, Lighthouse, performance traces), `lottie-creator` (make Lottie animations; sign in with `/mcp`, AI-generated assets spend LottieFiles credits).
+
+There is no `video/` workspace yet; `hyperframes` is a devDependency only.

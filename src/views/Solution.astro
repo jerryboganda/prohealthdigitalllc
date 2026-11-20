@@ -1,12 +1,15 @@
 ---
 import PageIntro from "../components/PageIntro.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import SolEngagementCard from "../components/SolEngagementCard.astro";
+import ArtGrid from "../components/ArtGrid.astro";
 import CtaBand from "../components/CtaBand.astro";
 import FaqList from "../components/FaqList.astro";
 import Icon from "../components/Icon.astro";
 import ArticleCard from "../components/ArticleCard.astro";
 import { engagements, localPath, ui, stages } from "../lib/content.ts";
 import type { Engagement, Locale } from "../lib/content.ts";
-import { nav, pages, common } from "../lib/copy.ts";
+import { nav, pages, common, home } from "../lib/copy.ts";
 import { entriesFor } from "../site/collections.ts";
 import { engagementDetails } from "../lib/engagement-details.ts";
 
@@ -15,24 +18,45 @@ interface Props {
   engagement: Engagement;
 }
 const { locale, engagement: e } = Astro.props;
+const L = (p: string) => localPath(p, locale);
 const t = (k: keyof typeof ui) => ui[k][locale];
-const sections = [
-  { id: "fit", title: t("fit"), body: [e.fit[locale]] },
-  { id: "outputs", title: t("outputs"), list: e.outputs.map((o) => o[locale]) },
-  { id: "dependencies", title: t("dependencies"), body: [e.dependencies[locale]] },
-  { id: "scope", title: t("exclusions"), body: [e.exclusions[locale], t("scope")] },
-  { id: "measures", title: t("measures"), body: [e.measures[locale]] },
-  { id: "after", title: t("after"), body: [e.after[locale], t("supportBody")] },
-];
 const details = engagementDetails[e.id];
 const phases = details.phases;
 const engagementFaqs = details.faqs;
+// Detail cards below the hero bento (fit and outputs sit in the bento).
+const sections = [
+  { id: "dependencies", title: t("dependencies"), body: [e.dependencies[locale]] },
+  { id: "scope", title: t("exclusions"), body: [e.exclusions[locale]], note: t("scope") },
+  { id: "measures", title: t("measures"), body: [e.measures[locale]] },
+  { id: "after", title: t("after"), body: [e.after[locale], t("supportBody")] },
+];
+const toc = [
+  { id: "fit", title: t("fit") },
+  { id: "outputs", title: t("outputs") },
+  ...sections,
+  ...(phases.length > 0 ? [{ id: "phases", title: details.phasesTitle[locale] }] : []),
+  ...(engagementFaqs.length > 0 ? [{ id: "questions", title: nav.faq[locale] }] : []),
+];
 const related = engagements.filter((x) => x.id !== e.id && x.audience === e.audience);
 const reading = (await entriesFor("insights", locale))
   .filter((a) => a.data.engagements.includes(e.id))
   .slice(0, 3);
-const contact = `${localPath("/contact", locale)}?engagement=${e.id}&source=/solutions/${e.id}`;
+const contact = `${L("/contact")}?engagement=${e.id}&source=/solutions/${e.id}`;
 const audienceName = e.audience === "provider" ? ui.providers[locale] : ui.companies[locale];
+const stageNums = [
+  "",
+  "background: var(--teal); color: var(--ink)",
+  "background: var(--ink)",
+  "background: var(--mint); color: var(--ink)",
+];
+// Phase tiles: colour, number style, and the wide royal tile with a progress bar.
+const phaseLooks = [
+  { tile: "lg-tile-white", num: "" },
+  { tile: "lg-tile-teal", num: "background: var(--ink)" },
+  { tile: "lg-tile-ink lg-shine sol-ink-tile", num: "background: var(--mint); color: var(--ink)" },
+  { tile: "lg-tile-royal lg-shine", num: "background: #fff; color: var(--royal)", wide: true },
+  { tile: "lg-tile-white", num: "background: var(--teal); color: var(--ink)" },
+];
 ---
 
 <PageIntro
@@ -45,111 +69,233 @@ const audienceName = e.audience === "provider" ? ui.providers[locale] : ui.compa
     { name: e.title[locale], path: `/solutions/${e.id}` },
   ]}
 >
-  <div class="mt-2 flex flex-wrap gap-4">
-    <a class="btn" href={contact} data-magnetic>
-      {ui.cta[locale]}
-      <Icon name="arrow" size={18} directional />
+  <div style="display: flex; flex-wrap: wrap; gap: 12px">
+    <a class="lg-btn" href={contact} data-magnetic>
+      <span>{ui.cta[locale]}</span>
+      <span class="lg-btn-ico" aria-hidden="true">
+        <Icon name="arrow" size={18} />
+      </span>
     </a>
+    {phases.length > 0 && (
+      <a class="lg-ghost" href="#phases">
+        {details.phasesTitle[locale]}
+      </a>
+    )}
   </div>
 </PageIntro>
 
-<section class="section">
-  <div class="container-x grid gap-14 lg:grid-cols-[15rem_1fr_19rem]">
-    <nav class="toc hidden lg:block" aria-label={common.onThisPage[locale]}>
-      <p class="eyebrow mb-4">{common.onThisPage[locale]}</p>
-      <ol class="grid gap-2">
-        {sections.map((s) => (
-          <li>
-            <a href={`#${s.id}`}>{s.title}</a>
-          </li>
-        ))}
-        {phases.length > 0 && (
-          <li>
-            <a href="#phases">{details.phasesTitle[locale]}</a>
-          </li>
-        )}
-        {engagementFaqs.length > 0 && (
-          <li>
-            <a href="#questions">{nav.faq[locale]}</a>
-          </li>
-        )}
-      </ol>
-    </nav>
-    <div class="grid gap-16">
-      {sections.map((s) => (
-        <section id={s.id} class="detail-section" data-reveal>
-          <h2>{s.title}</h2>
-          {s.body?.map((p) => (
-            <p class="muted">{p}</p>
-          ))}
-          {s.list && (
-            <ul class="grid gap-3 sm:grid-cols-2">
-              {s.list.map((item) => (
-                <li class="deliverable">
-                  <span class="deliverable-icon">
-                    <Icon name="check" size={16} />
-                  </span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
+<section
+  class="lg-wrap"
+  style="display: grid; gap: clamp(28px, 4vw, 48px); padding-bottom: clamp(56px, 7vw, 100px)"
+>
+  <nav class="lg-in lg-d4" aria-label={common.onThisPage[locale]} style="display: grid; gap: 14px">
+    <p class="lg-eyebrow">{common.onThisPage[locale]}</p>
+    <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 10px">
+      {toc.map((s) => (
+        <li>
+          <a class="lg-chip" href={`#${s.id}`}>
+            {s.title}
+          </a>
+        </li>
       ))}
-      {phases.length > 0 && (
-        <section id="phases" class="detail-section" data-reveal>
-          <h2>{details.phasesTitle[locale]}</h2>
-          <ol class="phase-list">
-            {phases.map((p, i) => (
-              <li>
-                <span class="phase-dot" aria-hidden="true">
-                  {i + 1}
-                </span>
-                <div class="grid gap-1">
-                  <h3>{p.title[locale]}</h3>
-                  <p class="muted">{p.body[locale]}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </section>
-      )}
-      {engagementFaqs.length > 0 && (
-        <section id="questions" class="detail-section">
-          <h2>{nav.faq[locale]}</h2>
-          <FaqList locale={locale} items={engagementFaqs} />
-        </section>
-      )}
+    </ul>
+  </nav>
+
+  <div class="lg-bento">
+    <div class="lg-in lg-d5" style="display: grid">
+      <section class="lg-tile lg-tile-teal" id="fit" data-tilt>
+        <div style="display: flex; justify-content: space-between; align-items: start; gap: 12px">
+          <span class="lg-ico" aria-hidden="true" style="background: #fff; color: var(--teal-ink)">
+            <Icon name="check" size={26} />
+          </span>
+          <span class="lg-num" aria-hidden="true" style="color: var(--teal-strong)">
+            01
+          </span>
+        </div>
+        <div style="display: grid; gap: 12px">
+          <h2 class="lg-tile-title">{t("fit")}</h2>
+          <p class="sol-tile-p" style="color: var(--ink-2)">
+            {e.fit[locale]}
+          </p>
+        </div>
+      </section>
     </div>
-    <aside class="lg:sticky lg:top-28 lg:self-start">
-      <div class="card grid gap-5 p-7">
-        <span class="engagement-badge">
-          <Icon name="pulse" size={22} />
+    <div class="lg-span2 lg-in lg-d6" style="display: grid">
+      <section class="lg-tile lg-tile-royal lg-shine" id="outputs">
+        <div style="display: flex; justify-content: space-between; align-items: start; gap: 12px; flex-wrap: wrap">
+          <h2 class="sol-tile-h">{t("outputs")}</h2>
+          <span class="lg-num" aria-hidden="true" style="color: var(--royal-100)">
+            02
+          </span>
+        </div>
+        <ul
+          class="lg-checklist"
+          style="grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 18px 28px"
+        >
+          {e.outputs.map((o, i) => (
+            <li>
+              <span class="lg-box" aria-hidden="true" style={`animation-delay: ${i * 0.6}s`}>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#fff"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    class="lg-check"
+                    style={`animation-delay: ${i * 0.6}s`}
+                    d="M5 12.5l4.5 4.5L19 7.5"
+                  />
+                </svg>
+              </span>
+              {o[locale]}
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  </div>
+</section>
+
+<section class="lg-section lg-white">
+  <div class="lg-wrap lg-split">
+    <aside class="lg-sticky" aria-labelledby="next-step-title" data-reveal>
+      <div class="lg-card" style="padding: clamp(26px, 3vw, 40px); gap: 20px">
+        <span class="lg-ico" aria-hidden="true" style="background: var(--ink); color: #fff">
+          <Icon name="pulse" size={26} />
         </span>
-        <h2 class="text-[1.5rem]">{pages.nextStep[locale]}</h2>
-        <p class="muted text-[0.97rem]">{ui.discoveryBody[locale]}</p>
-        <a class="btn w-full" href={contact}>
-          {ui.cta[locale]}
-          <Icon name="arrow" size={18} directional />
+        <h2 class="lg-h3" id="next-step-title" style="font-size: clamp(24px, 2.2vw, 30px)">
+          {pages.nextStep[locale]}
+        </h2>
+        <p class="lg-body">{ui.discoveryBody[locale]}</p>
+        <a class="lg-btn" href={contact} style="width: 100%; justify-content: space-between">
+          <span>{ui.cta[locale]}</span>
+          <span class="lg-btn-ico" aria-hidden="true">
+            <Icon name="arrow" size={18} />
+          </span>
         </a>
-        <ol class="grid gap-2 border-t border-[var(--color-line)] pt-5 text-[0.9rem]">
+        <ol class="sol-stages">
           {stages.map((s, i) => (
-            <li class="flex gap-3">
-              <span class="font-semibold text-teal-700">{i + 1}</span>
+            <li>
+              <span class="lg-num" style="color: var(--teal-strong)">
+                {i + 1}
+              </span>
               {s.label[locale]}
             </li>
           ))}
         </ol>
       </div>
     </aside>
+    <div class="lg-stack" style="gap: 16px">
+      {sections.map((s, i) => (
+        <section class="lg-card lg-stage sol-detail" id={s.id} data-reveal="side">
+          <span class="lg-stage-num" aria-hidden="true" style={stageNums[i % 4]}>
+            0{i + 3}
+          </span>
+          <div class="lg-stack" style="gap: 12px">
+            <h2 class="lg-h3">{s.title}</h2>
+            {s.body.map((p) => (
+              <p class="lg-body">{p}</p>
+            ))}
+            {s.note && (
+              <div class="lg-callout" style="padding: 18px 20px">
+                <p style="margin: 0; font-size: 15px; line-height: 1.65; color: var(--ink-2)">
+                  {s.note}
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+      ))}
+    </div>
   </div>
 </section>
 
+{phases.length > 0 && (
+  <section class="lg-section lg-ink" id="phases" style="position: relative; overflow: hidden">
+    <div
+      aria-hidden="true"
+      data-parallax="0.06"
+      style="position: absolute; inset: -80px 0; background-image: radial-gradient(rgb(255 255 255 / 0.14) 1.2px, transparent 1.6px); background-size: 26px 26px"
+    />
+    <div class="lg-wrap" style="position: relative; display: grid; gap: 48px">
+      <div class="lg-row">
+        <SectionHeading eyebrow={e.title[locale]} title={details.phasesTitle[locale]} dot="mint" />
+        <a class="lg-link" href={L("/how-we-work")}>
+          {home.processLink[locale]}
+          <Icon name="arrow" size={18} class="lg-arrow" />
+        </a>
+      </div>
+      <ol class="lg-bento" style="margin: 0; padding: 0; list-style: none">
+        {phases.map((p, i) => {
+          const look = phaseLooks[i % phaseLooks.length];
+          return (
+            <li class:list={[look.wide && "lg-span2"]} data-reveal="scale" style="display: grid">
+              <div class:list={["lg-tile", look.tile]}>
+                <div class="lg-stage" style="height: 100%; align-content: space-between; gap: 28px">
+                  {look.wide ? (
+                    <div style="display: flex; align-items: center; gap: 18px">
+                      <span class="lg-stage-num" aria-hidden="true" style={look.num}>
+                        0{i + 1}
+                      </span>
+                      <div class="lg-progress-track" aria-hidden="true" style="flex: 1 1 auto">
+                        <span class="lg-progress" />
+                      </div>
+                    </div>
+                  ) : (
+                    <span class="lg-stage-num" aria-hidden="true" style={look.num}>
+                      0{i + 1}
+                    </span>
+                  )}
+                  <div class="sol-phase" style={look.wide ? "max-width: 60ch" : undefined}>
+                    <h3 class="lg-h3">{p.title[locale]}</h3>
+                    <p>{p.body[locale]}</p>
+                  </div>
+                </div>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  </section>
+)}
+
+{engagementFaqs.length > 0 && (
+  <section class="lg-section" id="questions">
+    <div class="lg-wrap lg-split">
+      <SectionHeading
+        class="lg-sticky"
+        eyebrow={e.title[locale]}
+        title={nav.faq[locale]}
+        dot="teal"
+      >
+        <a class="lg-link" href={L("/faq")}>
+          {pages.faqTitle[locale]}
+          <Icon name="arrow" size={18} class="lg-arrow" />
+        </a>
+        <ArtGrid size="sm" motion="float" style="margin-top: 12px" />
+      </SectionHeading>
+      <FaqList locale={locale} items={engagementFaqs} />
+    </div>
+  </section>
+)}
+
 {reading.length > 0 && (
-  <section class="section-tight">
-    <div class="container-x grid gap-10">
-      <h2 class="text-[clamp(1.6rem,1.3rem+1.2vw,2.3rem)]">{common.relatedReading[locale]}</h2>
-      <div class="grid gap-5 md:grid-cols-3" data-reveal-stagger>
+  <section class="lg-section lg-tint">
+    <div class="lg-wrap" style="display: grid; gap: 44px">
+      <div class="lg-row">
+        <SectionHeading title={common.relatedReading[locale]} />
+        <a class="lg-link" href={L("/insights")}>
+          {common.allInsights[locale]}
+          <Icon name="arrow" size={18} class="lg-arrow" />
+        </a>
+      </div>
+      <div class="lg-grid-3" data-reveal-stagger>
         {reading.map((a, i) => (
           <ArticleCard
             locale={locale}
@@ -166,112 +312,84 @@ const audienceName = e.audience === "provider" ? ui.providers[locale] : ui.compa
   </section>
 )}
 
-<section class="section-tight">
-  <div class="container-x grid gap-8">
-    <h2 class="text-[clamp(1.6rem,1.3rem+1.2vw,2.3rem)]">{common.related[locale]}</h2>
-    <div class="grid gap-4 md:grid-cols-2">
-      {related.map((r) => (
-        <a class="related card card-hover" href={localPath(`/solutions/${r.id}`, locale)}>
-          <span class="grid gap-2">
-            <span class="font-display text-[1.3rem] leading-[var(--lh-heading)]">
-              {r.title[locale]}
-            </span>
-            <span class="muted text-[0.95rem]">{r.problem[locale]}</span>
-          </span>
-          <Icon name="arrow" size={20} directional />
-        </a>
-      ))}
+{related.length > 0 && (
+  <section class="lg-section-tight" style="padding-bottom: clamp(56px, 7vw, 100px)">
+    <div class="lg-wrap" style="display: grid; gap: 32px">
+      <SectionHeading title={common.related[locale]} />
+      <div style="display: grid; gap: 16px">
+        {related.map((r) => (
+          <SolEngagementCard locale={locale} engagement={r} layout="row" />
+        ))}
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+)}
 
 <CtaBand locale={locale} source={`/solutions/${e.id}`} engagement={e.id} />
 
 <style>
-  .toc {
-    position: sticky;
-    inset-block-start: 7rem;
-    align-self: start;
+  .sol-tile-p,
+  .sol-phase p {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.6;
   }
-  .toc a {
-    display: block;
-    padding-block: 0.3rem;
-    padding-inline-start: 0.9rem;
-    border-inline-start: 2px solid var(--color-line);
-    color: var(--color-muted);
-    font-size: 0.93rem;
-    transition:
-      color var(--dur-fast),
-      border-color var(--dur-fast);
-  }
-  .toc a:hover {
-    color: var(--color-ink);
-    border-color: var(--color-teal);
-  }
-  .detail-section {
-    display: grid;
-    gap: 1.1rem;
-    scroll-margin-top: 7rem;
-  }
-  .detail-section h2 {
-    font-size: clamp(1.6rem, 1.3rem + 1.2vw, 2.3rem);
-  }
-  .deliverable {
-    display: flex;
-    gap: 0.85rem;
-    align-items: flex-start;
-    padding: 1.1rem 1.2rem;
-    border-radius: 1rem;
-    background: #fff;
-    box-shadow: 0 0 0 1px var(--color-line);
-  }
-  .deliverable-icon {
-    flex: none;
-    display: grid;
-    place-items: center;
-    inline-size: 1.75rem;
-    block-size: 1.75rem;
-    border-radius: 99px;
-    background: var(--color-mint);
-    color: var(--color-teal-700);
-  }
-  .engagement-badge {
-    display: grid;
-    place-items: center;
-    inline-size: 3rem;
-    block-size: 3rem;
-    border-radius: 0.9rem;
-    background: var(--color-ink);
-    color: #fff;
-  }
-  .phase-list {
-    display: grid;
-    gap: 1.25rem;
-    position: relative;
-  }
-  .phase-list li {
-    display: flex;
-    gap: 1.25rem;
-  }
-  .phase-dot {
-    flex: none;
-    display: grid;
-    place-items: center;
-    inline-size: 2.5rem;
-    block-size: 2.5rem;
-    border-radius: 99px;
-    background: var(--color-mint);
-    color: var(--color-teal-700);
+  .sol-tile-h {
+    margin: 0;
+    font-size: clamp(26px, 2.6vw, 36px);
     font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    max-width: 16ch;
   }
-  .phase-list h3 {
-    font-size: 1.25rem;
+  .sol-tile-h:lang(ar) {
+    line-height: 1.45;
   }
-  .related {
+  .sol-stages {
+    margin: 0;
+    padding: 20px 0 0;
+    list-style: none;
+    display: grid;
+    gap: 12px;
+    border-top: 1px solid var(--line);
+    font-size: 15px;
+    color: var(--ink-2);
+  }
+  .sol-stages li {
     display: flex;
+    gap: 12px;
     align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-    padding: 1.5rem 1.75rem;
+  }
+  .sol-detail {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+  }
+  .sol-phase {
+    display: grid;
+    gap: 10px;
+  }
+  .sol-phase p {
+    font-size: 16px;
+    line-height: 1.65;
+  }
+  .sol-tile-p:lang(ar),
+  .sol-phase p:lang(ar) {
+    line-height: 1.9;
+  }
+  .lg-tile-white .sol-phase p {
+    color: var(--muted);
+  }
+  .lg-tile-teal .sol-phase p {
+    color: var(--ink-2);
+  }
+  .lg-tile-ink .sol-phase p {
+    color: var(--mist);
+  }
+  .lg-tile-royal .sol-phase p {
+    color: #e6ecff;
+  }
+  .sol-ink-tile {
+    border: 1px solid rgb(255 255 255 / 0.18);
   }
 </style>

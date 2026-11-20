@@ -1,0 +1,28 @@
+---
+/** Living-grid art: nine cells that morph between square and round (decorative). */
+interface Props {
+  size?: "lg" | "sm";
+  motion?: "float" | "spin" | "none";
+  class?: string;
+  style?: string;
+  /** Optional per-cell colour overrides (CSS colours), in reading order. */
+  cells?: (string | undefined)[];
+}
+const { size = "lg", motion = "none", class: className, style, cells = [] } = Astro.props;
+---
+
+<div
+  class:list={[
+    "lg-art",
+    size === "sm" && "lg-art-sm",
+    motion === "float" && "lg-float",
+    motion === "spin" && "lg-spin",
+    className,
+  ]}
+  style={style}
+  aria-hidden="true"
+>
+  {Array.from({ length: 9 }, (_, i) => (
+    <span style={cells[i] ? `background: ${cells[i]}` : undefined} />
+  ))}
+</div>

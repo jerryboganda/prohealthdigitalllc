@@ -1,8 +1,12 @@
 ---
 import PageIntro from "../components/PageIntro.astro";
 import ProjectList from "../components/ProjectList.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import Marquee from "../components/Marquee.astro";
+import ArtGrid from "../components/ArtGrid.astro";
 import CtaBand from "../components/CtaBand.astro";
-import { ui } from "../lib/content.ts";
+import Icon from "../components/Icon.astro";
+import { projects, localPath, ui } from "../lib/content.ts";
 import type { Locale } from "../lib/content.ts";
 import { nav, pages } from "../lib/copy.ts";
 
@@ -10,6 +14,8 @@ interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
+const L = (p: string) => localPath(p, locale);
+const pills = [...projects.flatMap((p) => [p.name, p.category]), ui.projectRole];
 ---
 
 <PageIntro
@@ -18,10 +24,124 @@ const { locale } = Astro.props;
   title={pages.workTitle[locale]}
   description={ui.proofNote[locale]}
   trail={[{ name: nav.work[locale], path: "/work" }]}
-/>
-<section class="section">
-  <div class="container-x">
+>
+  <div style="display: grid; gap: 22px">
+    <div style="display: flex; flex-wrap: wrap; gap: 12px">
+      <a class="lg-btn" href={`${L("/contact")}?source=/work`} data-magnetic>
+        <span>{ui.cta[locale]}</span>
+        <span class="lg-btn-ico" aria-hidden="true">
+          <Icon name="arrow" size={18} />
+        </span>
+      </a>
+      <a class="lg-ghost" href={L("/how-we-work")}>
+        {nav.process[locale]}
+      </a>
+    </div>
+    <ul class="lg-meta" style="margin: 0; padding: 0; list-style: none; font-size: 14px">
+      {projects.map((p) => (
+        <li class="lg-tag">{p.category[locale]}</li>
+      ))}
+    </ul>
+  </div>
+</PageIntro>
+
+<div style="padding-block: 0 clamp(40px, 5vw, 64px)">
+  <Marquee locale={locale} items={pills} rows={1} />
+</div>
+
+<section class="lg-section lg-white">
+  <div class="lg-wrap">
     <ProjectList locale={locale} level="h2" />
   </div>
 </section>
+
+<section class="lg-section lg-ink" style="position: relative; overflow: hidden">
+  <div
+    aria-hidden="true"
+    data-parallax="0.06"
+    style="position: absolute; inset: -60px 0; background-image: radial-gradient(rgb(255 255 255 / 0.14) 1.2px, transparent 1.6px); background-size: 26px 26px"
+  ></div>
+  <div class="lg-wrap" style="position: relative; display: grid; gap: 48px">
+    <div class="lg-row">
+      <SectionHeading
+        eyebrow={pages.contribution[locale]}
+        title={pages.diagramLabel[locale]}
+        id="work-diagram"
+        dot="mint"
+      />
+      <a class="lg-link" href={L("/how-we-work")}>
+        {nav.process[locale]}
+        <Icon name="arrow" size={18} class="lg-arrow" />
+      </a>
+    </div>
+    <figure style="margin: 0; display: grid; gap: 20px" aria-labelledby="work-diagram">
+      <ol class="lg-grid-3" style="margin: 0; padding: 0; list-style: none" data-reveal-stagger>
+        <li>
+          <div class="lg-tile lg-tile-white" style="min-height: 340px; height: 100%">
+            <div style="display: grid; gap: 10px">
+              <span class="lg-num" aria-hidden="true">
+                01
+              </span>
+              <p class="lg-tile-title">{pages.serviceContext[locale]}</p>
+            </div>
+            <div style="display: flex; justify-content: flex-end">
+              <ArtGrid size="sm" />
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="lg-tile lg-tile-royal lg-shine" style="min-height: 340px; height: 100%">
+            <div style="display: grid; gap: 10px">
+              <span
+                aria-hidden="true"
+                style="font-size: 14px; font-weight: 600; color: var(--royal-100)"
+              >
+                02
+              </span>
+              <p class="lg-tile-title">{ui.projectRole[locale]}</p>
+            </div>
+            <div aria-hidden="true" style="display: grid; gap: 10px">
+              {["100%", "82%", "92%", "64%"].map((w, i) => (
+                <div class="lg-progress-track" style={`height: 14px; width: ${w}`}>
+                  <span class="lg-progress" style={`animation-delay: ${i * -0.8}s`} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="lg-tile lg-tile-teal" style="min-height: 340px; height: 100%">
+            <div style="display: grid; gap: 10px">
+              <span aria-hidden="true" style="font-size: 14px; font-weight: 600">
+                03
+              </span>
+              <p class="lg-tile-title">{pages.userJourney[locale]}</p>
+            </div>
+            <div style="display: flex; justify-content: flex-end">
+              <ArtGrid
+                size="sm"
+                motion="float"
+                cells={[
+                  "var(--teal-ink)",
+                  "var(--teal)",
+                  "rgb(10 20 51 / 0.06)",
+                  "rgb(10 20 51 / 0.06)",
+                  "var(--royal)",
+                  "rgb(10 20 51 / 0.06)",
+                  "rgb(10 20 51 / 0.06)",
+                  "var(--teal)",
+                  "var(--ink)",
+                ]}
+              />
+            </div>
+          </div>
+        </li>
+      </ol>
+      <figcaption style="font-size: 14px; color: var(--mist)">
+        {pages.diagramNote[locale]}
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
 <CtaBand locale={locale} source="/work" />

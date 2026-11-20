@@ -1,40 +1,161 @@
 ---
+import type { ComponentProps } from "astro/types";
 import Icon from "../components/Icon.astro";
-import LogoMark from "../components/LogoMark.astro";
+import ArtGrid from "../components/ArtGrid.astro";
+import Marquee from "../components/Marquee.astro";
 import { localPath } from "../lib/content.ts";
 import type { Locale } from "../lib/content.ts";
-import { nav, pages } from "../lib/copy.ts";
+import { nav, pages, home } from "../lib/copy.ts";
 
 interface Props {
   locale: Locale;
   error?: boolean;
 }
 const { locale, error = false } = Astro.props;
+const L = (p: string) => localPath(p, locale);
+const code = error ? "500" : "404";
 const links = [
   ["/solutions", nav.solutions],
   ["/insights", nav.insights],
-  ["/contact", nav.contact],
 ] as const;
+// Decorative living-grid pieces scattered behind the message: [position, float timing, ArtGrid props].
+const bits: [string, string, ComponentProps<typeof ArtGrid>][] = [
+  [
+    "top: 4%; inset-inline-start: -70px; width: clamp(160px, 22vw, 330px)",
+    "animation-duration: 8s",
+    { motion: "spin", style: "width: 100%; opacity: 0.16; animation-duration: 80s" },
+  ],
+  [
+    "top: 10%; inset-inline-end: 6%; width: clamp(72px, 9vw, 140px)",
+    "animation-duration: 5s; animation-delay: -1.5s",
+    {
+      size: "sm",
+      style: "width: 100%; gap: 6px; opacity: 0.32",
+      cells: [undefined, undefined, undefined, undefined, "var(--mint)"],
+    },
+  ],
+  [
+    "top: 46%; inset-inline-start: 7%; width: clamp(48px, 5vw, 84px)",
+    "",
+    {
+      size: "sm",
+      motion: "spin",
+      style: "width: 100%; gap: 4px; opacity: 0.4; animation-duration: 14s",
+    },
+  ],
+  [
+    "top: 40%; inset-inline-end: -40px; width: clamp(120px, 15vw, 220px)",
+    "animation-duration: 9s; animation-delay: -4s",
+    {
+      size: "sm",
+      motion: "spin",
+      style: "width: 100%; opacity: 0.2; animation-duration: 46s; animation-direction: reverse",
+      cells: [
+        undefined,
+        "var(--royal-deep)",
+        undefined,
+        undefined,
+        "var(--royal)",
+        undefined,
+        "var(--teal)",
+      ],
+    },
+  ],
+  [
+    "bottom: 14%; inset-inline-start: 18%; width: clamp(40px, 4vw, 64px)",
+    "animation-duration: 4s; animation-delay: -2s",
+    { size: "sm", style: "width: 100%; gap: 3px; opacity: 0.5" },
+  ],
+  [
+    "bottom: -60px; inset-inline-end: 12%; width: clamp(140px, 18vw, 260px)",
+    "animation-duration: 7s; animation-delay: -3s",
+    { motion: "spin", style: "width: 100%; opacity: 0.14; animation-duration: 100s" },
+  ],
+];
 ---
 
-<section class="relative isolate overflow-hidden">
-  <div class="container-x grid min-h-[70vh] place-items-center py-24 text-center">
-    <div class="hero-enter grid justify-items-center gap-6">
-      <LogoMark class="w-24 opacity-90" />
-      <p class="eyebrow">{error ? "500" : "404"}</p>
-      <h1>{error ? pages.errorTitle[locale] : pages.notFoundTitle[locale]}</h1>
-      <p class="lede">{error ? pages.errorBody[locale] : pages.notFoundBody[locale]}</p>
-      <div class="flex flex-wrap justify-center gap-3">
-        <a class="btn" href={localPath("/", locale)}>
-          {pages.goHome[locale]}
-          <Icon name="arrow" size={18} directional />
-        </a>
-        {links.map(([href, label]) => (
-          <a class="btn btn-ghost" href={localPath(href, locale)}>
-            {label[locale]}
-          </a>
-        ))}
+<section style="position: relative; overflow: hidden; isolation: isolate; padding: clamp(40px, 6vw, 88px) 0 clamp(40px, 5vw, 64px); display: grid; gap: clamp(48px, 6vw, 80px)">
+  <div aria-hidden="true" style="position: absolute; inset: 0; z-index: -1; pointer-events: none">
+    <div
+      data-parallax="0.06"
+      style="position: absolute; inset: -60px 0; background-image: radial-gradient(rgb(10 20 51 / 0.1) 1.2px, transparent 1.6px); background-size: 26px 26px"
+    ></div>
+    {bits.map(([pos, float, art], i) => (
+      <div class={`lg-in lg-d${i + 1}`} style={`position: absolute; ${pos}`}>
+        {float ? (
+          <div class="lg-float" style={float}>
+            <ArtGrid {...art} />
+          </div>
+        ) : (
+          <ArtGrid {...art} />
+        )}
       </div>
+    ))}
+  </div>
+
+  <div class="lg-wrap" style="display: grid; justify-items: center; text-align: center; gap: 24px">
+    <div class="lg-in code" aria-hidden="true" dir="ltr">
+      <span class="lg-float" style="display: inline-block; animation-duration: 6s">
+        {code[0]}
+      </span>
+      <div class="lg-float" style="animation-duration: 6s; animation-delay: -2s">
+        <ArtGrid motion="spin" style="width: 0.74em; gap: 0.045em; animation-duration: 28s" />
+      </div>
+      <span
+        class="lg-float"
+        style="display: inline-block; animation-duration: 6s; animation-delay: -4s; color: var(--royal)"
+      >
+        {code[2]}
+      </span>
     </div>
+
+    <p class="lg-eyebrow lg-in lg-d2">
+      <span class="lg-dot" aria-hidden="true"></span>
+      {code}
+    </p>
+    <h1 class="lg-h1-page lg-in-solid lg-d3" style="max-width: 14ch">
+      {error ? pages.errorTitle[locale] : pages.notFoundTitle[locale]}
+    </h1>
+    <p class="lg-lede lg-in lg-d4" style="max-width: 44ch">
+      {error ? pages.errorBody[locale] : pages.notFoundBody[locale]}
+    </p>
+    <div
+      class="lg-in lg-d5"
+      style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px; margin-top: 8px"
+    >
+      <a class="lg-btn" href={L("/")} data-magnetic>
+        <span>{pages.goHome[locale]}</span>
+        <span class="lg-btn-ico" aria-hidden="true">
+          <Icon name="arrow" size={18} />
+        </span>
+      </a>
+      {links.map(([href, label]) => (
+        <a class="lg-ghost" href={L(href)}>
+          {label[locale]}
+        </a>
+      ))}
+    </div>
+    <a class="lg-link lg-in lg-d6" href={L("/contact")}>
+      {nav.contact[locale]}
+      <Icon name="arrow" size={18} class="lg-arrow" />
+    </a>
+  </div>
+
+  <div class="lg-in lg-d7">
+    <Marquee locale={locale} items={home.marquee} />
   </div>
 </section>
+
+<style>
+  .code {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(10px, 2.4vw, 32px);
+    font-size: clamp(120px, 24vw, 340px);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.06em;
+    color: var(--ink);
+  }
+</style>

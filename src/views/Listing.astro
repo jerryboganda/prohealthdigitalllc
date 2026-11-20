@@ -1,11 +1,14 @@
 ---
 import PageIntro from "../components/PageIntro.astro";
+import SectionHeading from "../components/SectionHeading.astro";
 import ArticleCard from "../components/ArticleCard.astro";
+import Marquee from "../components/Marquee.astro";
+import ArtGrid from "../components/ArtGrid.astro";
 import CtaBand from "../components/CtaBand.astro";
 import Icon from "../components/Icon.astro";
 import type { Locale } from "../lib/content.ts";
 import { localPath } from "../lib/content.ts";
-import { nav, common } from "../lib/copy.ts";
+import { nav, common, footer, pages, ui2 } from "../lib/copy.ts";
 import { meta } from "../lib/meta.ts";
 import { entriesFor } from "../site/collections.ts";
 
@@ -14,20 +17,84 @@ interface Props {
   collection: "insights" | "resources";
 }
 const { locale, collection } = Astro.props;
+const L = (p: string) => localPath(p, locale);
+const other = collection === "insights" ? "resources" : "insights";
 const entries = await entriesFor(collection, locale);
+const others = await entriesFor(other, locale);
+type Entry = (typeof entries)[number];
+
 const words = (body?: string) => (body ?? "").split(/\s+/).filter(Boolean).length;
-const label = (e: (typeof entries)[number]) =>
+const minutes = (e: Entry) => Math.max(3, Math.round(words(e.body) / 220));
+const audienceLabel = {
+  providers: common.forProviders,
+  "digital-health-companies": common.forCompanies,
+  both: common.forBoth,
+};
+const label = (e: Entry) =>
   "kind" in e.data
-    ? e.data.kind === "checklist"
-      ? common.checklist[locale]
-      : common.guide[locale]
-    : e.data.audience === "providers"
-      ? common.forProviders[locale]
-      : e.data.audience === "digital-health-companies"
-        ? common.forCompanies[locale]
-        : common.forBoth[locale];
+    ? (e.data.kind === "checklist" ? common.checklist : common.guide)[locale]
+    : audienceLabel[e.data.audience][locale];
+const tag = {
+  providers: "lg-tag lg-tag-teal",
+  "digital-health-companies": "lg-tag lg-tag-ink",
+  both: "lg-tag",
+};
+const artBg = {
+  providers: "background: var(--teal-50)",
+  "digital-health-companies": "background: var(--ink)",
+  both: undefined,
+};
+const icons = {
+  "digital-presence": "globe",
+  "care-workflows": "flow",
+  "platform-launch": "spark",
+  "platform-improvement": "layers",
+} as const;
+const icon = (ids: string[]) => icons[ids[0] as keyof typeof icons] ?? "book";
+const fmt = new Intl.DateTimeFormat(locale === "ar" ? "ar-u-nu-latn" : "en-GB", {
+  dateStyle: "long",
+});
+const cta = collection === "insights" ? common.readArticle[locale] : common.openResource[locale];
 const [featured, ...rest] = entries;
 const title = collection === "insights" ? nav.insights : nav.resources;
+const topics = [...new Set(entries.flatMap((e) => ("topic" in e.data ? [e.data.topic] : [])))];
+
+// Audience filter (insight-filter.ts): "both" entries match every audience, so counts do too.
+const filterable = new Set(entries.map((e) => e.data.audience)).size > 1;
+const chips = (
+  [
+    ["all", ui2.allAudiences],
+    ["providers", common.forProviders],
+    ["digital-health-companies", common.forCompanies],
+  ] as const
+)
+  .map(([value, name]) => ({
+    value,
+    name: name[locale],
+    count: entries.filter(
+      (e) => value === "all" || e.data.audience === value || e.data.audience === "both",
+    ).length,
+  }))
+  .filter((c) => c.count > 0);
+
+const knowledge = [
+  {
+    href: "/glossary",
+    icon: "book",
+    title: meta.glossary.title[locale],
+    body: meta.glossary.description[locale],
+    link: nav.glossary[locale],
+    ink: false,
+  },
+  {
+    href: "/faq",
+    icon: "list",
+    title: pages.faqTitle[locale],
+    body: pages.faqBody[locale],
+    link: nav.faq[locale],
+    ink: true,
+  },
+] as const;
 ---
 
 <PageIntro
@@ -36,92 +103,231 @@ const title = collection === "insights" ? nav.insights : nav.resources;
   title={meta[collection].title[locale]}
   description={meta[collection].description[locale]}
   trail={[{ name: title[locale], path: `/${collection}` }]}
-/>
-
-<section class="section pt-10">
-  <div class="container-x grid gap-10">
-    {featured && (
-      <a
-        class="featured card card-hover group"
-        href={localPath(`/${collection}/${featured.slug}`, locale)}
-        data-reveal
-      >
-        <div class="featured-art" aria-hidden="true">
-          <svg viewBox="0 0 600 260" fill="none">
-            <path
-              d="M0 170H220L250 170L276 92L312 236L340 140L362 170H600"
-              stroke="#0A1D3D"
-              stroke-opacity=".5"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <circle cx="312" cy="236" r="8" fill="#00B2A9" />
-          </svg>
-        </div>
-        <div class="grid content-center gap-4 p-7 md:p-12">
-          <p class="eyebrow">{label(featured)}</p>
-          <h2 class="text-[clamp(1.8rem,1.4rem+1.6vw,2.8rem)]">{featured.data.title}</h2>
-          <p class="muted">{featured.data.description}</p>
-          <span class="text-[0.9rem] text-muted">
-            {Math.max(3, Math.round(words(featured.body) / 220))} {common.minutes[locale]}
-          </span>
-          <span class="text-link w-fit">
-            {collection === "insights" ? common.readArticle[locale] : common.openResource[locale]}
-            <Icon name="arrow" size={18} directional />
-          </span>
-        </div>
+>
+  <div style="display: flex; flex-wrap: wrap; gap: 12px">
+    {others.length > 0 && (
+      <a class="lg-btn" href={`#${other}`}>
+        <span>{nav[other][locale]}</span>
+        <span class="lg-btn-ico" aria-hidden="true">
+          <Icon name="arrow" size={18} class="rotate-90 rtl:-rotate-90" />
+        </span>
       </a>
     )}
-    <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3" data-reveal-stagger>
-      {rest.map((e, i) => (
-        <ArticleCard
-          locale={locale}
-          href={`/${collection}/${e.slug}`}
-          title={e.data.title}
-          description={e.data.description}
-          label={label(e)}
-          date={collection === "insights" ? e.data.published : undefined}
-          minutes={Math.max(3, Math.round(words(e.body) / 220))}
-          index={i}
-          level="h2"
+    <a class="lg-ghost" href={L("/glossary")}>
+      {nav.glossary[locale]}
+    </a>
+  </div>
+</PageIntro>
+
+{topics.length > 0 && (
+  <div aria-hidden="true" style="padding-bottom: 28px">
+    <Marquee locale={locale} items={topics.map((t) => ({ en: t, ar: t }))} rows={1} />
+  </div>
+)}
+
+<section class="lg-section lg-white" id="latest" style="padding-top: clamp(48px, 6vw, 88px)">
+  <div
+    class="lg-wrap"
+    style="display: grid; gap: clamp(32px, 4vw, 48px)"
+    data-insight-filter={filterable ? "" : undefined}
+  >
+    {filterable && (
+      <div class="lg-row" style="align-items: center" data-filter-controls hidden>
+        <div
+          role="group"
+          aria-label={ui2.filterAudience[locale]}
+          style="display: flex; flex-wrap: wrap; gap: 10px"
+        >
+          {chips.map((c) => (
+            <button
+              type="button"
+              class="lg-chip"
+              data-filter-value={c.value}
+              aria-pressed={c.value === "all" ? "true" : "false"}
+            >
+              <span>{c.name}</span>
+              <span style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">
+                {c.count}
+              </span>
+            </button>
+          ))}
+        </div>
+        <p
+          class="lg-small"
+          style="margin: 0; color: var(--muted)"
+          aria-live="polite"
+          data-filter-status
+          data-all={ui2.shownAll[locale]}
+          data-some={ui2.shownSome[locale]}
+        >
+          {ui2.shownAll[locale].replace("{total}", String(entries.length))}
+        </p>
+      </div>
+    )}
+
+    {featured && (
+      <div data-reveal="scale" data-audience={featured.data.audience}>
+        <article class="lg-project">
+          <div class="lg-project-art" aria-hidden="true" style={artBg[featured.data.audience]}>
+            <ArtGrid />
+            <ArtGrid
+              size="sm"
+              motion="spin"
+              cells={[
+                "#fff",
+                undefined,
+                "#fff",
+                undefined,
+                "var(--mint)",
+                undefined,
+                "#fff",
+                undefined,
+                "#fff",
+              ]}
+              style="position: absolute; width: 88px; inset-inline-end: 24px; top: 24px; animation-duration: 28s"
+            />
+          </div>
+          <div class="lg-project-body">
+            <div class="lg-meta">
+              <span class={tag[featured.data.audience]}>{label(featured)}</span>
+              {collection === "insights" && (
+                <time datetime={featured.data.published.toISOString().slice(0, 10)}>
+                  {fmt.format(featured.data.published)}
+                </time>
+              )}
+              <span>
+                {minutes(featured)} {common.minutes[locale]}
+              </span>
+            </div>
+            <h2 style="margin: 0; font-size: clamp(28px, 3vw, 44px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.08">
+              <a class="lg-stretch" href={L(`/${collection}/${featured.slug}`)}>
+                {featured.data.title}
+              </a>
+            </h2>
+            <p class="lg-body" style="font-size: 17px">
+              {featured.data.description}
+            </p>
+            <span class="lg-link" aria-hidden="true">
+              {cta}
+              <Icon name="arrow" size={18} class="lg-arrow" />
+            </span>
+          </div>
+        </article>
+      </div>
+    )}
+
+    {rest.length > 0 && (
+      <div
+        class="lg-grid-3"
+        style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr))"
+        data-reveal
+      >
+        {rest.map((e, i) => (
+          <ArticleCard
+            locale={locale}
+            href={`/${collection}/${e.slug}`}
+            title={e.data.title}
+            description={e.data.description}
+            label={label(e)}
+            date={collection === "insights" ? e.data.published : undefined}
+            minutes={minutes(e)}
+            index={i}
+            level="h2"
+            audience={e.data.audience}
+            cta={cta}
+          />
+        ))}
+      </div>
+    )}
+  </div>
+</section>
+
+{others.length > 0 && (
+  <section class="lg-section lg-tint" id={other}>
+    <div class="lg-wrap" style="display: grid; gap: 44px">
+      <div class="lg-row">
+        <SectionHeading
+          eyebrow={nav[other][locale]}
+          title={meta[other].title[locale]}
+          body={meta[other].description[locale]}
         />
+        <a class="lg-link" href={L(`/${other}`)}>
+          {other === "insights" ? common.allInsights[locale] : common.allResources[locale]}
+          <Icon name="arrow" size={18} class="lg-arrow" />
+        </a>
+      </div>
+      <div class="lg-grid-4" data-reveal-stagger>
+        {others.map((e, i) => (
+          <article class="lg-eng">
+            <div style="display: flex; justify-content: space-between; align-items: start; gap: 12px">
+              <span class="lg-ico" aria-hidden="true">
+                <Icon name={icon(e.data.engagements)} size={26} />
+              </span>
+              <span class="lg-num" aria-hidden="true">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+            </div>
+            <div style="display: grid; gap: 10px">
+              <span class="lg-meta">
+                <span class={tag[e.data.audience]}>{label(e)}</span>
+                <span>
+                  {minutes(e)} {common.minutes[locale]}
+                </span>
+              </span>
+              <h3 class="lg-h3">
+                <a class="lg-stretch" href={L(`/${other}/${e.slug}`)}>
+                  {e.data.title}
+                </a>
+              </h3>
+              <p class="lg-body" style="font-size: 15px">
+                {e.data.description}
+              </p>
+            </div>
+            <span class="lg-go" aria-hidden="true">
+              <Icon name="arrow" size={18} class="lg-arrow" />
+            </span>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<section class="lg-section-tight">
+  <div class="lg-wrap" style="display: grid; gap: 24px">
+    <h2 class="lg-eyebrow" data-reveal>
+      <span class="lg-dot" aria-hidden="true"></span>
+      {footer.knowledge[locale]}
+    </h2>
+    <div class="lg-grid-2" data-reveal-stagger>
+      {knowledge.map((k) => (
+        <article
+          class:list={["lg-card lg-card-link", k.ink && "lg-card-ink"]}
+          style="grid-template-columns: auto minmax(0, 1fr); gap: 22px; align-items: start; padding: clamp(24px, 3vw, 36px); overflow: hidden"
+        >
+          <span
+            class="lg-ico"
+            aria-hidden="true"
+            style={k.ink ? "background: rgb(255 255 255 / 0.1); color: var(--mint)" : undefined}
+          >
+            <Icon name={k.icon} size={26} />
+          </span>
+          <div class="lg-stack" style="gap: 10px">
+            <h3 class="lg-h3">
+              <a class="lg-stretch" href={L(k.href)}>
+                {k.title}
+              </a>
+            </h3>
+            <p class="lg-body">{k.body}</p>
+            <span class="lg-link" aria-hidden="true">
+              {k.link}
+              <Icon name="arrow" size={18} class="lg-arrow" />
+            </span>
+          </div>
+        </article>
       ))}
     </div>
   </div>
 </section>
 
 <CtaBand locale={locale} source={`/${collection}`} />
-
-<style>
-  .featured {
-    display: grid;
-    overflow: hidden;
-  }
-  @media (min-width: 900px) {
-    .featured {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-  .featured-art {
-    display: grid;
-    place-items: center;
-    min-block-size: 16rem;
-    background:
-      radial-gradient(circle at 70% 30%, rgb(0 178 169 / 0.25), transparent 60%),
-      linear-gradient(135deg, var(--color-mint), #e5ecfc);
-  }
-  .featured-art svg {
-    inline-size: 85%;
-    transition: transform var(--dur-slow) var(--ease-out-expo);
-  }
-  .featured:hover .featured-art svg {
-    transform: scale(1.05);
-  }
-  .featured:hover h2 {
-    color: var(--color-royal);
-  }
-  .featured h2 {
-    transition: color var(--dur-base);
-  }
-</style>

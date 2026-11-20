@@ -3,8 +3,7 @@ import Logo from "./Logo.astro";
 import Icon from "./Icon.astro";
 import { localPath, ui } from "../lib/content.ts";
 import type { Locale } from "../lib/content.ts";
-import { nav } from "../lib/copy.ts";
-
+import { nav, ui2 } from "../lib/copy.ts";
 interface Props {
   locale: Locale;
   path: string;
@@ -21,136 +20,105 @@ const links = [
 const mobileLinks = [...links, ["/resources", nav.resources] as const, ["/faq", nav.faq] as const];
 const current = (href: string) =>
   path === href || path.startsWith(href + "/") ? "page" : undefined;
+const here = localPath(path, locale) + Astro.url.search;
 const switchHref = localPath(path, other) + Astro.url.search;
+const langHref = (l: Locale) => (l === locale ? here : switchHref);
 const contactHref = `${localPath("/contact", locale)}?source=${encodeURIComponent(path)}`;
+const langs = [
+  ["en", "EN"],
+  ["ar", "عربي"],
+] as const;
 ---
 
-<header class="site-header sticky top-0 z-50" data-header>
-  <div class="header-shell transition-[background-color,box-shadow] duration-500">
-    <div class="container-x flex h-[var(--header-h)] items-center justify-between gap-3 sm:gap-6">
-      <Logo locale={locale} animate />
-      <nav aria-label={nav.main[locale]} class="hidden items-center gap-7 lg:flex">
-        {links.map(([href, label]) => (
-          <a class="nav-link" href={localPath(href, locale)} aria-current={current(href)}>
-            {label[locale]}
+<header class="site-header" data-header>
+  <div class="lg-bar header-shell">
+    <Logo locale={locale} animate />
+    <nav aria-label={nav.main[locale]} class="lg-navs lg-hide-md">
+      {links.map(([href, label]) => (
+        <a class="lg-nav" href={localPath(href, locale)} aria-current={current(href)}>
+          {label[locale]}
+        </a>
+      ))}
+    </nav>
+    <div class="lg-tools">
+      <div class="lg-langs" role="group" aria-label={ui2.language[locale]}>
+        {langs.map(([l, label]) => (
+          <a
+            class="lg-lang"
+            href={langHref(l)}
+            lang={l}
+            hreflang={l}
+            aria-current={l === locale ? "true" : undefined}
+          >
+            {label}
           </a>
         ))}
-      </nav>
-      <div class="flex shrink-0 items-center gap-1.5 sm:gap-3">
-        <a class="lang-switch" href={switchHref} lang={other} hreflang={other}>
-          <Icon name="globe" size={17} />
-          <span class="sr-only min-[480px]:not-sr-only">{nav.languageName[other]}</span>
-          <span class="min-[480px]:hidden" aria-hidden="true">
-            {other === "ar" ? "ع" : "EN"}
-          </span>
-        </a>
-        <a
-          class="btn hidden px-5 py-3 text-[0.95rem] xl:inline-flex"
-          href={contactHref}
-          data-magnetic
-        >
-          {ui.cta[locale]}
-          <Icon name="arrow" size={18} directional />
-        </a>
-        <button
-          type="button"
-          class="menu-toggle grid lg:hidden"
-          popovertarget="mobile-menu"
-          aria-label={nav.openMenu[locale]}
-        >
-          <Icon name="menu" size={22} />
-        </button>
       </div>
+      <a class="lg-btn lg-btn-sm lg-hide-md" href={contactHref} data-magnetic>
+        <span>{ui.cta[locale]}</span>
+        <span class="lg-btn-ico" aria-hidden="true">
+          <Icon name="arrow" size={16} />
+        </span>
+      </a>
+      <button
+        type="button"
+        class="lg-menu"
+        popovertarget="mobile-menu"
+        aria-label={nav.openMenu[locale]}
+      >
+        <Icon name="menu" size={20} />
+      </button>
     </div>
   </div>
   <div id="mobile-menu" popover>
-    <div class="container-x flex h-[var(--header-h)] items-center justify-between">
-      <Logo locale={locale} />
+    <div class="lg-sheet-top">
+      <Logo locale={locale} tone="light" />
       <button
         type="button"
-        class="menu-toggle grid"
+        class="lg-sheet-close"
         popovertarget="mobile-menu"
         popovertargetaction="hide"
         aria-label={nav.closeMenu[locale]}
         autofocus
       >
-        <Icon name="close" size={22} />
+        <Icon name="close" size={20} />
       </button>
     </div>
-    <nav aria-label={nav.mobile[locale]} class="container-x mt-8 grid gap-1">
+    <nav aria-label={nav.mobile[locale]} class="lg-sheet-links">
       {mobileLinks.map(([href, label], i) => (
-        <a
-          class="mobile-link"
-          href={localPath(href, locale)}
-          aria-current={current(href)}
-          style={`--i:${i}`}
-        >
+        <a href={localPath(href, locale)} aria-current={current(href)} style={`--i:${i}`}>
           <span>{label[locale]}</span>
-          <Icon name="arrow" size={20} directional />
+          <Icon name="arrow" size={22} directional />
         </a>
       ))}
     </nav>
-    <div class="container-x mt-10 grid gap-3">
-      <a class="btn w-full" href={contactHref}>
-        {ui.cta[locale]}
-        <Icon name="arrow" size={18} directional />
+    <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 32px">
+      <a class="lg-btn lg-btn-w" href={contactHref}>
+        <span>{ui.cta[locale]}</span>
+        <span class="lg-btn-ico" aria-hidden="true">
+          <Icon name="arrow" size={18} />
+        </span>
+      </a>
+      <a class="lg-ghost lg-ghost-w" href={switchHref} lang={other} hreflang={other}>
+        <Icon name="globe" size={18} />
+        {nav.languageName[other]}
       </a>
     </div>
   </div>
 </header>
 
 <style>
-  .lang-switch {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    min-height: 2.75rem;
-    padding: 0.5rem clamp(0.65rem, 0.4rem + 1vw, 0.9rem);
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: var(--color-ink);
-    box-shadow: inset 0 0 0 1px var(--color-line-strong);
-    transition:
-      box-shadow var(--dur-base),
-      background-color var(--dur-base);
-  }
-  .lang-switch:hover {
-    background: var(--color-mint);
-    box-shadow: inset 0 0 0 1px var(--color-ink);
-  }
-  .menu-toggle {
-    place-items: center;
-    inline-size: 2.75rem;
-    block-size: 2.75rem;
-    border-radius: 999px;
-    color: var(--color-ink);
-    box-shadow: inset 0 0 0 1px var(--color-line-strong);
-    cursor: pointer;
-  }
-  .mobile-link {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-block: 1rem;
-    border-block-end: 1px solid var(--color-line);
-    font-family: var(--font-display);
-    font-size: clamp(1.6rem, 1.2rem + 2vw, 2.2rem);
-    line-height: 1.2;
-  }
-  .mobile-link[aria-current="page"] {
-    color: var(--color-teal-700);
-  }
+  /* Menu links rise in sequence each time the sheet opens. */
   @media (prefers-reduced-motion: no-preference) {
-    #mobile-menu:popover-open .mobile-link {
-      animation: menu-in 700ms var(--ease-out-expo) both;
-      animation-delay: calc(var(--i) * 45ms + 80ms);
+    #mobile-menu:popover-open .lg-sheet-links a {
+      animation: sheet-link 0.6s var(--ease-out) both;
+      animation-delay: calc(0.16s + var(--i, 0) * 0.06s);
     }
-    @keyframes menu-in {
-      from {
-        opacity: 0;
-        translate: 0 1rem;
-      }
+  }
+  @keyframes sheet-link {
+    from {
+      opacity: 0;
+      translate: 0 18px;
     }
   }
 </style>

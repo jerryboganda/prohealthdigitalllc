@@ -8,15 +8,14 @@
       "type": "http",
       "url": "https://mcp.context7.com/mcp"
     },
+    "lottie-creator": {
+      "type": "http",
+      "url": "https://creator.mcp.lottiefiles.com/mcp"
+    },
     "chrome-devtools": {
       "type": "stdio",
       "command": "cmd",
-      "args": [
-        "/c",
-        "npx",
-        "-y",
-        "chrome-devtools-mcp@latest"
-      ]
+      "args": ["/c", "npx", "-y", "chrome-devtools-mcp@latest"]
     }
   }
 }

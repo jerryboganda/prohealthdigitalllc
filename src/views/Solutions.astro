@@ -1,17 +1,43 @@
 ---
 import PageIntro from "../components/PageIntro.astro";
 import SectionHeading from "../components/SectionHeading.astro";
-import EngagementCards from "../components/EngagementCards.astro";
+import SolEngagementCard from "../components/SolEngagementCard.astro";
+import ProcessTimeline from "../components/ProcessTimeline.astro";
+import Marquee from "../components/Marquee.astro";
+import ArtGrid from "../components/ArtGrid.astro";
 import CtaBand from "../components/CtaBand.astro";
 import Icon from "../components/Icon.astro";
-import { localPath, ui } from "../lib/content.ts";
+import { engagements, localPath, ui } from "../lib/content.ts";
 import type { Locale } from "../lib/content.ts";
-import { nav, pages } from "../lib/copy.ts";
+import { home, nav, pages } from "../lib/copy.ts";
 
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
+const L = (p: string) => localPath(p, locale);
+const groups = [
+  {
+    id: "providers",
+    audience: "provider",
+    title: ui.providers,
+    body: ui.providerIntro,
+    link: home.exploreProviders,
+    path: "/providers",
+    tone: "lg-white",
+    dot: "teal",
+  },
+  {
+    id: "companies",
+    audience: "digital-health",
+    title: ui.companies,
+    body: ui.companyIntro,
+    link: home.exploreCompanies,
+    path: "/digital-health-companies",
+    tone: "lg-tint",
+    dot: "royal",
+  },
+] as const;
 ---
 
 <PageIntro
@@ -20,40 +46,120 @@ const { locale } = Astro.props;
   title={pages.solutionsTitle[locale]}
   description={pages.solutionsBody[locale]}
   trail={[{ name: nav.solutions[locale], path: "/solutions" }]}
-/>
-
-<section class="section" id="providers">
-  <div class="container-x grid gap-12">
-    <div class="flex flex-wrap items-end justify-between gap-6">
-      <SectionHeading title={ui.providers[locale]} body={ui.providerIntro[locale]} />
-      <a class="text-link" href={localPath("/providers", locale)}>
+>
+  <div class="lg-stack" style="gap: 20px">
+    <div style="display: flex; flex-wrap: wrap; gap: 12px">
+      <a class="lg-btn" href={`${L("/contact")}?source=/solutions`} data-magnetic>
+        <span>{ui.cta[locale]}</span>
+        <span class="lg-btn-ico" aria-hidden="true">
+          <Icon name="arrow" size={18} />
+        </span>
+      </a>
+      <a class="lg-ghost" href="#providers">
+        {home.secondaryCta[locale]}
+      </a>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px">
+      <a class="lg-chip" href="#providers">
+        <span class="lg-dot" aria-hidden="true"></span>
         {ui.providers[locale]}
-        <Icon name="arrow" size={18} directional />
       </a>
-    </div>
-    <EngagementCards locale={locale} filter="provider" />
-  </div>
-</section>
-
-<section class="section bg-mint/60" id="companies">
-  <div class="container-x grid gap-12">
-    <div class="flex flex-wrap items-end justify-between gap-6">
-      <SectionHeading title={ui.companies[locale]} body={ui.companyIntro[locale]} />
-      <a class="text-link" href={localPath("/digital-health-companies", locale)}>
+      <a class="lg-chip" href="#companies">
+        <span class="lg-dot" aria-hidden="true" style="background: var(--royal)"></span>
         {ui.companies[locale]}
-        <Icon name="arrow" size={18} directional />
       </a>
     </div>
-    <EngagementCards locale={locale} filter="digital-health" />
+  </div>
+</PageIntro>
+
+<div style="padding-block: 0 clamp(32px, 4vw, 56px)">
+  <Marquee locale={locale} items={home.marquee} rows={1} />
+</div>
+
+{groups.map((g) => (
+  <section class:list={["lg-section", g.tone]} id={g.id}>
+    <div class="lg-wrap" style="display: grid; gap: 48px">
+      <div class="lg-row">
+        <SectionHeading
+          eyebrow={nav.solutions[locale]}
+          title={g.title[locale]}
+          body={g.body[locale]}
+          dot={g.dot}
+        />
+        <a class="lg-link" href={L(g.path)}>
+          {g.link[locale]}
+          <Icon name="arrow" size={18} class="lg-arrow" />
+        </a>
+      </div>
+      <div class="lg-grid-2">
+        {engagements
+          .filter((e) => e.audience === g.audience)
+          .map((e) => (
+            <SolEngagementCard locale={locale} engagement={e} />
+          ))}
+      </div>
+    </div>
+  </section>
+))}
+
+<section class="lg-section lg-ink" style="position: relative; overflow: hidden">
+  <div
+    aria-hidden="true"
+    data-parallax="0.06"
+    style="position: absolute; inset: -80px 0; background-image: radial-gradient(rgb(255 255 255 / 0.14) 1.2px, transparent 1.6px); background-size: 26px 26px"
+  ></div>
+  <div class="lg-wrap" style="position: relative; display: grid; gap: 56px">
+    <div class="lg-row">
+      <SectionHeading eyebrow={ui.process[locale]} title={home.processTitle[locale]} dot="mint" />
+      <a class="lg-link" href={L("/how-we-work")}>
+        {home.processLink[locale]}
+        <Icon name="arrow" size={18} class="lg-arrow" />
+      </a>
+    </div>
+    <ProcessTimeline locale={locale} />
   </div>
 </section>
 
-<section class="section">
-  <div class="container-narrow grid gap-6">
-    <SectionHeading title={pages.specialistTitle[locale]} />
-    <div class="prose" data-reveal>
-      <p>{pages.specialistBody[locale]}</p>
-      <p class="callout">{ui.scope[locale]}</p>
+<section class="lg-section">
+  <div class="lg-wrap lg-split">
+    <SectionHeading
+      class="lg-sticky"
+      eyebrow={nav.solutions[locale]}
+      title={pages.specialistTitle[locale]}
+      dot="teal"
+    >
+      <ArtGrid
+        size="sm"
+        motion="spin"
+        cells={[undefined, undefined, undefined, undefined, "var(--mint)"]}
+        style="margin-top: 8px; animation-duration: 40s"
+      />
+    </SectionHeading>
+    <div class="lg-stack" style="gap: 20px">
+      <div class="lg-card" data-reveal style="padding: clamp(26px, 3vw, 40px); gap: 18px">
+        <span class="lg-ico" aria-hidden="true">
+          <Icon name="layers" size={26} />
+        </span>
+        <p class="lg-prose" style="margin: 0">
+          {pages.specialistBody[locale]}
+        </p>
+      </div>
+      <div
+        class="lg-callout"
+        data-reveal="scale"
+        style="grid-template-columns: auto minmax(0, 1fr); gap: 18px; align-items: start"
+      >
+        <span
+          class="lg-ico"
+          aria-hidden="true"
+          style="width: 48px; height: 48px; border-radius: 14px; background: #fff; color: var(--teal-ink)"
+        >
+          <Icon name="list" size={22} />
+        </span>
+        <p style="margin: 0; font-size: 17px; line-height: 1.7; color: var(--ink-2)">
+          {ui.scope[locale]}
+        </p>
+      </div>
     </div>
   </div>
 </section>

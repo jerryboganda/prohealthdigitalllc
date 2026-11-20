@@ -20,41 +20,13 @@ export default defineConfig({
   devToolbar: { enabled: false },
   fonts: [
     {
+      // One family for both scripts (Living Grid): Latin and Arabic share weight and rhythm.
       provider: fontProviders.fontsource(),
-      name: "Newsreader",
-      cssVariable: "--font-newsreader",
-      weights: [400],
-      styles: ["normal", "italic"],
-      subsets: ["latin"],
-      fallbacks: ["Georgia", "serif"],
-    },
-    {
-      provider: fontProviders.fontsource(),
-      name: "IBM Plex Sans",
-      cssVariable: "--font-plex",
-      weights: [400, 500, 600],
+      name: "Readex Pro",
+      cssVariable: "--font-readex",
+      weights: [400, 500, 600, 700],
       styles: ["normal"],
-      subsets: ["latin"],
-      fallbacks: ["system-ui", "sans-serif"],
-    },
-    {
-      provider: fontProviders.fontsource(),
-      name: "Noto Naskh Arabic",
-      cssVariable: "--font-naskh",
-      // One face: Arabic display text is set at 600; lighter requests resolve to it.
-      weights: [600],
-      styles: ["normal"],
-      // Latin too: spaces, digits and Latin names in Arabic headings must not fall back to Times.
-      subsets: ["arabic", "latin"],
-      fallbacks: ["serif"],
-    },
-    {
-      provider: fontProviders.fontsource(),
-      name: "IBM Plex Sans Arabic",
-      cssVariable: "--font-plex-arabic",
-      weights: [400, 600],
-      styles: ["normal"],
-      subsets: ["arabic", "latin"],
+      subsets: ["latin", "arabic"],
       fallbacks: ["system-ui", "sans-serif"],
     },
   ],

@@ -7,29 +7,40 @@ interface Props {
   id?: string;
   class?: string;
   as?: "h1" | "h2";
+  /** Dot colour for the eyebrow. */
+  dot?: "teal" | "royal" | "mint";
 }
-const { eyebrow, title, body, align = "start", id, class: className, as: Tag = "h2" } = Astro.props;
+const {
+  eyebrow,
+  title,
+  body,
+  align = "start",
+  id,
+  class: className,
+  as: Tag = "h2",
+  dot = "royal",
+} = Astro.props;
+const dotColor = {
+  teal: undefined,
+  royal: "background: var(--royal)",
+  mint: "background: var(--mint)",
+}[dot];
 ---
 
 <div
-  class:list={[
-    "grid content-start gap-5",
-    align === "center" ? "mx-auto max-w-3xl justify-items-center text-center" : "max-w-3xl",
-    className,
-  ]}
+  class:list={["lg-stack", className]}
+  style={`gap: 16px; max-width: 820px;${align === "center" ? " margin-inline: auto; text-align: center; justify-items: center;" : ""}`}
+  data-reveal
 >
   {eyebrow && (
-    <p class="eyebrow" data-reveal>
+    <p class="lg-eyebrow">
+      <span class="lg-dot" aria-hidden="true" style={dotColor} />
       {eyebrow}
     </p>
   )}
-  <Tag id={id} data-split>
+  <Tag class="lg-h2" id={id} data-split>
     {title}
   </Tag>
-  {body && (
-    <p class="lede" data-reveal>
-      {body}
-    </p>
-  )}
+  {body && <p class="lg-lede">{body}</p>}
   <slot />
 </div>

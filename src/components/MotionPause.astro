@@ -1,0 +1,16 @@
+---
+/** "Pause animations" control for looping motion (WCAG 2.2.2). Works without JS via CSS :has();
+    motion.ts keeps every instance in sync and remembers the choice. Hidden under reduced motion. */
+import { ui2 } from "../lib/copy.ts";
+import type { Locale } from "../lib/content.ts";
+interface Props {
+  locale: Locale;
+  class?: string;
+}
+const { locale, class: className } = Astro.props;
+---
+
+<label class:list={["motion-pause", className]}>
+  <input type="checkbox" />
+  <span>{ui2.pauseMotion[locale]}</span>
+</label>

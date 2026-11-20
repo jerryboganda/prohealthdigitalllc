@@ -1,15 +1,19 @@
 ---
 import PageIntro from "../components/PageIntro.astro";
 import FaqList from "../components/FaqList.astro";
+import Marquee from "../components/Marquee.astro";
+import ArtGrid from "../components/ArtGrid.astro";
 import CtaBand from "../components/CtaBand.astro";
-import { faqs } from "../lib/content.ts";
+import Icon from "../components/Icon.astro";
+import { EMAIL, faqs, localPath, ui } from "../lib/content.ts";
 import type { Locale } from "../lib/content.ts";
-import { nav, pages } from "../lib/copy.ts";
+import { home, nav, pages } from "../lib/copy.ts";
 
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
+const contact = `${localPath("/contact", locale)}?source=/faq`;
 ---
 
 <PageIntro
@@ -18,10 +22,85 @@ const { locale } = Astro.props;
   title={pages.faqTitle[locale]}
   description={pages.faqBody[locale]}
   trail={[{ name: nav.faq[locale], path: "/faq" }]}
-/>
-<section class="section">
-  <div class="container-narrow">
+>
+  <div style="display: flex; flex-wrap: wrap; gap: 12px">
+    <a class="lg-btn" href={contact} data-magnetic>
+      <span>{ui.cta[locale]}</span>
+      <span class="lg-btn-ico" aria-hidden="true">
+        <Icon name="arrow" size={18} />
+      </span>
+    </a>
+    <a class="lg-ghost" href={`mailto:${EMAIL}`}>
+      <Icon name="mail" size={18} />
+      {ui.email[locale]}
+    </a>
+  </div>
+</PageIntro>
+
+<div style="padding-bottom: 32px">
+  <Marquee locale={locale} items={home.marquee} />
+</div>
+
+<section class="lg-section lg-white">
+  <div class="lg-wrap lg-split">
+    <aside class="lg-sticky" data-reveal="side" aria-labelledby="faq-next-step">
+      <div
+        class="lg-card lg-card-ink"
+        style="padding: clamp(28px, 3vw, 40px); gap: 20px; overflow: hidden; isolation: isolate"
+      >
+        <ArtGrid
+          size="sm"
+          motion="spin"
+          cells={[
+            "#fff",
+            undefined,
+            "#fff",
+            undefined,
+            "var(--mint)",
+            undefined,
+            "#fff",
+            undefined,
+            "#fff",
+          ]}
+          style="position: absolute; inset-inline-end: -48px; top: -48px; width: 170px; opacity: 0.22; z-index: -1; animation-duration: 50s"
+        />
+        <p class="lg-eyebrow">
+          <span class="lg-dot" aria-hidden="true" style="background: var(--mint)"></span>
+          {nav.contact[locale]}
+        </p>
+        <h2
+          id="faq-next-step"
+          style="margin: 0; font-size: clamp(26px, 2.4vw, 36px); font-weight: 600; line-height: 1.12; letter-spacing: -0.025em; max-width: 16ch"
+        >
+          {pages.contactAsideTitle[locale]}
+        </h2>
+        <p class="lg-body">{pages.contactAsideA[locale]}</p>
+        <div style="display: grid; gap: 8px">
+          <a class="lg-btn lg-btn-w" href={contact} style="width: fit-content">
+            <span>{ui.cta[locale]}</span>
+            <span class="lg-btn-ico" aria-hidden="true">
+              <Icon name="arrow" size={18} />
+            </span>
+          </a>
+          <a
+            class="lg-link"
+            href={`mailto:${EMAIL}`}
+            style="flex-wrap: wrap; column-gap: 8px; row-gap: 0"
+          >
+            <Icon name="mail" size={18} />
+            <span>{ui.email[locale]}</span>
+            <span dir="ltr" style="overflow-wrap: anywhere">
+              {EMAIL}
+            </span>
+          </a>
+        </div>
+        <p style="margin: 0; padding-top: 18px; border-top: 1px solid rgb(255 255 255 / 0.14); font-size: 14px; line-height: 1.6; color: var(--mist)">
+          {pages.contactAsideB[locale]}
+        </p>
+      </div>
+    </aside>
     <FaqList locale={locale} items={faqs} />
   </div>
 </section>
+
 <CtaBand locale={locale} source="/faq" />

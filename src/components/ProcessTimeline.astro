@@ -4,115 +4,123 @@ import type { Locale } from "../lib/content.ts";
 
 interface Props {
   locale: Locale;
-  /** Pin and scroll horizontally on desktop. */
+  /** Pin and scroll horizontally on wide screens (motion.ts data-pin-track). */
   pinned?: boolean;
   level?: "h2" | "h3";
+  /** "dark" for ink sections, "light" for paper/white sections. */
+  tone?: "dark" | "light";
 }
-const { locale, pinned = false, level = "h3" } = Astro.props;
+const { locale, pinned = false, level = "h3", tone = "dark" } = Astro.props;
 const Heading = level;
+const nums = ["var(--royal)", "var(--teal)", "var(--mint)", "#fff"];
+const numText = ["#fff", "var(--ink)", "var(--ink)", "var(--ink)"];
 ---
 
-<div class:list={["process", pinned && "process-pinned"]} data-pin-track={pinned ? "" : undefined}>
-  {pinned && (
+<div
+  class:list={["process", tone === "light" && "is-light"]}
+  data-pin-track={pinned ? "" : undefined}
+>
+  {pinned ? (
     <div class="process-bar" aria-hidden="true">
       <span data-track-progress />
     </div>
+  ) : (
+    <div class="process-line" aria-hidden="true" />
   )}
-  <ol class="process-track" data-track data-reveal-stagger>
+  <ol class:list={["process-track", pinned && "is-pinned"]} data-track data-reveal-stagger>
     {stages.map((s, i) => (
-      <li class="process-step">
-        <span class="process-num" aria-hidden="true">
-          {String(i + 1).padStart(2, "0")}
+      <li class="lg-stage process-card">
+        <span class="lg-stage-num" style={`background: ${nums[i % 4]}; color: ${numText[i % 4]}`}>
+          0{i + 1}
         </span>
-        <span class="process-node" aria-hidden="true" />
-        <Heading class="process-title">{s.label[locale]}</Heading>
-        <p class="muted">{s.body[locale]}</p>
+        <Heading class="lg-h3">{s.label[locale]}</Heading>
+        <p class="lg-body">{s.body[locale]}</p>
       </li>
     ))}
   </ol>
 </div>
 
 <style>
+  .process {
+    position: relative;
+  }
   .process-track {
+    margin: 0;
+    padding: 0;
+    list-style: none;
     display: grid;
-    gap: 1.25rem;
-    counter-reset: step;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
   }
-  @media (min-width: 768px) {
-    .process-track {
-      grid-template-columns: repeat(2, 1fr);
-    }
+  .process-card {
+    padding: 28px;
+    border-radius: var(--r-lg);
+    border: 1px solid rgb(255 255 255 / 0.14);
+    background: rgb(255 255 255 / 0.04);
+    transition:
+      border-color var(--t-base),
+      background var(--t-base);
   }
-  @media (min-width: 1100px) {
-    .process-track {
-      grid-template-columns: repeat(4, 1fr);
-    }
-    /* Pinned row only while the GSAP runtime drives it; otherwise the 4-column grid stays. */
-    :global(html.motion-ready) .process-pinned .process-track {
+  .process-card:hover {
+    border-color: rgb(94 234 212 / 0.5);
+    background: rgb(255 255 255 / 0.07);
+  }
+  .is-light .process-card {
+    border-color: var(--line);
+    background: #fff;
+  }
+  .is-light .process-card:hover {
+    border-color: var(--line-2);
+  }
+  .process-bar,
+  .process-line {
+    height: 3px;
+    border-radius: 3px;
+    background: rgb(255 255 255 / 0.16);
+    margin-block-end: 28px;
+    overflow: hidden;
+  }
+  .is-light :is(.process-bar, .process-line) {
+    background: var(--line);
+  }
+  .process-line {
+    background: linear-gradient(90deg, var(--royal), var(--teal), var(--mint));
+  }
+  [dir="rtl"] .process-line {
+    background: linear-gradient(-90deg, var(--royal), var(--teal), var(--mint));
+  }
+  .process-bar span {
+    display: block;
+    block-size: 100%;
+    background: var(--mint);
+    transform-origin: left;
+  }
+  [dir="rtl"] .process-bar span {
+    transform-origin: right;
+  }
+  .is-light .process-bar span {
+    background: var(--royal);
+  }
+  /* Horizontal only while motion.ts pins it (motion allowed, "wide" query in pinTracks);
+     otherwise the grid keeps every stage on screen. */
+  @media (min-width: 1100px) and (prefers-reduced-motion: no-preference) {
+    :global(html.motion-ready) .is-pinned {
       display: flex;
-      gap: 1.5rem;
       inline-size: max-content;
     }
-    :global(html.motion-ready) .process-pinned .process-step {
-      inline-size: min(34rem, 42vw);
-      min-block-size: 22rem;
-    }
-    :global(html.motion-ready) .process-pinned {
-      overflow: hidden;
+    :global(html.motion-ready) .is-pinned > li {
+      inline-size: 420px;
+      min-block-size: 300px;
     }
   }
-  .process-step {
-    position: relative;
-    display: grid;
-    align-content: start;
-    gap: 1rem;
-    padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
-    border-radius: var(--radius-card);
-    background: #fff;
-    box-shadow: 0 0 0 1px var(--color-line);
-  }
-  .process-num {
-    font-family: var(--font-display);
-    font-size: clamp(3rem, 2rem + 4vw, 5.5rem);
-    line-height: 1;
-    color: transparent;
-    -webkit-text-stroke: 1px var(--color-teal);
-  }
-  .process-node {
-    position: absolute;
-    inset-block-start: 1.6rem;
-    inset-inline-end: 1.6rem;
-    inline-size: 0.75rem;
-    block-size: 0.75rem;
-    border-radius: 99px;
-    background: var(--color-teal);
-    box-shadow: 0 0 0 6px var(--color-teal-100);
-  }
-  .process-step .process-title {
-    font-size: clamp(1.35rem, 1.15rem + 0.8vw, 1.85rem);
-  }
-  .process-bar {
-    display: none;
-  }
-  @media (min-width: 1100px) {
-    :global(html.motion-ready) .process-pinned .process-bar {
-      display: block;
-      block-size: 2px;
-      margin-block-end: 2rem;
-      background: var(--color-line);
-      border-radius: 99px;
-      overflow: hidden;
+  @media (max-width: 1099px) {
+    .process-track {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-    .process-bar span {
-      display: block;
-      block-size: 100%;
-      background: linear-gradient(90deg, var(--color-teal), var(--color-royal));
-      transform-origin: left;
-      transform: scaleX(0.02);
-    }
-    :global([dir="rtl"]) .process-bar span {
-      transform-origin: right;
-      background: linear-gradient(-90deg, var(--color-teal), var(--color-royal));
+  }
+  @media (max-width: 640px) {
+    .process-track {
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 </style>

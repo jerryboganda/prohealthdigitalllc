@@ -1,6 +1,6 @@
 ---
 import Icon from "./Icon.astro";
-import UiMockup from "./UiMockup.astro";
+import ArtGrid from "./ArtGrid.astro";
 import { projects, localPath, ui } from "../lib/content.ts";
 import type { Locale } from "../lib/content.ts";
 import { common } from "../lib/copy.ts";
@@ -8,98 +8,64 @@ import { common } from "../lib/copy.ts";
 interface Props {
   locale: Locale;
   level?: "h2" | "h3";
+  /** Leave out one project (e.g. the one being viewed). */
+  exclude?: string;
 }
-const { locale, level = "h3" } = Astro.props;
+const { locale, level = "h3", exclude } = Astro.props;
 const Heading = level;
-const variants = {
-  "oet-with-dr-hesham": "learning",
-  mediq: "platform",
-  marham: "directory",
-} as const;
+const looks = [
+  { bg: "var(--royal-50)", cells: [] as (string | undefined)[] },
+  { bg: "var(--teal-50)", cells: [] },
+  {
+    bg: "var(--ink)",
+    cells: [
+      undefined,
+      "#24365a",
+      undefined,
+      "#13308f",
+      "var(--mint)",
+      undefined,
+      "#24365a",
+      undefined,
+      "#13308f",
+    ],
+  },
+];
+const list = projects.filter((p) => p.id !== exclude);
 ---
 
-<ol class="project-list grid">
-  {projects.map((p, i) => (
-    <li class="project-row group" data-reveal>
-      <div class="grid gap-3">
-        <span class="project-index" aria-hidden="true">
-          0{i + 1}
-        </span>
-        <p class="eyebrow">{p.category[locale]}</p>
-        <Heading class="project-title text-[clamp(1.75rem,1.3rem+1.8vw,2.75rem)]">
-          <a class="project-link" href={localPath(`/work/${p.id}`, locale)}>
-            {p.name[locale]}
-          </a>
-        </Heading>
+<ol style="margin: 0; padding: 0; list-style: none; display: grid; gap: 20px">
+  {list.map((p, i) => {
+    const look = looks[projects.indexOf(p) % looks.length];
+    const art = (
+      <div class="lg-project-art" aria-hidden="true" style={`background: ${look.bg}`}>
+        <ArtGrid cells={look.cells} />
       </div>
-      <div class="grid content-start gap-4">
-        <p class="muted">{p.context[locale]}</p>
-        <p class="inline-flex w-fit items-center gap-2 rounded-full bg-mint px-3 py-1 text-[0.85rem] font-semibold text-teal-700">
-          <Icon name="check" size={15} />
-          {ui.projectRole[locale]}
-        </p>
-        <span class="text-link w-fit" aria-hidden="true">
-          {common.viewProject[locale]}
-          <Icon name="arrow-up-right" size={18} directional />
-        </span>
-      </div>
-      <div class="project-visual">
-        <UiMockup variant={variants[p.id as keyof typeof variants]} />
-      </div>
-    </li>
-  ))}
+    );
+    return (
+      <li class="lg-project" data-reveal="scale">
+        {i % 2 === 0 && art}
+        <div class="lg-project-body">
+          <div class="lg-meta">
+            <span class="lg-tag">{p.category[locale]}</span>
+            <span class="lg-tag lg-tag-teal">
+              <Icon name="check" size={14} />
+              {ui.projectRole[locale]}
+            </span>
+          </div>
+          <Heading style="margin: 0; font-size: clamp(28px, 3vw, 44px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.05">
+            <a class="lg-stretch" href={localPath(`/work/${p.id}`, locale)}>
+              {p.name[locale]}
+            </a>
+          </Heading>
+          <p class="lg-body">{p.context[locale]}</p>
+          <span class="lg-link" aria-hidden="true">
+            {common.viewProject[locale]}
+            <Icon name="arrow" size={18} class="lg-arrow" />
+          </span>
+        </div>
+        {i % 2 === 1 && art}
+      </li>
+    );
+  })}
 </ol>
-
-<style>
-  .project-list {
-    border-block-start: 1px solid var(--color-line);
-  }
-  .project-row {
-    position: relative;
-    display: grid;
-    gap: 2rem;
-    padding-block: clamp(2rem, 1.5rem + 2vw, 3.25rem);
-    border-block-end: 1px solid var(--color-line);
-  }
-  @media (min-width: 900px) {
-    .project-row {
-      grid-template-columns: 1fr 1fr 0.9fr;
-      align-items: center;
-    }
-  }
-  .project-link::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-  }
-  .project-index {
-    font-family: var(--font-display);
-    color: var(--color-muted);
-  }
-  .project-visual {
-    transition:
-      transform var(--dur-slow) var(--ease-out-expo),
-      opacity var(--dur-slow);
-  }
-  @media (min-width: 900px) {
-    .project-visual {
-      opacity: 0.75;
-      transform: scale(0.94) rotate(-1.5deg);
-    }
-    .project-row:hover .project-visual {
-      opacity: 1;
-      transform: scale(1) rotate(0);
-    }
-  }
-  .project-row:hover .project-title {
-    color: var(--color-royal);
-  }
-  .project-row .project-title {
-    transition: color var(--dur-base);
-  }
-  .project-row:focus-within {
-    outline: 2px solid var(--color-royal);
-    outline-offset: 6px;
-    border-radius: 8px;
-  }
-</style>

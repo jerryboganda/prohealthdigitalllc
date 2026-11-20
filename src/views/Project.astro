@@ -1,7 +1,9 @@
 ---
 import PageIntro from "../components/PageIntro.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import ProjectList from "../components/ProjectList.astro";
+import ArtGrid from "../components/ArtGrid.astro";
 import CtaBand from "../components/CtaBand.astro";
-import UiMockup from "../components/UiMockup.astro";
 import Icon from "../components/Icon.astro";
 import { projects, localPath, ui } from "../lib/content.ts";
 import type { Locale } from "../lib/content.ts";
@@ -12,14 +14,11 @@ interface Props {
   slug: string;
 }
 const { locale, slug } = Astro.props;
+const L = (p: string) => localPath(p, locale);
 const p = projects.find((x) => x.id === slug)!;
-const variants = {
-  "oet-with-dr-hesham": "learning",
-  mediq: "platform",
-  marham: "directory",
-} as const;
-const others = projects.filter((x) => x.id !== slug);
 const steps = [pages.serviceContext, ui.projectRole, pages.userJourney];
+const soft = "rgb(255 255 255 / 0.22)";
+const faint = "rgb(255 255 255 / 0.08)";
 ---
 
 <PageIntro
@@ -31,93 +30,174 @@ const steps = [pages.serviceContext, ui.projectRole, pages.userJourney];
     { name: nav.work[locale], path: "/work" },
     { name: p.name[locale], path: `/work/${p.id}` },
   ]}
-/>
-
-<section class="section">
-  <div class="container-x grid gap-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-    <figure class="grid gap-5" aria-label={pages.diagramLabel[locale]}>
-      <div class="relative isolate" data-reveal>
-        <div class="project-glow" aria-hidden="true"></div>
-        <UiMockup variant={variants[slug as keyof typeof variants]} class="relative" />
-      </div>
-      <ol class="flow" data-reveal-stagger>
-        {steps.map((s, i) => (
-          <li class="flow-step">
-            <span>{s[locale]}</span>
-            {i < steps.length - 1 && (
-              <Icon name="arrow" size={18} directional class="text-teal-700" />
-            )}
-          </li>
-        ))}
-      </ol>
-      <figcaption class="muted text-[0.85rem]">{pages.diagramNote[locale]}</figcaption>
-    </figure>
-    <div class="grid gap-6" data-reveal>
-      <p class="eyebrow">{pages.contribution[locale]}</p>
-      <h2>{ui.projectRole[locale]}</h2>
-      <p class="muted">{p.problem[locale]}</p>
-      <a class="btn btn-ghost w-fit" href={p.url} target="_blank" rel="noopener noreferrer">
-        {pages.visitSite[locale]}
-        <span class="sr-only">{common.external[locale]}</span>
-        <Icon name="arrow-up-right" size={18} />
+>
+  <div style="display: grid; gap: 22px">
+    <p class="lg-meta" style="margin: 0; font-size: 14px">
+      <span class="lg-tag lg-tag-ink role-tag">
+        <Icon name="check" size={15} />
+        {ui.projectRole[locale]}
+      </span>
+    </p>
+    <div style="display: flex; flex-wrap: wrap; gap: 12px">
+      <a
+        class="lg-btn"
+        href={`${L("/contact")}?engagement=platform-launch&source=/work/${p.id}`}
+        data-magnetic
+      >
+        <span>{ui.cta[locale]}</span>
+        <span class="lg-btn-ico" aria-hidden="true">
+          <Icon name="arrow" size={18} />
+        </span>
+      </a>
+      <a class="lg-ghost" href={L("/work")}>
+        {nav.work[locale]}
       </a>
     </div>
   </div>
+</PageIntro>
+
+<section class="lg-section lg-white">
+  <div class="lg-wrap lg-grid-2" style="gap: clamp(36px, 5vw, 72px); align-items: center">
+    <div data-reveal="scale">
+      <figure
+        class="lg-tile lg-tile-royal lg-shine"
+        aria-labelledby="diagram-title"
+        style="min-height: 0; gap: 26px; padding: clamp(24px, 3vw, 40px)"
+      >
+        <div style="display: flex; justify-content: space-between; align-items: start; gap: 16px">
+          <p id="diagram-title" class="lg-tile-title" style="max-width: 18ch">
+            {pages.diagramLabel[locale]}
+          </p>
+          <ArtGrid
+            size="sm"
+            motion="spin"
+            cells={[
+              "#fff",
+              "var(--mint)",
+              "#fff",
+              "var(--mint)",
+              "var(--ink)",
+              "var(--mint)",
+              "#fff",
+              "var(--mint)",
+              "#fff",
+            ]}
+            style="width: 60px; gap: 4px; flex: none; animation-duration: 28s"
+          />
+        </div>
+        <div aria-hidden="true" class="flow">
+          <div class="lg-float" style="animation-duration: 7s">
+            <ArtGrid
+              cells={[
+                soft,
+                "var(--royal-100)",
+                soft,
+                "var(--mint)",
+                soft,
+                "var(--royal-100)",
+                soft,
+                "#fff",
+                soft,
+              ]}
+              style="width: 100%; gap: 6px"
+            />
+          </div>
+          <Icon name="arrow" size={20} class="lg-arrow" />
+          <div style="display: grid; gap: 8px">
+            {["100%", "78%", "92%", "60%", "86%"].map((w, i) => (
+              <div class="lg-progress-track" style={`height: 12px; width: ${w}`}>
+                <span class="lg-progress" style={`animation-delay: ${i * -0.75}s`} />
+              </div>
+            ))}
+          </div>
+          <Icon name="arrow" size={20} class="lg-arrow" />
+          <div class="lg-float" style="animation-delay: -3s">
+            <ArtGrid
+              cells={[
+                "var(--mint)",
+                "var(--royal-100)",
+                faint,
+                faint,
+                "#fff",
+                faint,
+                faint,
+                "var(--royal-100)",
+                "var(--mint)",
+              ]}
+              style="width: 100%; gap: 6px"
+            />
+          </div>
+        </div>
+        <div style="display: grid; gap: 14px">
+          <div class="lg-progress-track" aria-hidden="true">
+            <span class="lg-progress"></span>
+          </div>
+          <ol style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 12px">
+            {steps.map((s, i) => (
+              <li class={`lg-step lg-s${i + 1}`}>
+                <span aria-hidden="true" style="font-size: 13px; font-weight: 600">
+                  0{i + 1}
+                </span>
+                <span style="font-weight: 600; font-size: 18px; line-height: 1.25">
+                  {s[locale]}
+                </span>
+              </li>
+            ))}
+          </ol>
+        </div>
+        <figcaption style="font-size: 13px; color: var(--royal-100)">
+          {pages.diagramNote[locale]}
+        </figcaption>
+      </figure>
+    </div>
+
+    <SectionHeading
+      eyebrow={pages.contribution[locale]}
+      title={ui.projectRole[locale]}
+      body={p.problem[locale]}
+    >
+      <a
+        class="lg-ghost"
+        style="width: fit-content"
+        href={p.url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {pages.visitSite[locale]}
+        <span class="lg-sr">{common.external[locale]}</span>
+        <Icon name="arrow-up-right" size={18} />
+      </a>
+    </SectionHeading>
+  </div>
 </section>
 
-<section class="section-tight">
-  <div class="container-x grid gap-6 md:grid-cols-2">
-    <h2 class="text-[clamp(1.6rem,1.3rem+1.2vw,2.3rem)] md:col-span-2">
-      {pages.relevantWork[locale]}
-    </h2>
-    {others.map((o) => (
-      <a class="other card card-hover" href={localPath(`/work/${o.id}`, locale)}>
-        <span class="grid gap-1">
-          <span class="eyebrow">{o.category[locale]}</span>
-          <span class="font-display text-[1.6rem] leading-[var(--lh-heading)]">
-            {o.name[locale]}
-          </span>
-        </span>
-        <Icon name="arrow" size={22} directional />
+<section class="lg-section">
+  <div class="lg-wrap" style="display: grid; gap: 36px">
+    <div class="lg-row">
+      <SectionHeading eyebrow={nav.work[locale]} title={pages.relevantWork[locale]} />
+      <a class="lg-link" href={L("/work")}>
+        {nav.work[locale]}
+        <Icon name="arrow" size={18} class="lg-arrow" />
       </a>
-    ))}
+    </div>
+    <ProjectList locale={locale} exclude={p.id} />
   </div>
 </section>
 
 <CtaBand locale={locale} source={`/work/${p.id}`} engagement="platform-launch" />
 
 <style>
-  .project-glow {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    scale: 1.15;
-    background: radial-gradient(closest-side, rgb(0 178 169 / 0.2), transparent 70%);
-    filter: blur(20px);
+  .role-tag :global(svg),
+  .flow :global(.lg-arrow) {
+    color: var(--mint);
   }
   .flow {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-  .flow-step {
-    display: inline-flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
-    gap: 0.75rem;
-    font-weight: 600;
-  }
-  .flow-step span {
-    padding: 0.55rem 1rem;
-    border-radius: 99px;
-    background: #fff;
-    box-shadow: 0 0 0 1px var(--color-line);
-    font-size: 0.95rem;
-  }
-  .other {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-    padding: 1.75rem 2rem;
+    gap: clamp(8px, 1.4vw, 16px);
+    padding: clamp(16px, 2vw, 24px);
+    border-radius: 24px;
+    background: rgb(255 255 255 / 0.08);
   }
 </style>

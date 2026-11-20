@@ -275,3 +275,36 @@ export const pages = {
     "يرجى المحاولة مجددًا أو العودة إلى الصفحة الرئيسية.",
   ),
 };
+
+/** Interface strings added with the Living Grid redesign. `{n}` and `{total}` are filled in by scripts. */
+export const ui2 = {
+  pauseMotion: text("Pause animations", "إيقاف الحركة المتكررة"),
+  requiredNote: text("Fields marked * are required.", "الحقول المميزة بعلامة * مطلوبة."),
+  filterAudience: text("Filter by audience", "تصفية حسب الجمهور"),
+  allAudiences: text("All", "الكل"),
+  shownAll: text("Showing all {total}", "عرض الكل ({total})"),
+  shownSome: text("Showing {n} of {total}", "عرض {n} من أصل {total}"),
+  searchGlossary: text("Search the glossary", "ابحث في المسرد"),
+  filterLetter: text("Filter by letter", "تصفية حسب الحرف"),
+  noTerms: text("No terms match your search", "لا توجد مصطلحات مطابقة لبحثك"),
+  noTermsBody: text(
+    "Try a different word, or clear the search to see all terms.",
+    "جرّب كلمة مختلفة، أو امسح البحث لعرض كل المصطلحات.",
+  ),
+  clearSearch: text("Clear search", "مسح البحث"),
+  backToTop: text("Back to top", "العودة إلى الأعلى"),
+  language: text("Language", "اللغة"),
+  illustration: text("Illustration", "رسم توضيحي"),
+  /** Rotating hero phrases (English only on screen; Arabic keeps the static headline). */
+  heroSlot: [
+    text("healthcare services.", "خدمات صحية."),
+    text("patient access.", "وصول المرضى."),
+    text("care workflows.", "إجراءات الرعاية."),
+    text("health platforms.", "المنصات الصحية."),
+  ],
+  handover: [
+    text("Documentation", "الوثائق"),
+    text("Training", "التدريب"),
+    text("Agreed ownership", "الملكية المتفق عليها"),
+  ],
+};

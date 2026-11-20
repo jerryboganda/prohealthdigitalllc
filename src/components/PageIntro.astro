@@ -1,7 +1,7 @@
 ---
 import Breadcrumbs from "./Breadcrumbs.astro";
 import type { Crumb } from "./Breadcrumbs.astro";
-import LineMotif from "./LineMotif.astro";
+import ArtGrid from "./ArtGrid.astro";
 import type { Locale } from "../lib/content.ts";
 
 interface Props {
@@ -11,35 +11,62 @@ interface Props {
   eyebrow?: string;
   trail?: Crumb[];
   tone?: "paper" | "mint";
+  /** Living-grid art on the inline-end side (default) or none for editorial pages. */
+  art?: "grid" | "small" | "none";
 }
-const { locale, title, description, eyebrow, trail = [], tone = "paper" } = Astro.props;
+const {
+  locale,
+  title,
+  description,
+  eyebrow,
+  trail = [],
+  tone = "paper",
+  art = "grid",
+} = Astro.props;
 ---
 
-<section class:list={["page-intro relative isolate overflow-hidden", tone === "mint" && "bg-mint"]}>
-  <div class="intro-glow" aria-hidden="true"></div>
-  <div class="container-x relative pt-10 pb-20 md:pt-14 md:pb-28">
-    {trail.length > 0 && <Breadcrumbs locale={locale} trail={trail} />}
-    <div class="hero-enter mt-10 grid max-w-4xl gap-6 md:mt-14">
-      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
-      <h1>{title}</h1>
-      <p class="lede">{description}</p>
-      <slot />
+<section
+  class:list={["lg-wrap", tone === "mint" && "lg-tint"]}
+  style="padding-top: clamp(24px, 4vw, 56px); padding-bottom: clamp(48px, 6vw, 88px)"
+>
+  {trail.length > 0 && (
+    <div class="lg-in">
+      <Breadcrumbs locale={locale} trail={trail} />
     </div>
+  )}
+  <div class="lg-row" style="align-items: center; gap: 40px; margin-top: clamp(28px, 4vw, 52px)">
+    <div class="lg-stack" style="gap: 22px; flex: 999 1 560px; min-width: 0">
+      {eyebrow && (
+        <p class="lg-eyebrow lg-in">
+          <span class="lg-dot" aria-hidden="true" />
+          {eyebrow}
+        </p>
+      )}
+      <h1 class="lg-h1-page lg-in-solid lg-d1" style="max-width: 18ch">
+        {title}
+      </h1>
+      <p class="lg-lede lg-in lg-d2">{description}</p>
+      <div class="lg-in lg-d3">
+        <slot />
+      </div>
+    </div>
+    {art !== "none" && (
+      <div
+        class="lg-in lg-d3 intro-art"
+        style="flex: 1 1 260px; display: flex; justify-content: center"
+      >
+        <ArtGrid size={art === "small" ? "sm" : "lg"} motion="float" style="max-width: 340px" />
+      </div>
+    )}
   </div>
-  <LineMotif class="absolute inset-x-0 bottom-0 h-24 w-full opacity-70" />
 </section>
 
 <style>
-  .intro-glow {
-    position: absolute;
-    inset-block-start: -14rem;
-    inset-inline-end: -10%;
-    z-index: -1;
-    inline-size: min(60rem, 90vw);
-    block-size: 40rem;
-    background:
-      radial-gradient(closest-side, rgb(0 178 169 / 0.14), transparent 70%),
-      radial-gradient(closest-side at 70% 40%, rgb(27 78 216 / 0.1), transparent 70%);
-    filter: blur(10px);
+  /* On phones the art is an accent, not a block that pushes content below the fold. */
+  @media (max-width: 600px) {
+    .intro-art {
+      justify-content: flex-start !important;
+      max-width: 168px;
+    }
   }
 </style>

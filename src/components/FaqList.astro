@@ -1,32 +1,23 @@
 ---
-import Icon from "./Icon.astro";
 import type { Locale, Localized } from "../lib/content.ts";
 
 interface Props {
   locale: Locale;
   items: { q: Localized; a: Localized }[];
+  /** Open the first answer by default. */
+  openFirst?: boolean;
 }
-const { locale, items } = Astro.props;
+const { locale, items, openFirst = true } = Astro.props;
 ---
 
-<div class="faq-list" data-reveal-stagger>
-  {items.map((item) => (
-    <details class="faq">
+<div data-reveal>
+  {items.map((item, i) => (
+    <details class="lg-acc" open={openFirst && i === 0}>
       <summary>
-        <span>{item.q[locale]}</span>
-        <span class="faq-icon" aria-hidden="true">
-          <Icon name="plus" size={18} />
-        </span>
+        {item.q[locale]}
+        <span class="lg-acc-ico" aria-hidden="true" />
       </summary>
-      <div class="faq-answer">
-        <p>{item.a[locale]}</p>
-      </div>
+      <div class="lg-acc-body">{item.a[locale]}</div>
     </details>
   ))}
 </div>
-
-<style>
-  .faq-list {
-    border-block-start: 1px solid var(--color-line);
-  }
-</style>
