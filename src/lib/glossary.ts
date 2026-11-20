@@ -177,7 +177,7 @@ export const glossary: Term[] = [
     term: text("Core Web Vitals", "مؤشرات أداء الويب الأساسية (Core Web Vitals)"),
     definition: text(
       "A set of metrics defined by Google that describe real users' experience of a page's loading, responsiveness to input and visual stability: Largest Contentful Paint, Interaction to Next Paint and Cumulative Layout Shift.",
-      "مجموعة مقاييس حددتها Google لوصف تجربة المستخدمين الفعليين مع سرعة تحميل الصفحة وسرعة استجابتها للتفاعل وثبات عناصرها البصرية، وهي: Largest Contentful Paint، وInteraction to Next Paint، وCumulative Layout Shift.",
+      "مجموعة مقاييس حددتها Google لوصف تجربة المستخدمين الفعليين مع سرعة تحميل الصفحة وسرعة استجابتها للتفاعل وثبات عناصرها البصرية، وهي: مقياس LCP للتحميل، ومقياس INP للاستجابة، ومقياس CLS للثبات البصري.",
     ),
   },
   {

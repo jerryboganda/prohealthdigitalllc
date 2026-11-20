@@ -279,6 +279,10 @@
   .lg-h3:lang(ar) {
     line-height: 1.5;
   }
+  /* Feature titles set tight Latin line-heights inline; Arabic needs room for its ascenders and dots. */
+  :is(h2, h3)[style*="line-height"]:lang(ar) {
+    line-height: 1.4 !important;
+  }
   .lg-lede {
     margin: 0;
     font-size: clamp(17px, 1.35vw, 20px);
