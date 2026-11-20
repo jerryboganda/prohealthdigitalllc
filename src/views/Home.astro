@@ -37,11 +37,11 @@ const support = faqs[4];
 
 <section
   class="lg-wrap"
-  style="position: relative; isolation: isolate; padding-top: clamp(28px, 5vw, 80px); padding-bottom: clamp(48px, 6vw, 88px); display: grid; gap: clamp(36px, 5vw, 64px)"
+  style="position: relative; isolation: isolate; padding-top: clamp(28px, 5vw, 80px); padding-bottom: clamp(48px, 6vw, 88px); display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(36px, 5vw, 64px)"
 >
   <HeroCanvas />
   <div class="lg-row" style="gap: 32px">
-    <div style="display: grid; gap: 22px; min-width: 0; flex: 999 1 640px">
+    <div style="display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; min-width: 0; flex: 999 1 640px">
       <p class="lg-eyebrow lg-in">
         <span class="lg-dot" aria-hidden="true"></span>
         {home.eyebrow[locale]}

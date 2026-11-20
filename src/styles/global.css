@@ -815,6 +815,8 @@
   /* ───── Kinetic type ───── */
   .lg-slot {
     display: block;
+    /* Longest phrase is ~9em of unbreakable text: shrink on phones so it is never clipped. */
+    font-size: min(1em, calc((100vw - 40px) / 9.4));
     height: 1.12em;
     overflow: hidden;
     color: var(--royal);
@@ -1600,6 +1602,10 @@
     line-height: 1.78;
     color: var(--ink-2);
     max-width: 70ch;
+  }
+  /* Long emails and URLs wrap instead of pushing past narrow columns. */
+  :is(.lg-prose, .prose) a {
+    overflow-wrap: anywhere;
   }
   .lg-prose:lang(ar),
   .prose:lang(ar) {

@@ -152,7 +152,7 @@ const icons = {
       />
     </aside>
 
-    <div style="display: grid; gap: 48px; min-width: 0; max-width: 780px">
+    <div style="display: grid; grid-template-columns: minmax(0, 1fr); gap: 48px; min-width: 0; max-width: 780px">
       <div class="lg-callout" data-reveal="scale" style="padding: clamp(24px, 3vw, 36px)">
         <p class="lg-eyebrow">
           <span class="lg-dot" aria-hidden="true" style="background: var(--teal-ink)"></span>
@@ -264,6 +264,7 @@ const icons = {
 <style>
   .article-grid {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: clamp(32px, 5vw, 72px);
     align-items: start;
   }
